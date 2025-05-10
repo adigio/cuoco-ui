@@ -1,0 +1,48 @@
+.section {
+    padding: 4rem 2rem;
+    width: 100%;
+    background-color: white; 
+    position: relative;
+  }
+  
+  .container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    max-width: 100%;
+    margin: 0 auto;
+    flex-wrap: wrap;
+  }
+  
+  .image {
+    flex: 1;
+    max-width: 800px;
+    border-radius: 1rem;
+  }
+  
+  .textContent {
+    flex: 1;
+    min-width: 300px;
+  }
+  
+  .textContent h2 {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+  
+  .textContent p {
+    font-size: 2rem;
+    color: #555;
+    line-height: 1.6;
+  }
+  
+  .decorativos {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    max-width: 240px;
+    pointer-events: none;
+  }
+  
