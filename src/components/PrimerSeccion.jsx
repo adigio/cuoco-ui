@@ -1,17 +1,23 @@
 export default function PrimerSeccion() {
   return (
-    <div className="relative w-full"> 
+    <div className="relative w-full h-[60vh] md:h-[80vh] lg:h-screen">
       <img
-        src="/imagen_landing_principal.png" // Ruta de la imagen en la carpeta /public
+        src="/imagen_landing_principal.png"
         alt="Comida"
-        className="w-full h-full object-cover" // Asegura que la imagen ocupe toda la pantalla
+        className="w-full h-full object-cover"
       />
-      <div className="absolute top-14/20 left-1/4 transform -translate-x-1/4 -translate-y-1/2"> 
-  <div className="flex items-center  border-teal-500 py-2">
-    <button className="flex-shrink-0 bg-red-300 hover:bg-red-400 border-red-300 hover:border-red-400 text-sm border-4 text-white py-1 px-2 rounded" type="button">
-      Hora de cocinar!
-    </button> 
-  </div> 
+      <div className="absolute inset-0 flex items-center">
+        <div className="text-left pl-20  max-w-3xl">
+          <h1 className="text-3xl md:text-7xl font-bold text-gray-800 leading-tight">
+            Usá lo que tenés cociná lo que querés
+          </h1>
+          <p className="mt-4 text-lg md:text-2xl text-gray-700">
+            Cargá fotos de tus productos o ingresalos manualmente y te mostramos recetas que podés hacer con lo que tenés.
+          </p>
+          <button className="mt-6 bg-red-500 hover:bg-red-600 text-white text-lg font-semibold py-3 px-6 rounded-lg shadow-lg transition">
+            ¡Hora de cocinar!
+          </button>
+        </div>
       </div>
     </div>
   );

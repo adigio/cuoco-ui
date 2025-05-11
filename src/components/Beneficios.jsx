@@ -1,71 +1,37 @@
+import CardBeneficios from "./CardBeneficios";
 export default function Beneficios() {
-    return (
-      <section className="py-20 bg-purple-200 w-full">
-        <div className="container mx-auto px-4">
-          {/* Contenedor con grid y flexbox */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {/* Primer beneficio */}
-            <div className="max-w-sm bg-white rounded-4xl overflow-hidden shadow-xl">
-              <div className="px-6 py-4">
-                <div className="font-bold text-xl mb-2">¿Qué cocino hoy?</div>
-                <p className="text-gray-700 text-base">
-                  Recetas que usan lo que ya tenés
-                </p>
-              </div>
-              <img
-                className="w-full h-80 object-cover rounded-lg"
-                src="/heladera confundida.jpg"
-                alt="¿Qué cocino hoy?"
-              />
-            </div>
-  
-            {/* Segundo beneficio */}
-            <div className="max-w-sm bg-white rounded-4xl overflow-hidden shadow-xl">
-              <div className="px-6 py-4">
-                <div className="font-bold text-xl mb-2">Usá lo que ya tenés</div>
-                <p className="text-gray-700 text-base">
-                  Subí una foto, la IA hace el resto
-                </p>
-              </div>
-              <img
-                className="w-full h-80 object-cover rounded-lg"
-                src="/escaneo de heladera.webp"
-                alt="Usá lo que ya tenés"
-              />
-            </div>
-  
-            {/* Tercer beneficio */}
-            <div className="max-w-sm bg-white rounded-4xl overflow-hidden shadow-xl">
-              <div className="px-6 py-4">
-                <div className="font-bold text-xl mb-2">Menos desperdicio</div>
-                <p className="text-gray-700 text-base">
-                  Aprovechá al máximo tu despensa
-                </p>
-              </div>
-              <img
-                className="w-full h-80 object-cover rounded-lg"
-                src="/plato.jpeg"
-                alt="Menos desperdicio"
-              />
-            </div>
-  
-            {/* Cuarto beneficio */}
-            <div className="max-w-sm bg-white rounded-4xl overflow-hidden shadow-xl">
-              <div className="px-6 py-4">
-                <div className="font-bold text-xl mb-2">Cociná sin estrés</div>
-                <p className="text-gray-700 text-base">
-                  Rápido, rico y sin vueltas
-                </p>
-              </div>
-              <img
-                className="w-full h-80 object-cover rounded-lg"
-                src="/comiendo.jpg"
-                alt="Cociná sin estrés"
-              />
-            </div>
-          </div>
+  return (
+    <section className="p-15 bg-purple-200 w-full">
+      <div className="container mx-auto ">
+        <h2 className="text-center text-5xl  mb-8 font-bold">Beneficios</h2>
+        {/* Contenedor con grid res ponsivo */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"> 
+          <CardBeneficios 
+            img="/heladera confundida.jpg"
+            imgAlt="Find Freezer" 
+            title="¿Qué cocino hoy?"
+            subtit="Recetas que usan lo que ya tenés" 
+          />
+          <CardBeneficios 
+            img="/escaneo de heladera.webp"
+            imgAlt="Scan" 
+            title="Usá lo que ya tenés"
+            subtit="Subí una foto, la IA hace el resto" 
+          />
+          <CardBeneficios 
+            img="/plato.jpeg"
+            imgAlt="dish" 
+            title="Menos desperdicio"
+            subtit="Aprovechá al máximo tu despensa" 
+          />
+          <CardBeneficios 
+            img="/comiendo.jpg"
+            imgAlt="dish" 
+            title="Cociná sin estrés"
+            subtit="Rápido, rico y sin vueltas" 
+          /> 
         </div>
-      </section>
-    );
-  }
-  
+      </div>
+    </section>
+  );
+}
