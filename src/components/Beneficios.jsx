@@ -1,9 +1,11 @@
 import CardBeneficios from "./CardBeneficios";
 export default function Beneficios() {
   return (
-    <section className="p-15 bg-purple-200 w-full">
+    <section  className="min-h-[70vh] w-full bg-purple-200 py-8 px-4 flex flex-col items-center">
       <div className="container mx-auto ">
         <h2 className="text-center text-5xl  mb-8 font-bold">Beneficios</h2>
+
+      <h3 className="text-center text-3xl  mb-8 ">Tu cocina más eficiente: menos desperdicio, más sabor</h3>
         {/* Contenedor con grid res ponsivo */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"> 
           <CardBeneficios 
@@ -31,6 +33,7 @@ export default function Beneficios() {
             subtit="Rápido, rico y sin vueltas" 
           /> 
         </div>
+        <h3 className="text-center text-3xl pt-8 mb-8 ">Recetas listas al instante con lo que ya tenés en la heladera</h3>
       </div>
     </section>
   );

@@ -24,20 +24,7 @@
   .textContent {
     flex: 1;
     min-width: 300px;
-  }
-  
-  .textContent h2 {
-    font-size: 4rem;
-    margin-bottom: 1rem;
-    color: #333;
-  }
-  
-  .textContent p {
-    font-size: 2rem;
-    color: #555;
-    line-height: 1.6;
-  }
-  
+  }  
   .decorativos {
     position: absolute;
     bottom: 0;
