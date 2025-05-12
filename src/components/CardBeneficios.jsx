@@ -1,17 +1,17 @@
-export default function CardBeneficios({ img, imgAlt, title, subtit }) {
+export default function CardBeneficios({ img, imgAlt, title, subtitle, position = '' }) {
     return (
-      <div className="bg-white transition delay-150  uration-300 ease-in-out hover:-translate-y-1 hover:scale-110  rounded-2xl overflow-hidden shadow-lg w-full max-w-md">
-        <div className="m-4" >
-          <div className="mt-1 font-bold text-gray-700">
-            <a  className="hover:underline">
-              {title}
-            </a>
+      <div className={`bg-white transition delay-150 text-center duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 rounded-2xl overflow-hidden shadow-lg w-full max-w-xs min-w-[270px] min-h-[240px] flex flex-col ${position}`}> 
+        <div className="p-4 flex-1 flex flex-col justify-start">
+          <div className="mt-1 font-bold text-gray-700 text-lg">
+            <span className="cursor-pointer">{title}</span>
           </div>
-          <div className="mt-2 text-sm text-gray-600">{subtit}</div>
-          
+          <div className="mt-2 text-sm text-gray-600">{subtitle}</div>
         </div>
-        <img className="rounded-lg" src={img} alt={imgAlt} /> 
+        <img
+          className="w-full h-40 object-cover rounded-b-2xl"
+          src={img}
+          alt={imgAlt}
+        />
       </div>
-      
     );
   }
