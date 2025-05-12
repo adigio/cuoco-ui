@@ -1,6 +1,6 @@
 import styles from './SobrePlanicocina.module.css';
 
-export default function SobrePlanicocina() {
+export default function AboutUs() {
   return (
     <section className={styles.section}>
       <div className={styles.container}>
