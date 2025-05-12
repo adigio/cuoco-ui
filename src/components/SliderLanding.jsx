@@ -6,23 +6,23 @@ import { useState, useEffect } from 'react';
 const slides = [
   {
     image: '/heladera_confundida.jpg',
-    title: 'Bienvenido a Nuestro Sitio',
-    subtitle: 'Explora nuestras soluciones innovadoras',
+    title: '¿Qué cocino hoy?',
+    subtitle: 'Recetas que usan lo que ya tenés',
   },
   {
     image: '/escaneo_heladera.webp',
-    title: 'Transforma tu Negocio',
-    subtitle: 'Tecnología al servicio del crecimiento',
+    title: 'Usá lo que ya tenés',
+    subtitle: 'Subí una foto, la IA hace el resto',
   },
   {
     image: '/plato.jpeg',
-    title: 'Conéctate con el Futuro',
-    subtitle: 'Soluciones digitales a tu alcance',
+    title: 'Menos desperdicio',
+    subtitle: 'Aprovechá al máximo tu despensa',
   },
   {
     image: '/comiendo.jpg',
-    title: 'Conéctate con el Futuro',
-    subtitle: 'Soluciones digitales a tu alcance',
+    title: 'Cociná sin estrés',
+    subtitle: 'Rápido, rico y sin vueltas',
   },
 ];
 
