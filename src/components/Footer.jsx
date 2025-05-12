@@ -1,13 +1,13 @@
 export default function Footer() {
     return (
-      <footer className="bg-red-300 py-8 mt-6">
+      <footer className="background-color-nav-scrolled py-8 mt-6">
         <div className="container mx-auto px-4 flex justify-between items-center">
           {/* Columna 1: Icono y texto */}
           <div className="flex items-center space-x-2">
             <img
-              src="/log.png" // Ruta del logo o icono
+              src="/logos/logo-blanco.png" // Ruta del logo o icono
               alt="Icono de soporte"
-              className="w-8 h-8"
+              className="w-10 h-10"
             />
             <div>
               <h2 className="text-white text-lg font-bold">Soporte</h2>
