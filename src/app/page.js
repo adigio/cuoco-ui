@@ -1,7 +1,7 @@
  
 import NavbarLanding from "@/components/navbars/NavbarLanding";
 import SobrePlanicocina from "@/components/SobrePlanicocina";
-import PrimerSeccion from "@/components/PrimerSeccion";
+import PrimerSeccion from "@/components/Header";
 import Beneficios from "@/components/Beneficios";
 import Footer from "@/components/Footer";
 import CarrotLoader from "@/components/CarrotLoader";
