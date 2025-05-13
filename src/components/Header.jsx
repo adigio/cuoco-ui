@@ -12,7 +12,7 @@ export default function Header() {
         className="block sm:hidden w-full h-full object-cover"
       />
       <div className="absolute inset-0 flex items-start md:items-center">
-        <div className="text-left px-4 md:pl-20 max-w-3xl"> 
+        <div className="text-left px-4 md:pl-20 max-w-3xl pb-[30%] md:pb-0 sm:pt-0"> 
           <h1 className="text-3xl md:text-5xl font-bold text-gray-700 leading-tight">  
             Usá lo que tenés
             <span className="text-red-500 block">
@@ -22,12 +22,14 @@ export default function Header() {
           <p className="mt-4 text-md md:text-2xl font-bold text-gray-600 mb-6 md:mb-0">
             La app que transforma lo que ya tenés en casa en comidas ricas, sin estrés ni desperdicio ¡Cociná sin pensarlo!   
           </p>
-          <p className="mt-4 md:mt-30 text-md md:text-xl text-gray-700">
-            ¿Querés recibir la app antes que nadie?
-          </p>
-          <p className="text-md md:text-xl text-gray-700">
-            Dejanos tu mail y enterate cuando lanzamos
-          </p>
+          <div className="mt-4 md:mt-30">
+            <p className="text-md md:text-xl text-gray-700">
+              ¿Querés recibir la app antes que nadie?
+            </p>
+            <p className="text-md md:text-xl text-gray-700">
+              Dejanos tu mail y enterate cuando lanzamos
+            </p>
+          </div>
           <div className="mt-7 md:mb-0 mb-5 md:mt-10 flex flex-col sm:flex-row gap-3">
             <input 
               type="email" 

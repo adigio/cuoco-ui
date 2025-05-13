@@ -6,9 +6,9 @@ import Benefits from "@/components/Benefits";
 import Header from "@/components/Header";
 export default function Home() {
   return (
-    <div className="min-h-screen overflow-x-hidden"> {/* Esto asegura que el contenedor principal ocupe todo el alto de la pantalla */}
+    <div className="min-h-screen overflow-x-hidden">
         <NavbarLanding />
-        <main className="pt-16 md:pt-0 flex flex-col gap-16 items-center">
+        <main className="pt-16 md:pt-0 flex flex-col items-center">
         <Header/>  
         <Benefits />  
         <AboutUs />
