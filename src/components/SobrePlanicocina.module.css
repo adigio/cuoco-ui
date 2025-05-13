@@ -1,8 +1,15 @@
-.section {
+  .section {
     padding: 4rem 2rem;
     width: 100%;
     background-color: white; 
     position: relative;
+  }
+  @media(max-width: 768px) {
+    .section-mobile {
+      padding-top: 0;
+      padding-bottom: 2rem;
+    }
+    
   }
   
   .container {
