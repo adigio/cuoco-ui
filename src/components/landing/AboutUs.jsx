@@ -1,4 +1,4 @@
-import styles from './SobrePlanicocina.module.css';
+import styles from '../SobrePlanicocina.module.css';
 
 export default function AboutUs() {
   return (

@@ -1,4 +1,4 @@
-import BenefitCards from "@/components/BenefitCards";
+import BenefitCards from "@/components/landing/BenefitCards";
 
 export default function Benefits() {
   return (

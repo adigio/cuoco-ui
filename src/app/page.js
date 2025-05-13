@@ -1,9 +1,9 @@
  
 import NavbarLanding from "@/components/navbars/NavbarLanding";
-import Footer from "@/components/Footer";
-import AboutUs from "@/components/AboutUs";
-import Benefits from "@/components/Benefits";
-import Header from "@/components/Header";
+import Footer from "@/components/landing/Footer";
+import AboutUs from "@/components/landing/AboutUs";
+import Benefits from "@/components/landing/Benefits";
+import Header from "@/components/landing/Header";
 export default function Home() {
   return (
     <div className="min-h-screen overflow-x-hidden">
