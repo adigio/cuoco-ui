@@ -9,13 +9,16 @@ const montserrat = Montserrat({
 });
 
 export const metadata = {
-  title: "Planicocina",
+  title: "Cuoco",
   description: "Arma tu proxima comida como un chef",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="favicon/favicon.ico" />
+      </head>
       <body
         className={`${montserrat.variable}`}
       >
