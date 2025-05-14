@@ -12,7 +12,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Planicocina",
+  title: "Cuoco",
   description: "Arma tu proxima comida como un chef",
 };
 
