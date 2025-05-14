@@ -21,7 +21,7 @@ export default function Footer() {
               Síguenos y descubrí cómo transformar tu cocina todos los días.
             </p>
             <p className="text-white text-sm font-semibold">
-              @planicocina
+              @cuoco
             </p>
           </div>
         </div>

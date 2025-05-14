@@ -1,4 +1,4 @@
-export default function BenefitCards({ img, imgAlt, title, subtitle }) {
+export default function BenefitCard({ img, imgAlt, title, subtitle }) {
     return (
       <div className={`bg-white transition delay-150 text-center duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 rounded-2xl overflow-hidden shadow-lg w-full max-w-xs min-w-[270px] min-h-[240px] flex flex-col mx-0 md:mx-5 my-4`}> 
         <div className="p-4 flex-1 flex flex-col justify-start">
