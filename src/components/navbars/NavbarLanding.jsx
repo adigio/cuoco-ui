@@ -53,19 +53,19 @@ export default function NavbarLanding() {
         </button>
 
         {/* Menu para desktop */}
-        <div className="hidden lg:flex space-x-6 text-white font-bold">
-          <Link href="/beneficios" className={`${scrolled ? "hover:text-red-200" : "hover:text-red-400"}`}>
+        <div className="hidden lg:flex space-x-6 text-white font-bold flex items-center">
+          <Link href="/beneficios" className={`hover:text-red-200`}>
             Beneficios
           </Link>
-          <Link href="/sobre-nosotros" className={`${scrolled ? "hover:text-red-200" : "hover:text-red-400"}`}>
+          <Link href="/sobre-nosotros" className={`hover:text-red-200`}>
             Sobre nosotros
           </Link>
-          <Link href="/iniciar-sesion" className={`${scrolled ? "hover:text-red-200" : "hover:text-red-400"}`}>
+          <Link href="/iniciar-sesion" className={`hover:text-red-200`}>
             Iniciar Sesión
           </Link>
           <Link
             href="/registrarse"
-            className={`"bg-white text-red-400 px-6 py-2 rounded-lg hover:bg-red-500 hover:text-white transition-all duration-300"}`}
+            className={`"block px-6 py-2 rounded-lg ${scrolled ? "bg-white text-red-400": "hover:bg-red-400 hover:shadow-lg hover:text-white bg-white text-red-400"}   transition-all duration-300"}`} 
           >
             Registrarse
           </Link>

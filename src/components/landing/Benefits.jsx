@@ -9,7 +9,7 @@ export default function Benefits() {
         <h3 className="text-right text-lg font-bold text-white"> <span className="w-40"> Tu cocina más eficiente, menos desperdicio, más sabor </span></h3>
         <h3 className="text-left font-bold text-white text-lg">Recetas listas al instante con lo que ya tenés en la heladera</h3>  
 
-        <div className="w-full max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-center pt-12 pb-0">
+        <div className="flex flex-wrap justify-center">
           <BenefitCards
             img="/heladera_confundida.jpg"
             imgAlt="Find Freezer" 
