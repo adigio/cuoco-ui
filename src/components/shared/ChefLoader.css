@@ -1,0 +1,53 @@
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: white;
+}
+
+.loader-image {
+  width: 100px;
+  height: 100px;
+  animation: heartbeat 1.5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.6;
+  }
+}
+
+/* Texto con letras que aparecen una a una */
+.loader-text {
+  font-size: 20px;
+  color: #EF6F6C;
+  font-family: sans-serif;
+  letter-spacing: 2px;
+  position: relative;
+}
+
+.loader-text::after {
+  content: 'Cargando';
+  animation: typing 2s steps(8) infinite alternate;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+  width: 0;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 8ch;
+  }
+}
