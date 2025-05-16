@@ -6,9 +6,9 @@ import { useIngredients } from '@/context/IngredientContext';
 import { generateRecipes } from '@/services/recipeService';
 import NavbarLanding from '@/components/navbars/NavbarLanding';
 import Footer from '@/components/landing/Footer';
-import CarrotLoader from '@/components/shared/CarrotLoader';
+import ChefLoader from '@/components/shared/ChefLoader';
 import RecipeCard from '@/components/shared/cards/RecipeCard';
-
+import AlertModal from '@/components/shared/modal/AlertModal';
 export default function RecipeResultsPage() {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -57,13 +57,14 @@ export default function RecipeResultsPage() {
   };
 
   if (loading) {
-    return <CarrotLoader />;
+    return <ChefLoader />;
   }
 
   return (
-    <div className="min-h-screen bg-[#fefefe]">
-      <NavbarLanding />
-      
+  <div className="flex flex-col min-h-screen bg-[#fefefe]">
+    <NavbarLanding />
+
+    <main className="flex-1">
       <div className="container mx-auto px-4 py-12">
         <h1 className="text-3xl font-bold text-center mb-2">Recetas sugeridas</h1>
         <p className="text-gray-600 text-center mb-8">
@@ -100,7 +101,7 @@ export default function RecipeResultsPage() {
             ))}
           </div>
         )}
-        
+
         <div className="flex justify-center mt-8">
           <button 
             onClick={handleBack}
@@ -117,8 +118,10 @@ export default function RecipeResultsPage() {
           </button>
         </div>
       </div>
-      
-      <Footer />
-    </div>
-  );
+    </main>
+
+    <Footer />
+  </div>
+);
+
 } 

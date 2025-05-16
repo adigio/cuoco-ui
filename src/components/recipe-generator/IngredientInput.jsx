@@ -5,14 +5,33 @@ import React, { useState } from 'react';
 export default function RecipeIngredientInput({ setIngredients }) {
   const [inputValue, setInputValue] = useState('');
 
+  const normalizar = (texto) => texto.trim().toLowerCase();
+
+  const agregarIngrediente = (nombre, fuente = 'manual', confirmado = true) => {
+    const nuevoNombre = normalizar(nombre);
+    if (!nuevoNombre) return;
+
+    setIngredients((prev) => {
+      const yaExiste = prev.some((ing) => normalizar(ing.nombre) === nuevoNombre);
+      if (yaExiste) return prev;
+
+      const nuevo = { nombre: nombre.trim(), fuente, confirmado };
+      return [...prev, nuevo];
+    });
+    setInputValue('');
+  };
+
   const handleInputChange = (e) => setInputValue(e.target.value);
 
   const handleIngredientKeyPress = (e) => {
-    if (e.key === 'Enter' && inputValue.trim()) {
-      const nuevo = { nombre: inputValue.trim(), fuente: 'manual', confirmado: true }; 
-      setIngredients((prev) => [...prev, nuevo]);
-      setInputValue('');
+    if (e.key === 'Enter') {
+      e.preventDefault(); // evita submit en formularios
+      agregarIngrediente(inputValue);
     }
+  };
+
+  const handleAddClick = () => {
+    agregarIngrediente(inputValue);
   };
 
   const handleVoiceInput = () => {
@@ -27,15 +46,14 @@ export default function RecipeIngredientInput({ setIngredients }) {
     recognition.start();
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
-      const nuevo = { nombre: transcript.trim(), fuente: 'voz', confirmado: false };
-      setIngredients((prev) => [...prev, nuevo]);
+      agregarIngrediente(transcript, 'voz', false);
     };
   };
 
   return (
     <div>
       <h2 className="text-lg font-medium">También podés escribir o decir qué tenés</h2>
-      <div className="flex gap-4 mt-2 flex-wrap">
+      <div className="flex gap-2 mt-2 flex-wrap items-center">
         <input
           type="text"
           placeholder="Ej: Leche, Huevos..."
@@ -44,14 +62,21 @@ export default function RecipeIngredientInput({ setIngredients }) {
           onKeyDown={handleIngredientKeyPress}
           className="border rounded px-4 py-2 w-full max-w-md"
         />
-        <button 
-          onClick={handleVoiceInput} 
+        <button
+          onClick={handleVoiceInput}
           className="bg-gray-200 px-4 py-2 rounded-full text-xl"
           title="Reconocimiento de voz"
         >
           🎤
         </button>
+        <button
+          onClick={handleAddClick}
+          className="bg-purple-300 text-white px-4 py-2 rounded-full text-xl"
+          title="Agregar ingrediente"
+        >
+          +
+        </button>
       </div>
     </div>
   );
-} 
+}
