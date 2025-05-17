@@ -153,10 +153,10 @@ const mockRecipes = [
 ];
 
 
-export const getRecipeById = async (id) => {
+export const getRecipeById = async (id) => { 
   return new Promise((resolve) => {
     setTimeout(() => {
-      const recipe = mockRecipes.find((r) => r.id === id);
+      const recipe = mockRecipes.find((r) => r.id == id); 
       resolve(recipe || null);
     }, 500);
   });

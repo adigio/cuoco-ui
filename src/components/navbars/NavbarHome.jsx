@@ -1,4 +1,5 @@
 // components/Navbar.js
+"use client";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';

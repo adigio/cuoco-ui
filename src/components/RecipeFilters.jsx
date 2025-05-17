@@ -54,6 +54,7 @@ export default function RecipeFilters({ onSubmit }) {
 
     try{
       setLoading(true);
+      console.log(informationRecipe);
       const generatedRecipes = await generateRecipes(informationRecipe);
       setFilteredRecipes(generatedRecipes);
 
