@@ -2,11 +2,14 @@
 'use client';
 
 import { IngredientProvider } from '@/context/IngredientContext';
+import { RecipeProvider } from '@/context/RecipeContext';
 
 export default function RecipeGeneratorLayout({ children }) {
   return (
     <IngredientProvider>
-      {children}
+      <RecipeProvider>
+        {children}
+      </RecipeProvider>
     </IngredientProvider>
   );
 }

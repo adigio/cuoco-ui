@@ -3,64 +3,43 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useIngredients } from '@/context/IngredientContext';
-import { generateRecipes } from '@/services/recipeService';
 import NavbarHome from '@/components/navbars/NavbarHome';
 import Footer from '@/components/landing/Footer';
 import RecipeCard from '@/components/shared/cards/RecipeCard';
-import ChefLoader from '@/components/shared/ChefLoader';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock, faHeart } from '@fortawesome/free-regular-svg-icons';
 import { faRotate } from '@fortawesome/free-solid-svg-icons';
-import AlertModal from '@/components/shared/modal/AlertModal';
-export default function RecipeResultsPage() {
-  const [recipes, setRecipes] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+import { useRecipes } from '@/context/RecipeContext';
 
-  const { ingredients } = useIngredients();
+import AlertModal from '@/components/shared/modal/AlertModal';
+import ChefLoader from '@/components/shared/ChefLoader';
+export default function RecipeResultsPage() {
+  const { filteredRecipes } = useRecipes();
+  const [loading, setLoading] = useState(true);
+  const { ingredients }= useIngredients();
   const router = useRouter();
 
-  useEffect(() => {
-    // Si no hay ingredientes, redirigir a la página de generador
-    if (ingredients.length === 0) {
-      router.push('/recipe-generator');
-      return;
-    }
 
-    // Obtener solo los ingredientes confirmados
-    const confirmedIngredients = ingredients.filter(ing => ing.confirmado);
-    
-    // Generar recetas basadas en ingredientes confirmados
-    async function fetchRecipes() {
-      try {
-        setLoading(true);
-        const generatedRecipes = await generateRecipes(confirmedIngredients);
-        setRecipes(generatedRecipes);
-      } catch (err) {
-        console.error('Error al generar recetas:', err);
-        setError('Hubo un problema al generar las recetas. Por favor, inténtalo de nuevo.');
-      } finally {
-        setLoading(false);
-      }
-    }
+  console.log("recetas del contexto", filteredRecipes);  
 
-    fetchRecipes();
-  }, [ingredients, router]);
+  // Función para mostrar detalle de receta
+  const handleViewRecipe = (recipeId) => {
+    console.log('Ver detalle de receta:', recipeId);
+    // router.push(`/recipe/${recipeId}`);
+  };
 
-    // Función para mostrar detalle de receta
-    const handleViewRecipe = (recipeId) => {
-      console.log('Ver detalle de receta:', recipeId);
-      // router.push(`/recipe/${recipeId}`);
-    };
+  const handleRefreshRecipe = (recipeId) => {
+    alert("Mostrar el alert modal. Si era user no premiun no.")
+  };
 
-    const handleRefreshRecipe = (recipeId) => {
-      console.log('refresh detalle de receta:', recipeId);
-      // router.push(`/recipe/${recipeId}`);
-    };
+  const handleBack = () => {
+    router.push('/filters');
+  };
+  
 
-    const handleBack = () => {
-      router.push('/filters');
-    };
+  setTimeout(() => {
+    setLoading(false);
+  }, 2000);
 
   if (loading) {
     return <ChefLoader />;
@@ -77,13 +56,7 @@ export default function RecipeResultsPage() {
           Basadas en {ingredients.filter(ing => ing.confirmado).length} ingredientes que tienes disponibles
         </p>
 
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
-            {error}
-          </div>
-        )}
-
-        {recipes.length === 0 && !loading && !error ? (
+        {filteredRecipes.length === 0 ? (
           <div className="text-center py-10">
             <p className="text-xl text-gray-600">No se encontraron recetas con tus ingredientes.</p>
             <button 
@@ -95,7 +68,7 @@ export default function RecipeResultsPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {recipes.map((recipe) => (
+            {filteredRecipes.map((recipe) => (
               <RecipeCard key={recipe.id} recipe={recipe}>
               <div className='flex justify-between items-center px-2 text-red-400'>
                 <div className='flex items-center gap-2.5 w-15'>

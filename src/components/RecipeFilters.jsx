@@ -1,15 +1,22 @@
 'use client';
 
+import ChefLoader from '@/components/shared/ChefLoader';
+import { useIngredients } from '@/context/IngredientContext';
+import { useRecipes } from '@/context/RecipeContext';
+import { generateRecipes } from '@/services/recipeService';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-const ingredientesEjemplo = ['Fideos', 'Zanahoria', 'Queso', 'Tomate', 'Pollo'];
 const tiposDeComida = ['Desayuno', 'Almuerzo', 'Cena', 'Postre', 'Snack'];
 
 export default function RecipeFilters({ onSubmit }) {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const { ingredients } = useIngredients();
+  const { filteredRecipes, setFilteredRecipes } = useRecipes(); 
 
-  const [selectedIngredients, setSelectedIngredients] = useState([]);
+
   const [filters, setFilters] = useState({
     tiempo: '',
     dificultad: '',
@@ -37,24 +44,32 @@ export default function RecipeFilters({ onSubmit }) {
     });
   };
 
-  const generarPrompt = (ingredientes, filtros) => {
-    let prompt = `Genera recetas con estos ingredientes: ${ingredientes.join(', ')}.`;
+  const handleFinish = async () => {
+    //const ingredientsArray = ingredients.map(ing => ing.nombre);
+    
+    const informationRecipe = {
+      ingredients: ingredients,
+      filters: filters
+    }
 
-    if (filtros.tiempo) prompt += ` Solo mostrar recetas que se preparen en ${filtros.tiempo}.`;
-    if (filtros.dificultad) prompt += ` Dificultad: ${filtros.dificultad}.`;
-    if (filtros.tipos.length > 0) prompt += ` Tipo de comida: ${filtros.tipos.join(', ')}.`;
-    if (filtros.dieta) prompt += ` Preferencias dietéticas: ${filtros.dieta}.`;
-    if (filtros.personas) prompt += ` Deben rendir para ${filtros.personas} personas.`;
+    try{
+      setLoading(true);
+      const generatedRecipes = await generateRecipes(informationRecipe);
+      setFilteredRecipes(generatedRecipes);
 
-    prompt += ` Incluir pasos, ingredientes extra y calorías estimadas.`;
-    return prompt;
+      console.log("recetas generadas por el 'back ", generatedRecipes); 
+      router.push('/results');
+    }catch(error){
+      setError(error);
+    }finally{
+      setLoading(false);
+    }
   };
 
-  const handleFinish = () => {
-    const prompt = generarPrompt(selectedIngredients, filters);
-    console.log(prompt);
-    router.push('/results');
-  };
+  if (loading) {
+    return <ChefLoader />;
+  }
+
 
   return (
     <div className="flex flex-col min-h-screen bg-[#fefefe] p-6"> 
@@ -126,7 +141,7 @@ export default function RecipeFilters({ onSubmit }) {
             key={ing}
             onClick={() => toggleIngredient(ing)}
             className={`px-3 py-1 rounded border ${
-              selectedIngredients.includes(ing) ? 'bg-blue-500 text-white' : 'bg-gray-100'
+              ingredients.includes(ing) ? 'bg-blue-500 text-white' : 'bg-gray-100'
             }`}
           >
             {ing}

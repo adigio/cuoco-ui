@@ -1,8 +1,21 @@
-export const generateRecipes = async (ingredients) => {
+export const generateRecipes = async (informationRecipe) => {
+
+  /*
+    axios.post("http://localhost:3000/api/generate-recipes", {informationRecipe})
+    .then(response => {
+      console.log(response.data);
+    }).catch
+    (error => {
+      console.log(error);
+    });
+  */
+
+  const ingredients = informationRecipe.ingredients;
+
   return new Promise((resolve) => {
     setTimeout(() => {
       // Simular generador de recetas
-      const ingredientNames = ingredients.map(ingredient => ingredient.nombre.toLowerCase());
+      const ingredientNames = ingredients.map(ingredient => ingredient?.nombre?.toLowerCase());
       
       const possibleRecipes = [
         {
@@ -47,7 +60,7 @@ export const generateRecipes = async (ingredients) => {
         }
       ];
       
-      // filtrar recetassegun los ingredientes disponibles, (si al menos 2 ingredientes esta disponibles)
+      // filtrar recetas segun los ingredientes disponibles, (si al menos 2 ingredientes esta disponibles)
 
       const filteredRecipes = possibleRecipes.filter(recipe => {
         const availableIngredients = recipe.ingredients.filter(
