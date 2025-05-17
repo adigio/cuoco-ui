@@ -3,13 +3,13 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useIngredients } from "@/context/IngredientContext";
-import { mockAnalyzeImages } from "@/services/visionService";
-import NavbarLanding from "@/components/navbars/NavbarLanding";
+import { mockAnalyzeImages } from "@/services/visionService"; 
 import Footer from "@/components/landing/Footer";
 import RecipeImageUploader from "@/components/recipe-generator/ImageUploader";
 import RecipeIngredientInput from "@/components/recipe-generator/IngredientInput";
 import RecipeIngredientList from "@/components/recipe-generator/IngredientList";
 import AlertModal from "@/components/shared/modal/AlertModal";
+import NavbarHome from "@/components/navbars/NavbarHome";
 export default function RecipeGeneratorPage() {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -54,7 +54,7 @@ export default function RecipeGeneratorPage() {
 
   return (
   <div className="flex flex-col min-h-screen bg-[#fefefe]">
-    <NavbarLanding />
+    <NavbarHome />
 
     {/* Contenido principal que crece */}
     <main className="flex-1">

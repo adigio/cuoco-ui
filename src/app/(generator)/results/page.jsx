@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useIngredients } from '@/context/IngredientContext';
 import { generateRecipes } from '@/services/recipeService';
-import NavbarLanding from '@/components/navbars/NavbarLanding';
+import NavbarHome from '@/components/navbars/NavbarHome';
 import Footer from '@/components/landing/Footer';
 import RecipeCard from '@/components/shared/cards/RecipeCard';
 import ChefLoader from '@/components/shared/ChefLoader';
@@ -59,7 +59,7 @@ export default function RecipeResultsPage() {
     };
 
     const handleBack = () => {
-      router.push('/review');
+      router.push('/filters');
     };
 
   if (loading) {
@@ -68,7 +68,7 @@ export default function RecipeResultsPage() {
 
   return (
   <div className="flex flex-col min-h-screen bg-[#fefefe]">
-    <NavbarLanding />
+    <NavbarHome />
 
     <main className="flex-1">
       <div className="container mx-auto px-4 py-12">

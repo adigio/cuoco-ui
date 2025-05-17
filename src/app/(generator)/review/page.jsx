@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useIngredients } from '@/context/IngredientContext';
-import NavbarLanding from '@/components/navbars/NavbarLanding';
+import NavbarHome from '@/components/navbars/NavbarHome';
 import Footer from '@/components/landing/Footer';
 import AlertModal from '@/components/shared/modal/AlertModal';
 export default function ReviewPage() {
@@ -59,11 +59,12 @@ export default function ReviewPage() {
     }
     
     // Redirigir a la página de resultados
-    router.push('/results');
+    router.push('/filters');
   };
 
 return (
   <div className="flex flex-col min-h-screen bg-[#fefefe]">
+    <NavbarHome />
     {/* Aca iría <NavbarLanding /> si lo usás */}
 
     <main className="flex-1 px-6 py-10">
@@ -143,7 +144,7 @@ return (
             onClick={handleFinish}
             className="bg-[#f37b6a] text-white px-6 py-2 rounded hover:bg-[#e36455] transition"
           >
-            Generar Recetas
+           Ir a filtros
           </button>
         </div>
       </div>
