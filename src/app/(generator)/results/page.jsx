@@ -6,8 +6,11 @@ import { useIngredients } from '@/context/IngredientContext';
 import { generateRecipes } from '@/services/recipeService';
 import NavbarLanding from '@/components/navbars/NavbarLanding';
 import Footer from '@/components/landing/Footer';
-import ChefLoader from '@/components/shared/ChefLoader';
 import RecipeCard from '@/components/shared/cards/RecipeCard';
+import ChefLoader from '@/components/shared/ChefLoader';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faClock, faHeart } from '@fortawesome/free-regular-svg-icons';
+import { faRotate } from '@fortawesome/free-solid-svg-icons';
 import AlertModal from '@/components/shared/modal/AlertModal';
 export default function RecipeResultsPage() {
   const [recipes, setRecipes] = useState([]);
@@ -44,17 +47,20 @@ export default function RecipeResultsPage() {
     fetchRecipes();
   }, [ingredients, router]);
 
-  // Función para mostrar detalle de receta
-  const handleViewRecipe = (recipeId) => {
-    // Aquí podrías redirigir a una página de detalle o mostrar un modal
-    console.log('Ver detalle de receta:', recipeId);
-    // router.push(`/recipe/${recipeId}`);
-  };
+    // Función para mostrar detalle de receta
+    const handleViewRecipe = (recipeId) => {
+      console.log('Ver detalle de receta:', recipeId);
+      // router.push(`/recipe/${recipeId}`);
+    };
 
-  // Función para volver atrás
-  const handleBack = () => {
-    router.push('/review');
-  };
+    const handleRefreshRecipe = (recipeId) => {
+      console.log('refresh detalle de receta:', recipeId);
+      // router.push(`/recipe/${recipeId}`);
+    };
+
+    const handleBack = () => {
+      router.push('/review');
+    };
 
   if (loading) {
     return <ChefLoader />;
@@ -91,12 +97,20 @@ export default function RecipeResultsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {recipes.map((recipe) => (
               <RecipeCard key={recipe.id} recipe={recipe}>
-                <button
-                  onClick={() => handleViewRecipe(recipe.id)}
-                  className="w-full bg-[#f37b6a] text-white py-2 rounded hover:bg-[#e36455] transition"
-                >
-                  Ver receta completa
-                </button>
+              <div className='flex justify-between items-center px-2 text-red-400'>
+                <div className='flex items-center gap-2.5 w-15'>
+                  <FontAwesomeIcon className='w-4 h-4' icon={faClock} />  
+                  <p>{recipe.preparationTime} '</p>
+                </div>
+                <div className='flex items-center gap-3'> 
+                  <button className='cursor-pointer w-5 px-2' onClick={() => handleRefreshRecipe(recipe.id)}>
+                    <FontAwesomeIcon className='w-4 h-4' icon={faRotate} />
+                  </button>
+                  <button className='cursor-pointer w-4 px-2' onClick={() => handleViewRecipe(recipe.id)}>
+                    <FontAwesomeIcon className='w-4 h-4' icon={faHeart} />  
+                  </button>
+                </div>
+              </div>
               </RecipeCard>
             ))}
           </div>

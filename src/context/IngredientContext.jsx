@@ -16,7 +16,6 @@ export function IngredientProvider({ children }) {
       return false;
     }
 
-    // Verificar si ya existe un ingrediente con el mismo nombre (case insensitive)
     const exists = ingredients.some(
       (ing) => ing.nombre.toLowerCase() === nombre.toLowerCase()
     );
@@ -36,7 +35,7 @@ export function IngredientProvider({ children }) {
   }, [ingredients]);
 
   const removeIngredient = useCallback((idx) => {
-    setIngredients((prev) => prev.filter((_, i) => i !== idx));
+    setIngredients((prev) => prev.filter((idx, i) => i !== idx));
   }, []);
 
   const updateIngredient = useCallback((idx, updatedIngredient) => {

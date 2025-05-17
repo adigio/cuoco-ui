@@ -1,6 +1,10 @@
 import { Montserrat } from "next/font/google";
 import "./globals.css";
 
+import '@fortawesome/fontawesome-svg-core/styles.css';
+import { config } from '@fortawesome/fontawesome-svg-core';
+config.autoAddCss = false;
+
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -12,6 +16,8 @@ export const metadata = {
   title: "Cuoco",
   description: "Arma tu proxima comida como un chef",
 };
+
+import "@/lib/fontawesome";
 
 export default function RootLayout({ children }) {
   return (

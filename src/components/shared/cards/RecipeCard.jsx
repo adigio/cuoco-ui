@@ -1,9 +1,9 @@
 export default function RecipeCard({ recipe, children }) {
     return (
-        <div className={`bg-white transition delay-150 text-center duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 rounded-2xl overflow-hidden shadow-lg w-full max-w-xs min-w-[270px] min-h-[240px] flex flex-col mx-0 md:mx-5 my-4`}>
-            <a className="w-full" href={`/receta/${recipe.id}`}>
+        <div className={`bg-white pb-4 px-2 transition delay-150 text-center duration-300 ease-in-out hover:-translate-y-1 hover:scale-110 rounded-2xl overflow-hidden shadow-lg w-full max-w-xs min-w-[270px] min-h-[240px] flex flex-col mx-0 md:mx-5 my-4`}>
+            <a className="w-full" href={`/recipe/${recipe.id}`}>
                 <img
-                    className="w-full rounded-t-2xl h-40 object-cover"
+                    className="w-full rounded-t-2xl h-35 object-cover"
                     src={recipe.image}
                     alt={recipe.name}
                 />
@@ -11,10 +11,10 @@ export default function RecipeCard({ recipe, children }) {
                     <div className="mt-1 font-bold text-red-400 text-lg">
                         <span className="cursor-pointer">{recipe.name}</span>
                     </div>
-                    <div className="mt-2 text-md text-red-400">{recipe.subtitle}</div>
+                    <div className="mt-1 text-md text-red-400">{recipe.subtitle}</div>
                 </div>
-                {children}
             </a>
+            {children}
         </div>
     );
 }
