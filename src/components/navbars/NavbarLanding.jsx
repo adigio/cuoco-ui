@@ -60,11 +60,11 @@ export default function NavbarLanding() {
           <Link href="/sobre-nosotros" className={`hover:text-red-200`}>
             Sobre nosotros
           </Link>
-          <Link href="/iniciar-sesion" className={`hover:text-red-200`}>
+          <Link href="/signin" className={`hover:text-red-200`}>
             Iniciar Sesión
           </Link>
           <Link
-            href="/registrarse"
+            href="/signup"
             className={`"block px-6 py-2 rounded-lg ${scrolled ? "bg-white text-red-400": "hover:bg-red-400 hover:shadow-lg hover:text-white bg-white text-red-400"}   transition-all duration-300"}`} 
           >
             Registrarse
