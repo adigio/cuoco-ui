@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const AVAILABLE_INGREDIENTS = [
   'Arroz', 'Fideos', 'Avena', 'Quinoa', 'Lentejas', 'Garbanzos', 'Frijoles', 
   'Tomate', 'Cebolla', 'Ajo', 'Zanahoria', 'Pimiento', 'Espinaca', 'Lechuga',
@@ -65,17 +67,21 @@ export const mockAnalyzeImages = async (images) => {
 /**
  * Analizador principal que se puede cambiar a real cuando esté la API.
  */
+
 export const analyzeImagesWithAPI = async (images) => {
-  const response = await fetch('/api/analyze-images', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ images }),
-  });
-
-  if (!response.ok) throw new Error('Error en el análisis de imágenes');
-
-  const data = await response.json();
-  return data;
+  try {    
+    const response = await axios.post('/api/analyze-images', 
+      { images },
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+    
+    return response.data;
+  } catch (error) {
+    //TODO: mostrar alert? 
+  }
 };
-
 
