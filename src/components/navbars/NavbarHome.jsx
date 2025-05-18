@@ -20,11 +20,9 @@ export default function NavbarHome() {
         {/* Menu */}
         <nav className="flex items-center space-x-6 text-white text-sm">
           <Link href="/recipe-generator" className="hover:underline">Generar Recetas</Link>
-          <Link href="/favoritos" className="hover:underline">Favoritos</Link>
-          <Link href="/perfil" className="hover:underline">Perfil</Link>
-          <button title="Cerrar sesión">
-            <FontAwesomeIcon icon={faRightFromBracket} size="lg" />
-          </button>
+          <Link href="/favoritos" className="hover:text-red-200">Favoritos</Link>
+          <Link href="/perfil" className="hover:text-red-200">Perfil</Link>
+          <Link href="/logout" className="hover:text-red-200"><FontAwesomeIcon icon={faSignOutAlt} /></Link>
         </nav>
       </div>
     </header>
