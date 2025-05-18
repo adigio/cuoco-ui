@@ -1,6 +1,6 @@
 // pages/filtros.js
 "use client";
-import RecipeFilters from "@/components/RecipeFilters";
+import RecipeFilters from "@/components/recipe-generator/RecipeFilters";
 import Footer from "@/components/landing/Footer";
 import NavbarHome from "@/components/navbars/NavbarHome";
 

@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-export default function RecipeIngredientList({ ingredients, setIngredients }) {
+export default function RecipeIngredientList({ ingredients, setIngredients, enabledDelete = true }) {
   const handleRemoveIngredient = (idx) => {
     setIngredients((prev) => prev.filter((_, i) => i !== idx));
   };
@@ -18,13 +18,16 @@ export default function RecipeIngredientList({ ingredients, setIngredients }) {
             className="bg-gray-200 text-sm px-3 py-1 rounded-full flex items-center gap-2"
           >
             {item.nombre}
-            <button
-              onClick={() => handleRemoveIngredient(idx)}
-              className="text-gray-600 hover:text-red-500 font-bold"
-              title="Eliminar"
-            >
-              ×
-            </button>
+
+            {enabledDelete && (
+              <button
+                onClick={() => handleRemoveIngredient(idx)}
+                className="text-gray-600 hover:text-red-500 font-bold"
+                title="Eliminar"
+              >
+                ×
+              </button>
+            )}
           </span>
         ))
       )}

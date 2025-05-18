@@ -5,17 +5,17 @@ import { useIngredients } from '@/context/IngredientContext';
 import { useRecipes } from '@/context/RecipeContext';
 import { generateRecipes } from '@/services/recipeService';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react'; 
+import { useState } from 'react';
 import RecipeIngredientList from "@/components/recipe-generator/IngredientList";
 
 const tiposDeComida = ['Desayuno', 'Almuerzo', 'Cena', 'Postre', 'Snack'];
 
 export default function RecipeFilters({ onSubmit }) {
-    const { ingredients, setIngredients } = useIngredients();
+  const { ingredients, setIngredients } = useIngredients();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null); 
-  const { filteredRecipes, setFilteredRecipes } = useRecipes(); 
+  const [error, setError] = useState(null);
+  const { filteredRecipes, setFilteredRecipes } = useRecipes();
 
 
   const [filters, setFilters] = useState({
@@ -47,23 +47,23 @@ export default function RecipeFilters({ onSubmit }) {
 
   const handleFinish = async () => {
     //const ingredientsArray = ingredients.map(ing => ing.nombre);
-    
+
     const informationRecipe = {
       ingredients: ingredients,
       filters: filters
     }
 
-    try{
+    try {
       setLoading(true);
       console.log(informationRecipe);
       const generatedRecipes = await generateRecipes(informationRecipe);
       setFilteredRecipes(generatedRecipes);
 
-      console.log("recetas generadas por el 'back ", generatedRecipes); 
+      console.log("recetas generadas por el 'back ", generatedRecipes);
       router.push('/results');
-    }catch(error){
+    } catch (error) {
       setError(error);
-    }finally{
+    } finally {
       setLoading(false);
     }
   };
@@ -74,15 +74,16 @@ export default function RecipeFilters({ onSubmit }) {
 
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#fefefe] p-6"> 
-     <h2 className="text-xl font-semibold text-gray-800 mb-4">
-            Ingredientes seleccionados
-          </h2>
-          <RecipeIngredientList
-            ingredients={ingredients}
-            setIngredients={setIngredients}
-          />
-          <hr className="my-6" />
+    <div className="flex flex-col min-h-screen bg-[#fefefe] p-6">
+      <h2 className="text-xl font-semibold text-gray-800 mb-4">
+        Ingredientes seleccionados
+      </h2>
+      <RecipeIngredientList
+        ingredients={ingredients}
+        setIngredients={setIngredients}
+        enabledDelete={false}
+      />
+      <hr className="my-6" />
       <h2 className="text-3xl font-semibold mb-4 text-center">Filtros</h2>
       <div className="grid grid-cols-2 gap-4">
         <div className="flex flex-col">
@@ -144,20 +145,6 @@ export default function RecipeFilters({ onSubmit }) {
           ))}
         </div>
       </div>
-       {/* <h2 className="text-xl font-semibold mb-4">Seleccioná ingredientes</h2>
-      <div className="flex flex-wrap gap-2 mb-6">
-        {ingredientesEjemplo.map((ing) => (
-          <button
-            key={ing}
-            onClick={() => toggleIngredient(ing)}
-            className={`px-3 py-1 rounded border ${
-              ingredients.includes(ing) ? 'bg-blue-500 text-white' : 'bg-gray-100'
-            }`}
-          >
-            {ing}
-          </button>
-        ))}
-      </div> */}
 
       <div className="flex justify-between mt-8">
         <button
