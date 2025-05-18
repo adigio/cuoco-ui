@@ -1,4 +1,8 @@
+import { mocksIngredients } from '@/mocks/ingredients';
 import { http, HttpResponse } from 'msw';
+
+
+//Define como se responde a las APIs mockeadas
 
 export const handlers = [
   http.post('/api/analyze-images', async ({ request }) => {
@@ -6,9 +10,6 @@ export const handlers = [
     
     console.log('[MSW] Interceptando solicitud a /api/analyze-images');
     
-    return HttpResponse.json([
-      { nombre: 'Tomate', fuente: 'imagen', confirmado: false },
-      { nombre: 'Queso', fuente: 'imagen', confirmado: false },
-    ], { status: 200 });
+    return HttpResponse.json(mocksIngredients, { status: 200 });
   }),
 ];
