@@ -1,4 +1,3 @@
-
 const AVAILABLE_INGREDIENTS = [
   'Arroz', 'Fideos', 'Avena', 'Quinoa', 'Lentejas', 'Garbanzos', 'Frijoles', 
   'Tomate', 'Cebolla', 'Ajo', 'Zanahoria', 'Pimiento', 'Espinaca', 'Lechuga',
@@ -10,57 +9,49 @@ const AVAILABLE_INGREDIENTS = [
 ];
 
 /**
- * en cuanto esté el endpoint sacamos esta parte
- * 
+ * Mock local para simular el análisis de imágenes
  */
+/*
 export const mockAnalyzeImages = async (images) => {
   return new Promise((resolve, reject) => {
-    // Simulate processing time proportional to the number of images
     const processingTime = 800 + (images.length * 200);
-    
+
     setTimeout(() => {
       try {
-        // If no images, return empty list
         if (!images || images.length === 0) {
           resolve([]);
           return;
         }
-        // For each image, generate between 1 and 3 "detected" ingredients
-        
+
         let allIngredients = [];
-        
+
         images.forEach((image) => {
-          // Random number of ingredients per image (1-3)
           const ingredientCount = Math.floor(Math.random() * 3) + 1;
-          
-          // seleccionar ingrdientes randoms evitando duplicados
           const selectedIngredients = [];
-          
+
           while (selectedIngredients.length < ingredientCount) {
             const index = Math.floor(Math.random() * AVAILABLE_INGREDIENTS.length);
             const ingredient = AVAILABLE_INGREDIENTS[index];
-            
+
             if (!selectedIngredients.includes(ingredient)) {
               selectedIngredients.push(ingredient);
             }
           }
-          
-          // se suma al total de ingredientes
+
           allIngredients = [...allIngredients, ...selectedIngredients];
         });
-        
+
         const uniqueIngredients = [...new Set(allIngredients)];
-        
-        // ver estructura de la api
+
         const detectedIngredients = uniqueIngredients.map(ingredient => ({
           nombre: ingredient,
           fuente: 'imagen',
           confirmado: false
         }));
-        
-        // Simulate 10% chance of error
+
+        10% de chance de error
         if (Math.random() < 0.1) {
-          reject(new Error('Error processing images'));
+          reject(new Error('Error procesando las imágenes'));
         } else {
           resolve(detectedIngredients);
         }
@@ -70,8 +61,21 @@ export const mockAnalyzeImages = async (images) => {
     }, processingTime);
   });
 };
-
-// TODO: modificar integracion con la api
+*/
+/**
+ * Analizador principal que se puede cambiar a real cuando esté la API.
+ */
 export const analyzeImagesWithAPI = async (images) => {
-  return await mockAnalyzeImages(images);
+  const response = await fetch('/api/analyze-images', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ images }),
+  });
+
+  if (!response.ok) throw new Error('Error en el análisis de imágenes');
+
+  const data = await response.json();
+  return data;
 };
+
+

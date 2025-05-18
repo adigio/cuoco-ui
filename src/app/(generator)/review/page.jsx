@@ -6,11 +6,13 @@ import { useIngredients } from '@/context/IngredientContext';
 import NavbarHome from '@/components/navbars/NavbarHome';
 import Footer from '@/components/landing/Footer';
 import AlertModal from '@/components/shared/modal/AlertModal';
+import RecipeIngredientInput from '@/components/recipe-generator/IngredientInput';
 export default function ReviewPage() {
   const { 
     ingredients, 
     removeIngredient, 
     updateIngredient, 
+      setIngredients, 
     confirmIngredient 
   } = useIngredients();
   
@@ -26,7 +28,9 @@ export default function ReviewPage() {
       router.push('/recipe-generator');
     }
   }, [ingredients, router]);
-
+  const contextSetIngredients = (updater) => {
+  setIngredients((prev) => typeof updater === 'function' ? updater(prev) : updater);
+};
   const openEditModal = (idx) => {
     setEditIndex(idx);
     setNewName(ingredients[idx].nombre);
@@ -70,6 +74,8 @@ return (
     <main className="flex-1 px-6 py-10">
       <div className="container mx-auto bg-white p-6 rounded-2xl shadow-md">
         <h1 className="text-2xl font-bold text-gray-800 mb-6">Revisión de Ingredientes</h1>
+        <RecipeIngredientInput setIngredients={contextSetIngredients} />
+
 
         {ingredients.length === 0 ? (
           <p className="text-gray-500 text-center">No hay ingredientes.</p>

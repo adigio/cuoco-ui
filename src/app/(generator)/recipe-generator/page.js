@@ -10,6 +10,9 @@ import RecipeIngredientInput from "@/components/recipe-generator/IngredientInput
 import RecipeIngredientList from "@/components/recipe-generator/IngredientList";
 import AlertModal from "@/components/shared/modal/AlertModal";
 import NavbarHome from "@/components/navbars/NavbarHome";
+//mockeo img analisis
+import { analyzeImagesWithAPI } from '@/services/visionService';
+
 export default function RecipeGeneratorPage() {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -30,8 +33,7 @@ export default function RecipeGeneratorPage() {
     try {
       // Solo procesar imágenes si hay alguna
       if (images.length > 0) {
-        const detectados = await mockAnalyzeImages(images);
-
+      const detectados = await analyzeImagesWithAPI(images);
         // Usar el método mejorado para agregar múltiples ingredientes
         const cantidadAgregada = addMultipleIngredients(detectados);
 

@@ -5,15 +5,16 @@ import { useIngredients } from '@/context/IngredientContext';
 import { useRecipes } from '@/context/RecipeContext';
 import { generateRecipes } from '@/services/recipeService';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState } from 'react'; 
+import RecipeIngredientList from "@/components/recipe-generator/IngredientList";
 
 const tiposDeComida = ['Desayuno', 'Almuerzo', 'Cena', 'Postre', 'Snack'];
 
 export default function RecipeFilters({ onSubmit }) {
+    const { ingredients, setIngredients } = useIngredients();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const { ingredients } = useIngredients();
+  const [error, setError] = useState(null); 
   const { filteredRecipes, setFilteredRecipes } = useRecipes(); 
 
 
@@ -74,6 +75,14 @@ export default function RecipeFilters({ onSubmit }) {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#fefefe] p-6"> 
+     <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Ingredientes seleccionados
+          </h2>
+          <RecipeIngredientList
+            ingredients={ingredients}
+            setIngredients={setIngredients}
+          />
+          <hr className="my-6" />
       <h2 className="text-3xl font-semibold mb-4 text-center">Filtros</h2>
       <div className="grid grid-cols-2 gap-4">
         <div className="flex flex-col">

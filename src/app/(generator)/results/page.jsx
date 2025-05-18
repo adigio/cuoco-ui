@@ -14,8 +14,7 @@ import { useRecipes } from '@/context/RecipeContext';
 import AlertModal from '@/components/shared/modal/AlertModal';
 import ChefLoader from '@/components/shared/ChefLoader';
 export default function RecipeResultsPage() {
-  const { filteredRecipes } = useRecipes();
-  const [loading, setLoading] = useState(true);
+  const { filteredRecipes } = useRecipes(); 
   const { ingredients }= useIngredients();
   const router = useRouter();
 
@@ -35,16 +34,8 @@ export default function RecipeResultsPage() {
   const handleBack = () => {
     router.push('/filters');
   };
-  
-
-  setTimeout(() => {
-    setLoading(false);
-  }, 2000);
-
-  if (loading) {
-    return <ChefLoader />;
-  }
-
+   
+ 
   return (
   <div className="flex flex-col min-h-screen bg-[#fefefe]">
     <NavbarHome />
