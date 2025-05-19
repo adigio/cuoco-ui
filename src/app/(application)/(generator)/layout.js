@@ -4,7 +4,7 @@
 import { IngredientProvider } from '@/context/IngredientContext';
 import { RecipeProvider } from '@/context/RecipeContext';
 
-export default function RecipeGeneratorLayout({ children }) {
+export default function GeneratorRootLayout({ children }) {
   return (
     <IngredientProvider>
       <RecipeProvider>

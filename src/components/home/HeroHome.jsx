@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 export default function HeroHome() {
 
-      const [saludo, setSaludo] = useState("");
+  const [saludo, setSaludo] = useState("");
 
   useEffect(() => {
     const ahora = new Date();

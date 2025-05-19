@@ -1,4 +1,5 @@
 export default function InspiracionTitulo() {
+
   return (
     <div className="text-center mt-12 mb-6">
       <h2 className="text-xl md:text-2xl font-semibold text-[#EF5B70]">

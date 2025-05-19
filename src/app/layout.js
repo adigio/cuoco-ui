@@ -6,9 +6,7 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false;
 
 import "@/lib/fontawesome";
-import ClientProvider from "@/context/clientProvider";
-
-
+import ClientProvider from "@/context/ClientProvider";
 
 const montserrat = Montserrat({
   subsets: ["latin"],

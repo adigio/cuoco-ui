@@ -5,9 +5,7 @@ import {
   HandThumbUpIcon,
   LockClosedIcon
 } from '@heroicons/react/24/outline'
-
 import { useState } from 'react'
-
 import Link from 'next/link'
 import RegisterModal from '@/components/shared/RegisterModal'
 import RegisterStepper from '@/components/shared/RegisterStepper'
@@ -18,18 +16,16 @@ export default function SignupPage() {
   const [completedSteps, setCompletedSteps] = useState([])
   const [registerFinished, setRegisterFinished] = useState(false)
 
-
   const handleComplete = (step) => {
-  setCompletedSteps((prev) => {
-    const updated = [...prev, step]
-    if (updated.includes('email') && updated.includes('prefs') && updated.includes('password')) {
-      setRegisterFinished(true)
-    }
-    return updated
-  })
-  setCurrentStep(null)
-}
-
+    setCompletedSteps((prev) => {
+      const updated = [...prev, step]
+      if (updated.includes('email') && updated.includes('prefs') && updated.includes('password')) {
+        setRegisterFinished(true)
+      }
+      return updated
+    })
+    setCurrentStep(null)
+  }
 
   return (
     <div className="min-h-screen bg-[url('/fondo-ingredientes-signup.png')] bg-cover bg-no-repeat bg-center px-4 py-10 flex items-center justify-center">
@@ -89,18 +85,17 @@ export default function SignupPage() {
         )}
       </div>
 
-        {/* Modales */}
-        <RegisterModal isOpen={currentStep === 'email'} onClose={() => setCurrentStep(null)}>
-            <RegisterStepper key="email" step={1} onComplete={() => handleComplete('email')} />
-        </RegisterModal>
+      <RegisterModal isOpen={currentStep === 'email'} onClose={() => setCurrentStep(null)}>
+          <RegisterStepper key="email" step={1} onComplete={() => handleComplete('email')} />
+      </RegisterModal>
 
-        <RegisterModal isOpen={currentStep === 'prefs'} onClose={() => setCurrentStep(null)}>
-            <RegisterStepper key="prefs" step={2} onComplete={() => handleComplete('prefs')} />
-        </RegisterModal>
+      <RegisterModal isOpen={currentStep === 'prefs'} onClose={() => setCurrentStep(null)}>
+          <RegisterStepper key="prefs" step={2} onComplete={() => handleComplete('prefs')} />
+      </RegisterModal>
 
-        <RegisterModal isOpen={currentStep === 'password'} onClose={() => setCurrentStep(null)}>
-            <RegisterStepper key="password" step={3} onComplete={() => handleComplete('password')} />
-        </RegisterModal>
+      <RegisterModal isOpen={currentStep === 'password'} onClose={() => setCurrentStep(null)}>
+        <RegisterStepper key="password" step={3} onComplete={() => handleComplete('password')} />
+      </RegisterModal>
 
     </div>
   )

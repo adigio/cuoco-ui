@@ -40,7 +40,7 @@ export default function Login() {
       </form>
 
       <p className="mt-4 text-center text-sm">
-        No tienes cuenta?{' '}
+        ¿No tienes cuenta?{' '}
         <a href="/signup" className="text-blue-600 hover:underline">
           Registrate
         </a>
