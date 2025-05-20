@@ -53,10 +53,10 @@ export default function RecipeResultsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredRecipes.map((recipe) => (
               <RecipeCard key={recipe.id} recipe={recipe}>
-                <div className='flex justify-between items-center px-2 text-red-400'>
+                <div className='flex justify-between items-end px-2 text-red-400'>
                   <div className='flex items-center gap-2.5 w-15'>
                     <FontAwesomeIcon className='w-4 h-4' icon={faClock} />
-                    <p>{recipe.preparationTime} '</p>
+                    <p>{recipe.preparationTime} ´</p>
                   </div>
                   <div className='flex items-center gap-3'>
                     <button className='cursor-pointer w-5 px-2' onClick={() => handleRefreshRecipe(recipe.id)}>
