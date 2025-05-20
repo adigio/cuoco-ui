@@ -2,7 +2,7 @@ import BenefitCard from "@/components/landing/BenefitCard";
 
 export default function Benefits({ items }) {
   return (
-    <section  className="w-full min-h-[80vh] bg-purple-200 py-25 md:py-8 md:pt-20 px-4 flex flex-col items-center">
+    <section id="beneficios" className="w-full min-h-[80vh] bg-purple-200  py-25 md:py-8 md:pt-20 px-4 flex flex-col items-center">
       <div className="container mx-auto ">
         <h2 className="text-center text-3xl  mb-4 font-bold">Beneficios</h2>
 

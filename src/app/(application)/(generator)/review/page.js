@@ -7,6 +7,7 @@ import NavbarHome from '@/components/navbars/NavbarHome';
 import Footer from '@/components/landing/Footer';
 import AlertModal from '@/components/shared/modal/AlertModal';
 import RecipeIngredientInput from '@/components/recipe-generator/IngredientInput';
+import BackgroundLayers from '@/components/shared/BackgroundLayers';
 export default function ReviewPage() {
   const {
     ingredients,
@@ -150,6 +151,7 @@ export default function ReviewPage() {
             </button>
           </div>
         </div>
+          <BackgroundLayers/>
 
       </main>
       {/* Modal de edición */}

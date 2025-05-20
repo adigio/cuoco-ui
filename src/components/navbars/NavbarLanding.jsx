@@ -26,6 +26,7 @@ export default function NavbarLanding() {
         scrolled ? "background-color-nav-scrolled shadow text-red-400" : "bg-transparent text-white"
         }`}>
       <div className="flex justify-between items-center">
+        <Link href="/">
         <div className={`text-3xl ${scrolled ? "text-red-400" : "text-white"}`}>
           <img
             src={scrolled ? "/logos/logo-blanco.png" : "/logos/logo-rosa.png"}
@@ -33,7 +34,7 @@ export default function NavbarLanding() {
             className="w-10 h-10 object-contain"
           />
         </div>
-
+      </Link>
         {/* Botón para mobile  */}
         <button 
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -54,10 +55,10 @@ export default function NavbarLanding() {
 
         {/* Menu para desktop */}
         <div className="hidden lg:flex space-x-6 text-white font-bold flex items-center">
-          <Link href="/beneficios" className={`hover:text-red-200`}>
+          <Link href="#beneficios" className={`hover:text-red-200`}>
             Beneficios
           </Link>
-          <Link href="/sobre-nosotros" className={`hover:text-red-200`}>
+          <Link href="#aboutUs" className={`hover:text-red-200`}>
             Sobre nosotros
           </Link>
           <Link href="/signin" className={`hover:text-red-200`}>

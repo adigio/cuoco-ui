@@ -74,7 +74,7 @@ export default function RecipeFilters({ onSubmit }) {
 
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#fefefe] p-6">
+    <div className="flex flex-col  bg-[#fefefe] p-6">
       <h2 className="text-xl font-semibold text-gray-800 mb-4">
         Ingredientes seleccionados
       </h2>

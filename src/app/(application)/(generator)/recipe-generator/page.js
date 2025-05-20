@@ -12,6 +12,7 @@ import AlertModal from "@/components/shared/modal/AlertModal";
 import NavbarHome from "@/components/navbars/NavbarHome";
 //mockeo img analisis
 import { analyzeImagesWithAPI } from '@/services/visionService';
+import BackgroundLayers from "@/components/shared/BackgroundLayers";
 
 export default function RecipeGeneratorPage() {
   const [images, setImages] = useState([]);
@@ -84,6 +85,7 @@ export default function RecipeGeneratorPage() {
               {loading ? "Analizando..." : "Continuar"}
             </button>
           </div>
+          <BackgroundLayers/>
         </div>
       </main>
       <AlertModal
