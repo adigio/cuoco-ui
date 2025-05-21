@@ -19,7 +19,7 @@ export default function BackgroundLayers() {
         <img
           src="/tomate.png"
           alt="tomate decorativo"
-          style={{ width: '160px', height: '160px', opacity: 0.5 }}
+          style={{ width: '160px', height: '160px', opacity: 0.65 }}
         />
       </div>
 
@@ -28,7 +28,7 @@ export default function BackgroundLayers() {
         <img
           src="/palta.png"
           alt="palta decorativa"
-          style={{ width: '180px', height: '180px', opacity: 0.5 }}
+          style={{ width: '180px', height: '180px', opacity: 0.65 }}
         />
       </div>
 
@@ -37,7 +37,7 @@ export default function BackgroundLayers() {
         <img
           src="/tomate.png"
           alt="tomate decorativo"
-          style={{ width: '120px', height: '120px', opacity: 0.5, transform: 'rotate(45deg)' }}
+          style={{ width: '120px', height: '120px', opacity: 0.65, transform: 'rotate(45deg)' }}
         />
       </div>
 
@@ -46,7 +46,7 @@ export default function BackgroundLayers() {
         <img
           src="/aji.png"
           alt="ají decorativo"
-          style={{ width: '140px', height: '140px', opacity: 0.5 }}
+          style={{ width: '140px', height: '140px', opacity: 0.65 }}
         />
       </div>
     </div>
