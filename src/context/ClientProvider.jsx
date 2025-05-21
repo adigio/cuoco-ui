@@ -30,10 +30,12 @@ export default function ClientProvider({ children }) {
 export default function ClientProvider({ children }) {
   useEffect(() => {
     console.log("[MSW] Bloque de arranque en ClientProvider");
-
+    console.log(process.env.NEXT_PUBLIC_USE_MOCKS); // debería imprimir "true"
     // Chequeamos la variable pública para saber si arrancamos mocks
     if (process.env.NEXT_PUBLIC_USE_MOCKS === "true") {
-      console.log("[MSW] Variable NEXT_PUBLIC_USE_MOCKS activada, iniciando worker...");
+      console.log(
+        "[MSW] Variable NEXT_PUBLIC_USE_MOCKS activada, iniciando worker..."
+      );
 
       import("@/mocks/browser")
         .then(({ worker }) => {
@@ -47,7 +49,9 @@ export default function ClientProvider({ children }) {
           console.error("❌ MSW init error:", err);
         });
     } else {
-      console.log("[MSW] Variable NEXT_PUBLIC_USE_MOCKS no activada, no se inicia el mock");
+      console.log(
+        "[MSW] Variable NEXT_PUBLIC_USE_MOCKS no activada, no se inicia el mock"
+      );
     }
   }, []);
 
