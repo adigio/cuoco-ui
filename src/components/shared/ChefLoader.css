@@ -34,8 +34,7 @@
   position: relative;
 }
 
-.loader-text::after {
-  content: 'Cargando';
+.loader-text::after { 
   animation: typing 2s steps(8) infinite alternate;
   white-space: nowrap;
   overflow: hidden;

@@ -1,0 +1,17 @@
+/* Estilos específicos para la página de SignIn */
+.signin-loader-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(3px);
+}
+
+.signin-loader-wrapper .loader-container {
+  height: auto;
+  background: transparent;
+  padding: 2rem;
+} 

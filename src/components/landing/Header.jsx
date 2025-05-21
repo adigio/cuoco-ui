@@ -1,6 +1,9 @@
-import Link from "next/link";
+'use client';
+import { useRouter } from 'next/navigation';
 
+ 
 export default function Header() {
+  const router = useRouter(); 
   return (
     <div className="relative w-full h-[80vh] md:h-[80vh] lg:h-screen mt-17 md:mt-0">
       <img
@@ -26,32 +29,22 @@ export default function Header() {
           </p>
           {/* <div className="mt-4 md:mt-30">
             <p className="text-md md:text-xl text-gray-700">
-              ¿Querés recibir la app antes que nadie?
+             
             </p>
             <p className="text-md md:text-xl text-gray-700">
-              Dejanos tu mail y enterate cuando lanzamos
+              
             </p>
-          </div> */}
-          <div className="mt-12 md:mb-0 mb-5 md:mt-20 flex flex-col sm:flex-row justify-end gap-3">
-            <Link className="w-full" href="/recipe-generator">
-              <button className="w-full bg-green-400 hover:bg-red-400 text-white text-lg font-semibold py-3 px-6 rounded-lg shadow-lg transition"> 
-                Comenzar!
-              </button>
-            </Link>
-            {/* <input 
-              type="email" 
-              placeholder="Email" 
-              className="w-full sm:w-70 rounded-lg border border-red-400 md:border-gray-300 placeholder-gray-400 bg-transparent md:bg-white p-3 md:p-4 text-lg text-white md:text-gray-700" 
-            />
-            <button className="w-full sm:w-auto bg-green-400 hover:bg-red-400 text-white text-lg font-semibold py-3 px-6 rounded-lg shadow-lg transition"> 
-              Sumarme!
-            </button> */}
           </div>
-          {/* <small className="block mt-2 italic text-xs text-white md:text-gray-500">
-            No mandamos spam. Solo te avisamos cuando Cuoco esté lista para vos.        
-          </small> */}
+          <div className="mt-7 md:mb-0 mb-5 md:mt-5 flex flex-col sm:flex-row gap-3">
+          {/* Aqui primero hay que constatar de que este logeado, si lo esta va a recipe-generator, sino al log/registrarse */}
+            <button 
+                  onClick={() => router.push('/recipe-generator')}
+            className="w-full sm:w-auto bg-green-400 hover:bg-red-400 text-white text-lg font-semibold py-3 px-6 rounded-lg shadow-lg transition"> 
+              Hora de Cocinar!
+            </button>
+          </div>
+         
         </div>
-      </div>
-    </div>
+      </div> 
   );
 }

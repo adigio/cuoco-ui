@@ -6,7 +6,7 @@ export const mockRecipes = [
         instructions: 'Hervir los fideos. Mientras, saltear cebolla y ajo. Añadir tomate y cocinar 10 minutos.',
         preparationTime: 25,
         difficulty: 'Fácil',
-        image: 'https://placehold.co/600x400/orange/white?text=Fideos+con+salsa',
+        image: 'https://alicante.com.ar/wp-content/uploads/2022/06/iStock-1185433826.jpg',
         subtitle: 'Una receta de cocina rápida y fácil para preparar los fideos con salsa y tomate.',
     },
     {
@@ -16,7 +16,7 @@ export const mockRecipes = [
         instructions: 'Mezclar la avena con el yogur. Añadir miel al gusto y unas gotas de limón.',
         preparationTime: 10,
         difficulty: 'Muy fácil',
-        image: 'https://placehold.co/600x400/green/white?text=Ensalada+de+avena',
+        image: 'https://avenacanada.com/wp-content/uploads/2022/09/La-ensalada-Aniston-1.jpg',
         subtitle: 'Una receta de cocina rápida y fácil para preparar la ensalada de avena y yogur.',
     },
     {
@@ -26,7 +26,7 @@ export const mockRecipes = [
         instructions: 'Cortar las verduras y colocar en una fuente. Cubrir con queso rallado y gratinar.',
         preparationTime: 30,
         difficulty: 'Media',
-        image: 'https://placehold.co/600x400/yellow/white?text=Queso+gratinado',
+        image: 'https://okdiario.com/img/recetas/2016/07/21/gratinado-de-verduras-al-queso.jpg',
         subtitle: 'Una receta de cocina rápida y fácil para preparar el queso gratinado con verduras.',
     },
     {
@@ -36,7 +36,7 @@ export const mockRecipes = [
         instructions: 'Licuar todos los ingredientes hasta obtener una mezcla homogénea.',
         preparationTime: 5,
         difficulty: 'Muy fácil',
-        image: 'https://placehold.co/600x400/pink/white?text=Batido+de+frutas',
+        image: 'https://www.elmejornido.com/sites/g/files/jgfbjl316/files/srh_recipes/20f62bd6b03a0bd31b98ab915ab91be2.jpg',
         subtitle: 'Una receta de cocina rápida y fácil para preparar un batido de frutas con leche.',
     }
 ];
@@ -57,7 +57,7 @@ export const mockDetailsRecipes = [
         ],
         preparationTime: 25,
         difficulty: 'Fácil',
-        image: 'https://placehold.co/600x400/orange/white?text=Fideos+con+salsa',
+        image: 'https://alicante.com.ar/wp-content/uploads/2022/06/iStock-1185433826.jpg',
         subtitle: 'Una receta de cocina rápida y fácil para preparar los fideos con salsa y tomate.',
     },
     {
@@ -74,7 +74,7 @@ export const mockDetailsRecipes = [
         ],
         preparationTime: 10,
         difficulty: 'Muy fácil',
-        image: 'https://placehold.co/600x400/green/white?text=Ensalada+de+avena',
+        image: 'https://avenacanada.com/wp-content/uploads/2022/09/La-ensalada-Aniston-1.jpg',
         subtitle: 'Una receta de cocina rápida y fácil para preparar la ensalada de avena y yogur.',
     },
     {
@@ -91,7 +91,7 @@ export const mockDetailsRecipes = [
         ],
         preparationTime: 30,
         difficulty: 'Media',
-        image: 'https://placehold.co/600x400/yellow/white?text=Queso+gratinado',
+        image: 'https://okdiario.com/img/recetas/2016/07/21/gratinado-de-verduras-al-queso.jpg',
         subtitle: 'Una receta de cocina rápida y fácil para preparar el queso gratinado con verduras.',
     },
     {
@@ -108,7 +108,7 @@ export const mockDetailsRecipes = [
         ],
         preparationTime: 5,
         difficulty: 'Muy fácil',
-        image: 'https://placehold.co/600x400/pink/white?text=Batido+de+frutas',
+        image: 'https://www.elmejornido.com/sites/g/files/jgfbjl316/files/srh_recipes/20f62bd6b03a0bd31b98ab915ab91be2.jpg',
         subtitle: 'Una receta de cocina rápida y fácil para preparar un batido de frutas con leche.',
     }
 ];

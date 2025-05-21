@@ -2,7 +2,7 @@ import styles from './SobrePlanicocina.module.css';
 
 export default function AboutUs() {
   return (
-    <section className={`${styles.section} ${styles['section-mobile']}`}>
+    <section id="aboutUs" className={`${styles.section} ${styles['section-mobile']}`}>
       <div className={styles.container}>
         <img src="/comida.png" alt="Comida casera" className={styles.image} />
         <div className={styles.textContent}>

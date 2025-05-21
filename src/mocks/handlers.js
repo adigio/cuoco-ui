@@ -27,5 +27,6 @@ export const handlers = [
     console.log(id);
     return HttpResponse.json(mockDetailsRecipes[id], { status: 200 });
   }),
+  
 
 ];

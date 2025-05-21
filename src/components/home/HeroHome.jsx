@@ -1,10 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function HeroHome() {
-
   const [saludo, setSaludo] = useState("");
 
   useEffect(() => {
@@ -40,9 +40,11 @@ export default function HeroHome() {
         <h1 className="text-black text-3xl md:text-5xl font-semibold mb-6">
           {saludo}
         </h1>
-        <button className="px-6 py-3 background-color-nav-scrolled text-white rounded-lg hover:bg-blue-700 transition">
-          Empezá a cocinar con lo que tenés
-        </button>
+        <Link href="recipe-generator">
+          <button className="px-6 py-3 background-color-nav-scrolled text-white rounded-lg hover:brightness-90 transition">
+            Empezá a cocinar con lo que tenés
+          </button>
+        </Link>
       </div>
     </div>
   );

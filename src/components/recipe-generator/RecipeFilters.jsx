@@ -1,14 +1,38 @@
 'use client';
 
 import ChefLoader from '@/components/shared/ChefLoader';
+import CheckboxGroup from '@/components/shared/form/CheckboxGroup';
 import { useIngredients } from '@/context/IngredientContext';
 import { useRecipes } from '@/context/RecipeContext';
 import { generateRecipes } from '@/services/recipeService';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import RecipeIngredientList from "@/components/recipe-generator/IngredientList";
+import Select from '@/components/shared/form/Select';
+import Input from '@/components/shared/form/Input';
+import Checkbox from '@/components/shared/form/Checkbox';
 
 const tiposDeComida = ['Desayuno', 'Almuerzo', 'Cena', 'Postre', 'Snack'];
+
+// Opciones para los selectores
+const tiempoOptions = [
+  { value: 'menos de 15 minutos', label: '-15 min' },
+  { value: '15 a 30 minutos', label: '15-30 min' },
+  { value: 'más de 30 minutos', label: '+30 min' }
+];
+
+const dificultadOptions = [
+  { value: 'fácil', label: 'Fácil' },
+  { value: 'media', label: 'Media' },
+  { value: 'difícil', label: 'Difícil' }
+];
+
+const dietaOptions = [
+  { value: 'vegetariana', label: 'Vegetariana' },
+  { value: 'vegana', label: 'Vegana' },
+  { value: 'sin gluten', label: 'Sin gluten' },
+  { value: 'keto', label: 'Keto' }
+];
 
 export default function RecipeFilters({ onSubmit }) {
   const { ingredients, setIngredients } = useIngredients();
@@ -24,6 +48,7 @@ export default function RecipeFilters({ onSubmit }) {
     tipos: [],
     dieta: '',
     personas: 1,
+    useProfilePreferences: false
   });
 
   const toggleIngredient = (ing) => {
@@ -36,18 +61,15 @@ export default function RecipeFilters({ onSubmit }) {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
 
-  const toggleTipo = (tipo) => {
-    setFilters((prev) => {
-      const tipos = prev.tipos.includes(tipo)
-        ? prev.tipos.filter((t) => t !== tipo)
-        : [...prev.tipos, tipo];
-      return { ...prev, tipos };
-    });
+  const handleTiposChange = (newValues) => {
+    setFilters({ ...filters, tipos: newValues });
+  };
+
+  const handleProfilePreferencesChange = () => {
+    setFilters(prev => ({ ...prev, useProfilePreferences: !prev.useProfilePreferences }));
   };
 
   const handleFinish = async () => {
-    //const ingredientsArray = ingredients.map(ing => ing.nombre);
-
     const informationRecipe = {
       ingredients: ingredients,
       filters: filters
@@ -55,26 +77,34 @@ export default function RecipeFilters({ onSubmit }) {
 
     try {
       setLoading(true);
-      console.log(informationRecipe);
+      setError(null);
+      console.log("Generando recetas con la información:", informationRecipe);
+      
       const generatedRecipes = await generateRecipes(informationRecipe);
-      setFilteredRecipes(generatedRecipes);
-
-      console.log("recetas generadas por el 'back ", generatedRecipes);
-      router.push('/results');
+      
+      if (generatedRecipes && generatedRecipes.length > 0) {
+        setFilteredRecipes(generatedRecipes);
+        console.log("Recetas generadas correctamente:", generatedRecipes);
+        router.push('/results');
+      } else {
+        setError("No se pudieron generar recetas. Intenta con otros filtros.");
+        setLoading(false);
+      }
     } catch (error) {
-      setError(error);
-    } finally {
+      console.error("Error al generar recetas:", error);
+      setError("Ocurrió un error al generar las recetas. Por favor, intenta de nuevo.");
       setLoading(false);
     }
   };
 
+  // Si está cargando, mostramos el ChefLoader
   if (loading) {
-    return <ChefLoader />;
+    return <ChefLoader text="Generando recetas deliciosas..." />;
   }
 
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#fefefe] p-6">
+    <div className="flex flex-col  bg-[#fefefe] p-6">
       <h2 className="text-xl font-semibold text-gray-800 mb-4">
         Ingredientes seleccionados
       </h2>
@@ -85,80 +115,84 @@ export default function RecipeFilters({ onSubmit }) {
       />
       <hr className="my-6" />
       <h2 className="text-3xl font-semibold mb-4 text-center">Filtros</h2>
+      
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          {error}
+        </div>
+      )}
+      
       <div className="grid grid-cols-2 gap-4">
-        <div className="flex flex-col">
-          <label className="text-sm font-medium mb-1 text-gray-700">Tiempo de preparación</label>
-          <select name="tiempo" value={filters.tiempo} onChange={handleChange} className="p-2 border rounded">
-            <option value="">Seleccionar</option>
-            <option value="menos de 15 minutos">-15 min</option>
-            <option value="15 a 30 minutos">15-30 min</option>
-            <option value="más de 30 minutos">+30 min</option>
-          </select>
-        </div>
+        <Select
+          name="tiempo"
+          value={filters.tiempo}
+          onChange={handleChange}
+          options={tiempoOptions}
+          label="Tiempo de preparación"
+        />
 
-        <div className="flex flex-col">
-          <label className="text-sm font-medium mb-1 text-gray-700">Dificultad</label>
-          <select name="dificultad" value={filters.dificultad} onChange={handleChange} className="p-2 border rounded">
-            <option value="">Seleccionar</option>
-            <option value="fácil">Fácil</option>
-            <option value="media">Media</option>
-            <option value="difícil">Difícil</option>
-          </select>
-        </div>
+        <Select
+          name="dificultad"
+          value={filters.dificultad}
+          onChange={handleChange}
+          options={dificultadOptions}
+          label="Dificultad"
+        />
 
-        <div className="flex flex-col">
-          <label className="text-sm font-medium mb-1 text-gray-700">Dieta</label>
-          <select name="dieta" value={filters.dieta} onChange={handleChange} className="p-2 border rounded">
-            <option value="">Seleccionar</option>
-            <option value="vegetariana">Vegetariana</option>
-            <option value="vegana">Vegana</option>
-            <option value="sin gluten">Sin gluten</option>
-            <option value="keto">Keto</option>
-          </select>
-        </div>
+        <Select
+          name="dieta"
+          value={filters.dieta}
+          onChange={handleChange}
+          options={dietaOptions}
+          label="Dieta"
+        />
 
-        <div className="flex flex-col">
-          <label className="text-sm font-medium mb-1 text-gray-700">Cantidad de personas</label>
-          <input
-            type="number"
-            name="personas"
-            value={filters.personas}
-            onChange={handleChange}
-            className="p-2 border rounded"
-            min="1"
-          />
-        </div>
+        <Input
+          type="number"
+          name="personas"
+          value={filters.personas}
+          onChange={handleChange}
+          label="Cantidad de personas"
+          min="1"
+        />
       </div>
 
       <div className="mt-6">
-        <h3 className="text-lg font-medium mb-2">Tipo de comida</h3>
-        <div className="flex flex-wrap gap-4">
-          {tiposDeComida.map((tipo) => (
-            <label key={tipo} className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={filters.tipos.includes(tipo)}
-                onChange={() => toggleTipo(tipo)}
-              />
-              {tipo}
-            </label>
-          ))}
-        </div>
+        <CheckboxGroup
+          title="Tipo de comida"
+          options={tiposDeComida}
+          selectedValues={filters.tipos}
+          onChange={handleTiposChange}
+        />
+      </div>
+      
+      <div className="mt-6">
+          <Checkbox
+            name="profile-preferences"
+            checked={filters.useProfilePreferences}
+            onChange={handleProfilePreferencesChange}
+            label="Tener en cuenta las preferencias del perfil configurado"
+          />
       </div>
 
       <div className="flex justify-between mt-8">
         <button
           onClick={() => router.push('/review')}
           className="bg-gray-200 text-gray-800 px-6 py-2 rounded hover:bg-gray-300 transition"
+          disabled={loading}
         >
           Volver
         </button>
 
         <button
           onClick={handleFinish}
-          className="bg-[#f37b6a] text-white px-6 py-2 rounded hover:bg-[#e36455] transition"
+          disabled={loading}
+          className={`
+            ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-[#f37b6a] hover:bg-[#e36455] cursor-pointer"} 
+            text-white px-6 py-2 rounded transition
+          `}
         >
-          Ir a filtros
+          {loading ? "Generando..." : "Generar Recetas"}
         </button>
       </div>
     </div>

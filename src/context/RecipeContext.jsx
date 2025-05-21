@@ -8,20 +8,25 @@ export const useRecipes = () => useContext(RecipeContext);
 
 // se guarda en localStorage para poder volver atras y tener las recetas
 export function RecipeProvider({ children }) {
-  const [filteredRecipes, setFilteredRecipes] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('filteredRecipes');
-      return saved ? JSON.parse(saved) : [];
+  // Inicializar con un array vacío para evitar problemas de hidratación
+  const [filteredRecipes, setFilteredRecipes] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Cargar datos del localStorage después de que el componente se monte en el cliente
+  useEffect(() => {
+    const saved = localStorage.getItem('filteredRecipes');
+    if (saved) {
+      setFilteredRecipes(JSON.parse(saved));
     }
-    return [];
-  });
+    setIsLoaded(true);
+  }, []);
 
   // Guardar automáticamente en localStorage cada vez que cambian
   useEffect(() => {
-    if (filteredRecipes.length > 0) {
+    if (isLoaded && filteredRecipes.length > 0) {
       localStorage.setItem('filteredRecipes', JSON.stringify(filteredRecipes));
     }
-  }, [filteredRecipes]);
+  }, [filteredRecipes, isLoaded]);
 
   return (
     <RecipeContext.Provider value={{ filteredRecipes, setFilteredRecipes }}>

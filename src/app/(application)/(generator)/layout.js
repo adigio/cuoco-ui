@@ -1,6 +1,7 @@
 // app/recipe-generator/layout.jsx
 'use client';
 
+import Container from '@/components/shared/containers/Container';
 import { IngredientProvider } from '@/context/IngredientContext';
 import { RecipeProvider } from '@/context/RecipeContext';
 
@@ -8,7 +9,7 @@ export default function GeneratorRootLayout({ children }) {
   return (
     <IngredientProvider>
       <RecipeProvider>
-        {children}
+        <Container>{children}</Container>
       </RecipeProvider>
     </IngredientProvider>
   );

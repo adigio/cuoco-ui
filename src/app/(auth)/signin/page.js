@@ -1,64 +1,126 @@
 'use client';
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Input from '@/components/shared/form/Input';
+import Button from '@/components/shared/form/Button';
+import Link from 'next/link';
+import ChefLoader from '@/components/shared/ChefLoader';
+import './signin.css';
 
-import React from 'react';
+export default function SignIn() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
 
-export default function Login() {
-  return (
-    <div className="min-h-screen bg-[url('/fondo-ingredientes-signup.png')] bg-cover bg-no-repeat bg-center px-4 py-10 flex items-center justify-center">
-      <div className="bg-white/90 rounded-3xl p-6 max-w-xl w-full space-y-4 shadow-xl backdrop-blur">
-      <h2 className="text-2xl font-semibold mb-6 text-center">Bienvenido de nuevo</h2>
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    try {
+      setLoading(true);
+      console.log('Form submitted:', formData);
       
-      <form className="flex flex-col space-y-4" onSubmit={(e) => e.preventDefault()}>
-        <label htmlFor="email" className="font-medium">Email</label>
-        <input
-          type="email"
-          id="email"
-          placeholder="juan@gmail.com"
-          required
-          className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+      // Simulación de un proceso de autenticación
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Redirigir a la página principal después de un inicio de sesión exitoso
+      router.push('/home');
+    } catch (error) {
+      console.error('Error during login:', error);
+      // Aquí podrías manejar errores de autenticación
+      setLoading(false);
+    }
+  };
 
-        <label htmlFor="password" className="font-medium">Contraseña</label>
-        <input
-          type="password"
-          id="password"
-          placeholder="*********************"
-          required
-          className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+  return (
+    <div className="relative min-h-screen w-full overflow-hidden">
+      {loading && (
+        <div className="signin-loader-wrapper">
+          <ChefLoader text="Iniciando sesión" />
+        </div>
+      )}
+      
+      <div className="min-h-screen bg-[url('/fondo-ingredientes-signup.png')] bg-cover bg-no-repeat bg-center px-4 py-10 flex items-center justify-center">
+        <div className="bg-white/90 rounded-3xl p-6 max-w-xl w-full space-y-4 shadow-xl backdrop-blur">
+          <h2 className="text-2xl font-semibold mb-6 text-center">Bienvenido de nuevo</h2>
+          
+          <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
+            <Input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              label="Email"
+              placeholder="juan@gmail.com"
+              required
+              disabled={loading}
+            />
 
-        <a href="#" className="text-sm text-blue-600 hover:underline self-end">
-          ¿Olvidaste tu contraseña?
-        </a>
+            <Input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              label="Contraseña"
+              placeholder="*********************"
+              required
+              disabled={loading}
+            />
 
-        <button
-          type="submit"
-          className="bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
-        >
-          Iniciar Sesión
-        </button>
-      </form>
+            <Link href="#" className="text-sm text-purple-600 hover:underline self-end">
+              ¿Olvidaste tu contraseña?
+            </Link>
 
-      <p className="mt-4 text-center text-sm">
-        ¿No tienes cuenta?{' '}
-        <a href="/signup" className="text-blue-600 hover:underline">
-          Registrate
-        </a>
-      </p>
+            <Button
+              type="submit"
+              variant="primary"
+              fullWidth
+              disabled={loading}
+            >
+              Iniciar Sesión
+            </Button>
+          </form>
 
-      <div className="mt-6 flex flex-col gap-3">
-        <button
-          className="bg-red-600 text-white py-2 rounded-md hover:bg-red-700 transition"
-        >
-          Iniciar sesión con Google
-        </button>
-        <button
-          className="bg-blue-800 text-white py-2 rounded-md hover:bg-blue-900 transition"
-        >
-          Iniciar sesión con Facebook
-        </button>
+          <p className="mt-4 text-center text-sm">
+            ¿No tienes cuenta?{' '}
+            <Link href="/signup" className="text-purple-600 hover:underline">
+              Registrate
+            </Link>
+          </p>
+
+          <div className="mt-6 flex flex-col gap-3">
+            <Button
+              variant="google"
+              fullWidth
+              onClick={() => console.log('Google login')}
+              size={'sm'}
+              disabled={loading}
+            >
+              Iniciar sesión con Google
+            </Button>
+            
+            <Button
+              variant="facebook"
+              fullWidth
+              size={'sm'}
+              onClick={() => console.log('Facebook login')}
+              disabled={loading}
+            >
+              Iniciar sesión con Facebook
+            </Button>
+          </div>
+        </div>
       </div>
-    </div>
     </div>
   );
 }

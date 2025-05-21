@@ -28,7 +28,7 @@ const benefitsItems = [
     subtitle: "Rápido, rico y sin vueltas"
   }
 ];
-
+  
 export default function LandingPage() {
   return (
       <main className="pt-16 md:pt-0 flex flex-col items-center">
