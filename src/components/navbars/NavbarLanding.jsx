@@ -91,14 +91,14 @@ export default function NavbarLanding() {
             Sobre nosotros
           </Link>
           <Link 
-            href="/iniciar-sesion" 
+            href="/signin" 
             className={`text-center font-bold ${scrolled ? "text-red-400 hover:text-red-600" : "text-white hover:text-red-200"}`}
             onClick={() => setIsMenuOpen(false)}
           >
             Iniciar Sesión
           </Link>
           <Link
-            href="/registrarse"
+            href="/signup"
             className={`text-center font-bold ${scrolled ? "bg-red-400 text-white" : "bg-white text-red-400"} px-6 py-2 rounded-lg hover:bg-red-500 hover:text-white transition-all duration-300`}
             onClick={() => setIsMenuOpen(false)}
           >
