@@ -3,16 +3,12 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useIngredients } from "@/context/IngredientContext";
-import { mockAnalyzeImages } from "@/services/visionService";
-import Footer from "@/components/landing/Footer";
 import RecipeImageUploader from "@/components/recipe-generator/ImageUploader";
-import RecipeIngredientInput from "@/components/recipe-generator/IngredientInput";
-import RecipeIngredientList from "@/components/recipe-generator/IngredientList";
 import AlertModal from "@/components/shared/modal/AlertModal";
-import NavbarHome from "@/components/navbars/NavbarHome";
 //mockeo img analisis
 import { analyzeImagesWithAPI } from '@/services/visionService';
 import BackgroundLayers from "@/components/shared/BackgroundLayers";
+import ContainerShadow from "@/components/shared/containers/ContainerShadow";
 
 export default function RecipeGeneratorPage() {
   const [images, setImages] = useState([]);
@@ -57,21 +53,22 @@ export default function RecipeGeneratorPage() {
 
   return (
     <>
-      <main className="flex-1">
-        <div className="container mx-auto px-4 py-10">
+      <BackgroundLayers />
+      
+      <div className="w-full border-b-4 border-purple-400 mb-6"></div>
+      
+      <main className="flex-1 relative">
+        <ContainerShadow customClass={"container"}>
           <h1 className="text-3xl font-semibold mb-6">
             Subí una foto de tu heladera o alacena
           </h1>
 
-          <RecipeImageUploader images={images} setImages={setImages} />
-
-          <div className="mt-8">
-            <RecipeIngredientInput setIngredients={setIngredients} />
-            <RecipeIngredientList
-              ingredients={ingredients}
-              setIngredients={setIngredients}
-            />
-          </div>
+          <RecipeImageUploader
+            images={images} 
+            setImages={setImages} 
+            ingredients={ingredients}
+            setIngredients={setIngredients}
+          />
 
           <div className="flex justify-end mt-10">
             <button
@@ -85,8 +82,7 @@ export default function RecipeGeneratorPage() {
               {loading ? "Analizando..." : "Continuar"}
             </button>
           </div>
-          <BackgroundLayers/>
-        </div>
+        </ContainerShadow>
       </main>
       <AlertModal
         show={showModal}

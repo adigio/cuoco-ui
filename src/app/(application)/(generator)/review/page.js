@@ -3,11 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useIngredients } from '@/context/IngredientContext';
-import NavbarHome from '@/components/navbars/NavbarHome';
-import Footer from '@/components/landing/Footer';
 import AlertModal from '@/components/shared/modal/AlertModal';
 import RecipeIngredientInput from '@/components/recipe-generator/IngredientInput';
 import BackgroundLayers from '@/components/shared/BackgroundLayers';
+import ContainerShadow from '@/components/shared/containers/ContainerShadow';
+
 export default function ReviewPage() {
   const {
     ingredients,
@@ -69,8 +69,12 @@ export default function ReviewPage() {
 
   return (
     <>
-      <main className="flex-1 px-6 py-10">
-        <div className="container mx-auto bg-white p-6 rounded-2xl shadow-md">
+      <BackgroundLayers />
+      
+      <div className="w-full border-b-4 border-purple-400 mb-6"></div>
+      
+      <main className="flex-1 relative">
+        <ContainerShadow customClass={"container"}>
           <h1 className="text-2xl font-bold text-gray-800 mb-6">Revisión de Ingredientes</h1>
           <RecipeIngredientInput setIngredients={contextSetIngredients} />
 
@@ -150,9 +154,7 @@ export default function ReviewPage() {
               Ir a filtros
             </button>
           </div>
-        </div>
-          <BackgroundLayers/>
-
+        </ContainerShadow>
       </main>
       {/* Modal de edición */}
       {isModalOpen && (

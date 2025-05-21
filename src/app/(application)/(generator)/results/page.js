@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock, faHeart } from '@fortawesome/free-regular-svg-icons';
 import { faRotate } from '@fortawesome/free-solid-svg-icons';
 import { useRecipes } from '@/context/RecipeContext';
+import Container from '@/components/shared/containers/Container';
 
 export default function RecipeResultsPage() {
   const { filteredRecipes } = useRecipes();
@@ -38,7 +39,7 @@ export default function RecipeResultsPage() {
         <p className="text-gray-600 text-center mb-8">
           Basadas en {ingredients.filter(ing => ing.confirmado).length} ingredientes que tienes disponibles
         </p>
-
+        <Container>
         {filteredRecipes.length === 0 ? (
           <div className="text-center py-10">
             <p className="text-xl text-gray-600">No se encontraron recetas con tus ingredientes.</p>
@@ -50,9 +51,9 @@ export default function RecipeResultsPage() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="flex gap-4 justify-center px-4 pb-12 flex-wrap">
             {filteredRecipes.map((recipe) => (
-              <RecipeCard key={recipe.id} recipe={recipe}>
+              <RecipeCard customClass={"mx-auto"} key={recipe.id} recipe={recipe}>
                 <div className='flex justify-between items-center px-2 text-red-400'>
                   <div className='flex items-center gap-2.5 w-15'>
                     <FontAwesomeIcon className='w-4 h-4' icon={faClock} />
@@ -71,6 +72,7 @@ export default function RecipeResultsPage() {
             ))}
           </div>
         )}
+        </Container>
 
         <div className="flex justify-center mt-8">
           <button

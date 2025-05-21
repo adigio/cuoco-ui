@@ -2,6 +2,9 @@ import axios from "axios";
 
 export const generateRecipes = async (informationRecipe) => {
   try {    
+    // Simulación de delay para mostrar el loader (solo para desarrollo)
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
     const response = await axios.post('/api/generate-recipes', 
       { informationRecipe },
       {
@@ -12,14 +15,17 @@ export const generateRecipes = async (informationRecipe) => {
     );
     return response.data;
   } catch (error) {
-    //TODO: mostrar alert? 
+    console.error("Error al generar recetas:", error);
+    // Propagamos el error para que pueda ser manejado por el componente
+    throw error;
   }
 };
 
-
-
 export const getRecipeById = async (id) => { 
-  try {    
+  try {
+    // Simulación de delay para mostrar el loader (solo para desarrollo)
+    await new Promise(resolve => setTimeout(resolve, 1500));
+        
     const response = await axios.get(`/api/recipe/${id}`,  
       {
         headers: {
@@ -29,7 +35,9 @@ export const getRecipeById = async (id) => {
     );
     return response.data;
   } catch (error) {
-    //TODO: mostrar alert? 
+    console.error("Error al obtener receta:", error);
+    // Propagamos el error para que pueda ser manejado por el componente
+    throw error;
   }
 };
 
