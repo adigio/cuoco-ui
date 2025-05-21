@@ -1,7 +1,7 @@
 "use client"; // Esto es clave para que solo corra en el cliente
 
 import { useEffect } from "react";
-
+/**
 export default function ClientProvider({ children }) {
     useEffect(() => {
         console.log("[MSW] Bloque de arranque en ClientProvider");
@@ -26,4 +26,30 @@ export default function ClientProvider({ children }) {
     }, []);
 
     return children;
+} */
+export default function ClientProvider({ children }) {
+  useEffect(() => {
+    console.log("[MSW] Bloque de arranque en ClientProvider");
+
+    // Chequeamos la variable pública para saber si arrancamos mocks
+    if (process.env.NEXT_PUBLIC_USE_MOCKS === "true") {
+      console.log("[MSW] Variable NEXT_PUBLIC_USE_MOCKS activada, iniciando worker...");
+
+      import("@/mocks/browser")
+        .then(({ worker }) => {
+          console.log("[MSW] Worker importado correctamente");
+          return worker.start({ onUnhandledRequest: "bypass" });
+        })
+        .then(() => {
+          console.log("[MSW] Mocking habilitado.");
+        })
+        .catch((err) => {
+          console.error("❌ MSW init error:", err);
+        });
+    } else {
+      console.log("[MSW] Variable NEXT_PUBLIC_USE_MOCKS no activada, no se inicia el mock");
+    }
+  }, []);
+
+  return children;
 }
