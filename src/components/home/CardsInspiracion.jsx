@@ -1,45 +1,40 @@
-import Image from "next/image";
+import RecipeCard from "@/components/shared/cards/RecipeCard";
+import { faClock } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const recetas = [
+const recipes = [
   {
     id: 1,
-    titulo: "Guiso de lentejas",
-    imagen: "/plato.jpeg",
-    tiempo: "30’",
+    name: "Guiso de lentejas",
+    image: "/plato.jpeg",
+    time: "30’",
   },
   {
     id: 2,
-    titulo: "Pechuga de pollo y ensalada",
-    imagen: "/comida.png",
-    tiempo: "30’",
+    name: "Pechuga de pollo y ensalada",
+    image: "/comida.png",
+    time: "30’",
   },
   {
     id: 3,
-    titulo: "Carne con papas y verduras",
-    imagen: "/comida.png",
-    tiempo: "30’",
+    name: "Carne con papas y verduras",
+    image: "/comida.png",
+    time: "30’",
   },
 ];
 
 export default function CardsInspiracion() {
   return (
     <div className="flex gap-4 justify-center px-4 pb-12 flex-wrap">
-      {recetas.map((receta) => (
-        <div key={receta.id} className="w-[240px] bg-white rounded-xl shadow-md overflow-hidden">
-          <Image
-            src={receta.imagen}
-            alt={receta.titulo}
-            width={240}
-            height={160}
-            className="object-cover"
-          />
-          <div className="p-4">
-            <h3 className="font-medium text-base mb-2">{receta.titulo}</h3>
-            <div className="text-gray-500 text-sm flex items-center gap-1">
-              <span>🕒</span> <span>{receta.tiempo}</span>
+      {recipes.map((recipe) => (
+        <RecipeCard customClass={"mx-auto"} key={recipe.id} recipe={recipe}>
+          <div className='flex justify-between items-center px-2 text-red-400'>
+            <div className='flex items-center gap-2.5 w-15'>
+              <FontAwesomeIcon className='w-4 h-4' icon={faClock} />
+              <p>{recipe.time}</p>
             </div>
           </div>
-        </div>
+        </RecipeCard>
       ))}
     </div>
   );
