@@ -9,7 +9,7 @@ import { faClock, faHeart } from '@fortawesome/free-regular-svg-icons';
 import { faRotate } from '@fortawesome/free-solid-svg-icons';
 import { useRecipes } from '@/context/RecipeContext';
 import Container from '@/components/shared/containers/Container';
-
+import BackgroundLayers from '@/components/shared/BackgroundLayers';
 export default function RecipeResultsPage() {
   const { filteredRecipes } = useRecipes();
   const { ingredients } = useIngredients();
@@ -33,6 +33,8 @@ export default function RecipeResultsPage() {
   };
 
   return (
+    <>
+          <BackgroundLayers />
     <main className="flex-1">
       <div className="container mx-auto px-4 py-12">
         <h1 className="text-3xl font-bold text-center mb-2">Recetas sugeridas</h1>
@@ -91,5 +93,6 @@ export default function RecipeResultsPage() {
         </div>
       </div>
     </main>
+    </>
   );
 } 
