@@ -79,9 +79,9 @@ export default function RecipeFilters({ onSubmit }) {
       setLoading(true);
       setError(null);
       console.log("Generando recetas con la información:", informationRecipe);
-      
+
       const generatedRecipes = await generateRecipes(informationRecipe);
-      
+
       if (generatedRecipes && generatedRecipes.length > 0) {
         setFilteredRecipes(generatedRecipes);
         console.log("Recetas generadas correctamente:", generatedRecipes);
@@ -115,13 +115,13 @@ export default function RecipeFilters({ onSubmit }) {
       />
       <hr className="my-6" />
       <h2 className="text-3xl font-semibold mb-4 text-center">Filtros</h2>
-      
+
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
           {error}
         </div>
       )}
-      
+
       <div className="grid grid-cols-2 gap-4">
         <Select
           name="tiempo"
@@ -157,22 +157,23 @@ export default function RecipeFilters({ onSubmit }) {
         />
       </div>
 
-      <div className="mt-6">
+      <div className="grid grid-cols-2 gap-4 mt-6">
         <CheckboxGroup
           title="Tipo de comida"
           options={tiposDeComida}
           selectedValues={filters.tipos}
           onChange={handleTiposChange}
         />
-      </div>
-      
-      <div className="mt-6">
+
+        <div>
+          <h3 className={`text-lg font-medium mb-2 text-gray-800`}>Preferencias de perfil</h3>
           <Checkbox
             name="profile-preferences"
             checked={filters.useProfilePreferences}
             onChange={handleProfilePreferencesChange}
             label="Tener en cuenta las preferencias del perfil configurado"
           />
+        </div>
       </div>
 
       <div className="flex justify-between mt-8">

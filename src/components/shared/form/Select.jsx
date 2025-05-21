@@ -44,7 +44,7 @@ export default function Select({
         onChange={onChange}
         disabled={disabled}
         required={required}
-        className={`p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none ${
+        className={`px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-100 outline-none ${
           disabled ? 'bg-gray-100 cursor-not-allowed' : ''
         } ${selectClassName}`}
       >
