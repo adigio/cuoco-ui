@@ -7,9 +7,7 @@ export default function RegisterStepBox({
   disabled,
   completed,
 }) {
-  // Color principal coral del generador
-  const baseColor = '#F5807B' 
-  const hoverColor = '#e36455'
+  // Color principal coral del generador 
   const bgCompleted = 'bg-[#F5807B]'
   const textCompleted = 'text-white'
 

@@ -103,6 +103,7 @@ export default function SignIn() {
               variant="google"
               fullWidth
               onClick={() => console.log('Google login')}
+              size={'sm'}
               disabled={loading}
             >
               Iniciar sesión con Google
@@ -111,6 +112,7 @@ export default function SignIn() {
             <Button
               variant="facebook"
               fullWidth
+              size={'sm'}
               onClick={() => console.log('Facebook login')}
               disabled={loading}
             >

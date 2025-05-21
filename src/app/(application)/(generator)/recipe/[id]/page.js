@@ -35,7 +35,7 @@ export default function RecipePage({ params }) {
 
   if (loading) {
     return (
-      <ChefLoader />
+      <ChefLoader  text="...Receta..."/>
     );
   }
 
