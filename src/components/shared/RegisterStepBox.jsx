@@ -7,10 +7,11 @@ export default function RegisterStepBox({
   disabled,
   completed,
 }) {
-
-    const baseColor = '#F5807B' // color rosa
-    const bgCompleted = 'bg-[#F5807B]'
-    const textCompleted = 'text-white'
+  // Color principal coral del generador
+  const baseColor = '#F5807B' 
+  const hoverColor = '#e36455'
+  const bgCompleted = 'bg-[#F5807B]'
+  const textCompleted = 'text-white'
 
   return (
     <button
@@ -28,7 +29,7 @@ export default function RegisterStepBox({
         </div>
     </div>
 
-    <span className={`px-4 py-1 rounded-lg text-sm font-semibold shadow transition-colors duration-200 ${completed ? 'bg-white text-[#F5807B]' : 'bg-[#F5807B] text-white group-hover:bg-white group-hover:text-[#F5807B]'}`}>{completed ? '✓' : buttonText}</span>
+    <span className={`px-4 py-1 rounded text-sm font-semibold shadow transition-colors duration-200 ${completed ? 'bg-white text-[#F5807B]' : 'bg-[#F5807B] text-white group-hover:bg-white group-hover:text-[#F5807B]'}`}>{completed ? '✓' : buttonText}</span>
     
     </button>
   )

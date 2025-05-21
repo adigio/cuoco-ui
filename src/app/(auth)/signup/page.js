@@ -36,7 +36,7 @@ export default function SignupPage() {
                 <p className="text-gray-600">Ya podés empezar a usar la app.</p>
                 <Link
                 href="/"
-                className="inline-block bg-[#F5807B] text-white px-6 py-2 rounded-lg hover:bg-white hover:text-[#F5807B] hover:shadow transition"
+                className="inline-block bg-[#f37b6a] text-white px-6 py-2 rounded hover:bg-[#e36455] transition"
                 >
                 Ir al Home
                 </Link>

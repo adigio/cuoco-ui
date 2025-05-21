@@ -1,7 +1,8 @@
- 'use client'
+'use client'
 
 import { useState } from 'react'
-import { EnvelopeIcon, HandThumbUpIcon, LockClosedIcon } from '@heroicons/react/24/outline'
+import Input from '@/components/shared/form/Input'
+import Checkbox from '@/components/shared/form/Checkbox'
 
 export default function RegisterStepper({ step, onComplete }) {
   const [email, setEmail] = useState('')
@@ -12,6 +13,7 @@ export default function RegisterStepper({ step, onComplete }) {
   const [foodNeeds, setFoodNeeds] = useState([])
   const [allergies, setAllergies] = useState([])
   const [subStep, setSubStep] = useState(1)
+  const [termsAccepted, setTermsAccepted] = useState(false)
 
   const toggleItem = (list, setList, item) => {
     setList((prev) => (prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]))
@@ -23,24 +25,29 @@ export default function RegisterStepper({ step, onComplete }) {
       <div className="space-y-4 text-left">
         <h3 className="text-2xl font-bold text-gray-800">Ingresá tu e-mail</h3>
         <p className="text-gray-500">Asegurate de tener acceso a él.</p>
-        <input
+        <Input
           type="email"
-          className="w-full border border-gray-300 rounded-xl p-3 text-gray-800"
+          name="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="E-mail"
+          required
+          inputClassName="rounded-xl p-3 text-gray-800"
         />
-        <div className="flex items-start gap-2 text-left text-sm text-gray-600">
-          <input type="checkbox" required className="mt-1 accent-[#F5807B]" />
-          <p>
-            Acepto los Términos y condiciones y autorizo el uso de mis datos de acuerdo a la Declaración de privacidad.
-          </p>
-        </div>
+        <Checkbox
+          id="terms"
+          checked={termsAccepted}
+          onChange={() => setTermsAccepted(!termsAccepted)}
+          label="Acepto los Términos y condiciones y autorizo el uso de mis datos de acuerdo a la Declaración de privacidad."
+          className="items-start"
+          checkboxClassName="mt-1 accent-[#F5807B]"
+          labelClassName="text-sm text-gray-600"
+        />
         <button
           onClick={() => {
-            if (email.includes('@')) onComplete()
+            if (email.includes('@') && termsAccepted) onComplete()
           }}
-          className="w-full bg-[#F5807B] hover:bg-white hover:text-[#F5807B] text-white font-semibold py-2 rounded-xl transition"
+          className="w-full bg-[#F5807B] hover:bg-[#F5807B] text-white font-semibold py-2 rounded transition"
         >
           Continuar
         </button>
@@ -87,14 +94,13 @@ export default function RegisterStepper({ step, onComplete }) {
             <h3 className="text-xl font-semibold text-gray-800">¿Tenés alguna necesidad alimentaria especial?</h3>
             <div className="space-y-2">
               {['Sin gluten', 'Sin lactosa', 'Alta en proteínas', 'Keto', 'Ninguna en particular'].map((item) => (
-                <label key={item} className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={foodNeeds.includes(item)}
-                    onChange={() => toggleItem(foodNeeds, setFoodNeeds, item)}
-                  />
-                  <span>{item}</span>
-                </label>
+                <Checkbox
+                  key={item}
+                  id={`food-need-${item}`}
+                  checked={foodNeeds.includes(item)}
+                  onChange={() => toggleItem(foodNeeds, setFoodNeeds, item)}
+                  label={item}
+                />
               ))}
             </div>
           </>
@@ -106,14 +112,13 @@ export default function RegisterStepper({ step, onComplete }) {
             <div className="space-y-2">
               {['Leche', 'Frutos secos', 'Soja', 'Crustáceos', 'Huevo', 'Pescados', 'Cereales', 'Maní', 'Otro', 'Ninguna en particular'].map(
                 (item) => (
-                  <label key={item} className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={allergies.includes(item)}
-                      onChange={() => toggleItem(allergies, setAllergies, item)}
-                    />
-                    <span>{item}</span>
-                  </label>
+                  <Checkbox
+                    key={item}
+                    id={`allergy-${item}`}
+                    checked={allergies.includes(item)}
+                    onChange={() => toggleItem(allergies, setAllergies, item)}
+                    label={item}
+                  />
                 )
               )}
             </div>
@@ -121,18 +126,21 @@ export default function RegisterStepper({ step, onComplete }) {
         )}
 
         <div className="flex justify-between pt-4">
-          {subStep > 1 && (
-            <button className="bg-[#75C24B] text-white px-6 py-2 rounded-xl" onClick={() => setSubStep(subStep - 1)}>
+          {subStep > 1 ? (
+            <button className="bg-gray-200 text-gray-800 px-6 py-2 rounded hover:bg-gray-300 transition" onClick={() => setSubStep(subStep - 1)}>
               Atrás
             </button>
+          ) : (
+            <div></div>
           )}
+          
           {subStep < 3 ? (
-            <button className="bg-[#75C24B] text-white px-6 py-2 rounded-xl" onClick={() => setSubStep(subStep + 1)}>
+            <button className="bg-[#f37b6a] text-white px-6 py-2 rounded hover:bg-[#e36455] transition" onClick={() => setSubStep(subStep + 1)}>
               Siguiente
             </button>
           ) : (
             <button
-              className="bg-[#75C24B] text-white px-6 py-2 rounded-xl"
+              className="bg-[#f37b6a] text-white px-6 py-2 rounded hover:bg-[#e36455] transition"
               onClick={() => onComplete()}
             >
               Guardar preferencias
@@ -157,35 +165,45 @@ export default function RegisterStepper({ step, onComplete }) {
       <div className="space-y-4 text-center">
         <h3 className="text-2xl font-bold text-gray-800">Creá tu contraseña</h3>
         <p className="text-sm text-gray-500">Mantené tu cuenta protegida.</p>
-        <input
+        <Input
           type="password"
-          className="w-full border border-gray-300 rounded-xl p-3"
+          name="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Contraseña"
+          required
+          inputClassName="rounded-xl p-3"
         />
         <div className="text-left text-sm text-gray-700 space-y-1">
-          <label className="flex items-center gap-2">
-            <input type="checkbox" readOnly checked={valid} />
-            Mínimo 8 caracteres con letras y números
-          </label>
-          <label className="flex items-center gap-2">
-            <input type="checkbox" readOnly checked={!/1234|abcd/i.test(password)} />
-            Sin secuencias como 1234 o ABCD
-          </label>
+          <Checkbox
+            id="valid-check"
+            checked={valid}
+            onChange={() => {}}
+            label="Mínimo 8 caracteres con letras y números"
+            disabled={true}
+          />
+          <Checkbox
+            id="sequence-check"
+            checked={!/1234|abcd/i.test(password)}
+            onChange={() => {}}
+            label="Sin secuencias como 1234 o ABCD"
+            disabled={true}
+          />
         </div>
-        <input
+        <Input
           type="password"
-          className="w-full border border-gray-300 rounded-xl p-3"
+          name="confirmPassword"
           value={confirmPass}
           onChange={(e) => setConfirmPass(e.target.value)}
           placeholder="Confirmar contraseña"
+          required
+          inputClassName="rounded-xl p-3"
         />
         <button
           onClick={() => {
             if (password === confirmPass && valid) onComplete()
           }}
-          className="w-full bg-[#B362D8] hover:bg-white hover:text-[#B362D8] text-white font-semibold py-2 rounded-xl transition"
+          className="w-full bg-[#B362D8] hover:opacity-80  text-white font-semibold py-2 rounded transition"
         >
           Finalizar
         </button>

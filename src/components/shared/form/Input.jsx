@@ -41,7 +41,7 @@ export default function Input({
           htmlFor={name} 
           className={`text-sm font-medium mb-1 text-gray-700 ${labelClassName}`}
         >
-          {label} {required && <span className="text-red-500">*</span>}
+          {label} {required && <span className="text-gray-200">*</span>}
         </label>
       )}
       <input
@@ -55,7 +55,7 @@ export default function Input({
         disabled={disabled}
         min={min}
         max={max}
-        className={`p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none ${
+        className={`px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-100 ${
           disabled ? 'bg-gray-100 cursor-not-allowed' : ''
         } ${inputClassName}`}
         {...props}
