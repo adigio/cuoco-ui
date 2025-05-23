@@ -3,12 +3,12 @@
 import RecipeCard from "@/components/shared/cards/RecipeCard";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock, faHeart } from '@fortawesome/free-regular-svg-icons';
-import { faRotate } from '@fortawesome/free-solid-svg-icons';
-import { useRecipes } from '@/context/RecipeContext';
+import { faRotate } from '@fortawesome/free-solid-svg-icons'; 
+import { useRecipesStore } from "@/store/useRecipesStore";
 import { useRouter } from 'next/navigation';
 
 export default function CardsInspiracion() {
-  const { filteredRecipes } = useRecipes();
+  const { filteredRecipes } = useRecipesStore();
   const router = useRouter();
 
   const handleViewRecipe = (recipeId) => {

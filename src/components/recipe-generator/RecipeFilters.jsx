@@ -1,12 +1,16 @@
 'use client';
 
-import ChefLoader from '@/components/shared/ChefLoader';
-import CheckboxGroup from '@/components/shared/form/CheckboxGroup';
-import { useIngredients } from '@/context/IngredientContext';
-import { useRecipes } from '@/context/RecipeContext';
 import { generateRecipes } from '@/services/recipeService';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+ 
+// Contexto Zustand 
+import { useIngredientsStore } from '@/store/useIngredientsStore';
+import { useRecipesStore } from '@/store/useRecipesStore';
+
+// Componentes
+import CheckboxGroup from '@/components/shared/form/CheckboxGroup';
+import ChefLoader from '@/components/shared/ChefLoader';
 import RecipeIngredientList from "@/components/recipe-generator/IngredientList";
 import Select from '@/components/shared/form/Select';
 import Input from '@/components/shared/form/Input';
@@ -35,11 +39,11 @@ const dietaOptions = [
 ];
 
 export default function RecipeFilters({ onSubmit }) {
-  const { ingredients, setIngredients } = useIngredients();
+  const { ingredients, setIngredients } = useIngredientsStore();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const { filteredRecipes, setFilteredRecipes } = useRecipes();
+  const { filteredRecipes, setFilteredRecipes } = useRecipesStore();
 
 
   const [filters, setFilters] = useState({
@@ -69,7 +73,7 @@ export default function RecipeFilters({ onSubmit }) {
     setFilters(prev => ({ ...prev, useProfilePreferences: !prev.useProfilePreferences }));
   };
 
-  const handleFinish = async () => {
+  const handleFinish = async () => { 
     const informationRecipe = {
       ingredients: ingredients,
       filters: filters

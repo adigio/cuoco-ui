@@ -2,15 +2,11 @@
 'use client';
 
 import Container from '@/components/shared/containers/Container';
-import { IngredientProvider } from '@/context/IngredientContext';
-import { RecipeProvider } from '@/context/RecipeContext';
 
 export default function GeneratorRootLayout({ children }) {
   return (
-    <IngredientProvider>
-      <RecipeProvider>
-        <Container>{children}</Container>
-      </RecipeProvider>
-    </IngredientProvider>
+    <Container>
+      {children}
+    </Container>
   );
 }

@@ -2,11 +2,12 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useIngredients } from "@/context/IngredientContext";
+import { analyzeImagesWithAPI } from '@/services/visionService';
+//Contexto 
+import { useIngredientsStore } from '@/store/useIngredientsStore'; 
+//Componentes
 import RecipeImageUploader from "@/components/recipe-generator/ImageUploader";
 import AlertModal from "@/components/shared/modal/AlertModal";
-//mockeo img analisis
-import { analyzeImagesWithAPI } from '@/services/visionService';
 import BackgroundLayers from "@/components/shared/BackgroundLayers";
 import ContainerShadow from "@/components/shared/containers/ContainerShadow";
 
@@ -15,8 +16,8 @@ export default function RecipeGeneratorPage() {
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
-  const { ingredients, setIngredients, addMultipleIngredients } =
-    useIngredients();
+  const { ingredients, addIngredient, addMultipleIngredients } =
+    useIngredientsStore();
   const router = useRouter();
 
   const handleContinue = async () => {
@@ -67,7 +68,7 @@ export default function RecipeGeneratorPage() {
             images={images} 
             setImages={setImages} 
             ingredients={ingredients}
-            setIngredients={setIngredients}
+            addIngredient={addIngredient}
           />
 
           <div className="flex justify-end mt-10">

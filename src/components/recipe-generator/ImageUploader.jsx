@@ -5,7 +5,7 @@ import RecipeIngredientList from '@/components/recipe-generator/IngredientList';
 import ContainerShadow from '@/components/shared/containers/ContainerShadow';
 import React from 'react';
 
-export default function RecipeImageUploader({ images, setImages, ingredients, setIngredients }) {
+export default function RecipeImageUploader({ images, setImages, ingredients, addIngredient }) {
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
     setImages((prev) => [...prev, ...files]);
@@ -54,10 +54,10 @@ export default function RecipeImageUploader({ images, setImages, ingredients, se
 
         {/* 3. Área de Ingredientes */}
         <div>
-          <RecipeIngredientInput setIngredients={setIngredients} />
+          <RecipeIngredientInput addIngredient={addIngredient} />
           <RecipeIngredientList
             ingredients={ingredients}
-            setIngredients={setIngredients}
+            addIngredient={addIngredient}
           />
         </div>
       </div>
@@ -81,10 +81,10 @@ export default function RecipeImageUploader({ images, setImages, ingredients, se
             <p className="text-sm mt-2 text-gray-500">JPG, PNG o GIF (máx. 800x400px)</p>
           </div>
           <div className="mt-8">
-            <RecipeIngredientInput setIngredients={setIngredients} />
+            <RecipeIngredientInput addIngredient={addIngredient} />
             <RecipeIngredientList
               ingredients={ingredients}
-              setIngredients={setIngredients}
+              addIngredient={addIngredient}
             />
           </div>
         </div>

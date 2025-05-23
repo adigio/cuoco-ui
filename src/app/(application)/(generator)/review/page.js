@@ -2,7 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useIngredients } from '@/context/IngredientContext';
+//contexto
+import { useIngredientsStore } from '@/store/useIngredientsStore'; 
+//components
 import AlertModal from '@/components/shared/modal/AlertModal';
 import RecipeIngredientInput from '@/components/recipe-generator/IngredientInput';
 import BackgroundLayers from '@/components/shared/BackgroundLayers';
@@ -15,7 +17,7 @@ export default function ReviewPage() {
     updateIngredient,
     setIngredients,
     confirmIngredient
-  } = useIngredients();
+  } = useIngredientsStore();
 
   const router = useRouter();
 

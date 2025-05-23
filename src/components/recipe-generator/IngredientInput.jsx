@@ -1,28 +1,20 @@
 "use client";
 
 import React, { useState } from "react";
-
-export default function RecipeIngredientInput({ setIngredients }) {
-  const [inputValue, setInputValue] = useState("");
-
-  const normalizar = (texto) => texto.trim().toLowerCase();
+import { useIngredientsStore } from "@/store/useIngredientsStore";
+export default function RecipeIngredientInput() {
+    const [inputValue, setInputValue] = useState("");
+  const addIngredient = useIngredientsStore(state => state.addIngredient);
   
   const agregarIngrediente = (nombre, fuente = "manual", confirmado = true) => {
-    const nuevoNombre = normalizar(nombre);
-    if (!nuevoNombre) return;
-
-    setIngredients((prev) => {
-      const yaExiste = prev.some(
-        (ing) => normalizar(ing.nombre) === nuevoNombre
-      );
-      if (yaExiste) return prev;
-
-      const nuevo = { nombre: nombre.trim(), fuente, confirmado };
-      return [...prev, nuevo];
-    });
-    setInputValue("");
+    const agregado = addIngredient(nombre, fuente, confirmado);
+    if (agregado) setInputValue("");
   };
 
+
+  const handleAddClick = () => {
+    agregarIngrediente(inputValue);
+  };
   const handleInputChange = (e) => setInputValue(e.target.value);
 
   const handleIngredientKeyPress = (e) => {
@@ -32,9 +24,6 @@ export default function RecipeIngredientInput({ setIngredients }) {
     }
   };
 
-  const handleAddClick = () => {
-    agregarIngrediente(inputValue);
-  };
 
   return (
     <div>
