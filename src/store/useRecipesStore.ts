@@ -1,13 +1,10 @@
 'use client';
 
+import { Recipe } from '@/types/recipe.types';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export type Recipe = {
-  id: string;
-  title: string;
-  // podés extender con más campos
-};
+
 
 type RecipesState = {
   filteredRecipes: Recipe[];
