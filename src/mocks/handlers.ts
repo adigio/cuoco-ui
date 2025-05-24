@@ -23,7 +23,7 @@ export const handlers = [
   }),
   http.get('/api/recipe/:id', async ({ params }) => {
     console.log('[MSW] Interceptando solicitud a /api/recipe/:id');
-    const id = parseInt(params.id, 10) - 1;
+    const id = parseInt(params.id as string || '0', 10) - 1;
     console.log(id);
     return HttpResponse.json(mockDetailsRecipes[id], { status: 200 });
   }),

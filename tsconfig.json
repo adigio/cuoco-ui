@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "jsx": "react-jsx",
+    "jsx": "preserve",
     "allowJs": true,
     "noEmit": true,
     "target": "esnext",
@@ -14,17 +14,26 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "baseUrl": ".", // 👈 esto es clave
+    "baseUrl": ".", 
     "paths": {
       "@/*": [
         "src/*"
-      ] // 👈 define que @/ apunta a /src
-    }
+      ]
+    },
+    "skipLibCheck": true,
+    "incremental": true,
+    "resolveJsonModule": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
-    "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "next-env.d.ts",
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

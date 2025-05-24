@@ -8,16 +8,16 @@ import BackgroundLayers from '@/components/shared/BackgroundLayers';
 import ContainerShadow from '@/components/shared/containers/ContainerShadow';
 import { ApiResponse, Recipe } from '@/types';
 
-export default function RecipePage(id :string) {
+export default function RecipePage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchRecipe = async () => {
-      if (!id) return;
+      if (!params.id) return;
 
-      let recipeId = id.toString();
+      let recipeId = params.id.toString();
 
       try {
         const res: Recipe | undefined = await getRecipeById(recipeId);
@@ -33,7 +33,7 @@ export default function RecipePage(id :string) {
     };
 
     fetchRecipe();
-  }, [id]);
+  }, [params.id]);
 
 
   const handleBack = () => {
