@@ -6,16 +6,16 @@ import RecipeIngredientList from '@/components/recipe-generator/IngredientList';
 import ContainerShadow from '@/components/shared/containers/ContainerShadow';
 
 interface Ingredient {
-  nombre: string;
-  fuente: string;
-  confirmado: boolean;
+  name: string;
+  origin: string;
+  confirm: boolean;
 }
 
 interface RecipeImageUploaderProps {
   images: File[];
   setImages: React.Dispatch<React.SetStateAction<File[]>>;
   ingredients: Ingredient[];
-  addIngredient: (nombre: string, fuente?: string, confirmado?: boolean) => boolean;
+  addIngredient: (name: string, origin?: string, confirm?: boolean) => boolean;
 }
 
 export default function RecipeImageUploader({ images, setImages, ingredients, addIngredient }: RecipeImageUploaderProps) {

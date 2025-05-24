@@ -1,13 +1,13 @@
 
 export type Ingredient = {
-    nombre: string;
-    fuente: string;
-    confirmado: boolean;
+    name: string;
+    origin: string;
+    confirm: boolean;
 };
 
 export type IngredientsStore = {
     ingredients: Ingredient[];
-    addIngredient: (nombre: string, fuente?: string, confirmado?: boolean) => boolean;
+    addIngredient: (name: string, origin?: string, confirm?: boolean) => boolean;
     removeIngredient: (idx: number) => void;
     updateIngredient: (idx: number, updated: Partial<Ingredient>) => void;
     confirmIngredient: (idx: number) => void;

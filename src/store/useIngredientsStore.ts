@@ -7,25 +7,25 @@ import { create } from 'zustand';
 export const useIngredientsStore = create<IngredientsStore>((set, get) => ({
   ingredients: [],
 
-  addIngredient: (nombre, fuente = 'manual', confirmado = true) => {
-    if (!nombre || nombre.trim() === '') {
+  addIngredient: (name, origin = 'manual', confirm = true) => {
+    if (!name || name.trim() === '') {
       console.error('El nombre del ingrediente no puede estar vacío');
       return false;
     }
 
     const exists = get().ingredients.some(
-      (ing) => ing.nombre.toLowerCase() === nombre.toLowerCase()
+      (ing) => ing.name.toLowerCase() === name.toLowerCase()
     );
 
     if (exists) {
-      console.warn(`El ingrediente "${nombre}" ya existe en la lista`);
+      console.warn(`El ingrediente "${name}" ya existe en la lista`);
       return false;
     }
 
     set((state) => ({
       ingredients: [
         ...state.ingredients,
-        { nombre: nombre.trim(), fuente, confirmado },
+        { name: name.trim(), origin, confirm },
       ],
     }));
 
@@ -48,16 +48,16 @@ export const useIngredientsStore = create<IngredientsStore>((set, get) => ({
 
   confirmIngredient: (idx) => {
     const { updateIngredient } = get();
-    updateIngredient(idx, { confirmado: true });
+    updateIngredient(idx, { confirm: true });
   },
 
   addMultipleIngredients: (newIngredients) => {
     const lowerNames = get().ingredients.map((ing) =>
-      ing.nombre.toLowerCase()
+      ing.name.toLowerCase()
     );
 
     const filtered = newIngredients.filter(
-      (ing) => !lowerNames.includes(ing.nombre.toLowerCase())
+      (ing) => !lowerNames.includes(ing.name.toLowerCase())
     );
 
     if (filtered.length > 0) {

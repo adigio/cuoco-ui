@@ -3,9 +3,9 @@
 import React from 'react';
 
 interface Ingredient {
-  nombre: string;
-  fuente: string;
-  confirmado: boolean;
+  name: string;
+  origin: string;
+  confirm: boolean;
 }
 
 interface IngredientReviewTableProps {
@@ -38,9 +38,9 @@ export default function IngredientReviewTable({ ingredientes, onConfirm, onEdit,
         <tbody>
           {ingredientes.map((item, idx) => (
             <tr key={idx} className="border-t">
-              <td className="px-4 py-2 text-red-500">{item.nombre}</td>
+              <td className="px-4 py-2 text-red-500">{item.name}</td>
               <td className="px-4 py-2">
-                {item.fuente === 'manual' ? 'Manual (texto)' : item.fuente === 'voz' ? 'Por voz' : 'Por imagen'}
+                {item.origin === 'manual' ? 'Manual (texto)' : item.origin === 'voz' ? 'Por voz' : 'Por imagen'}
               </td>
               <td className="px-4 py-2 flex gap-2 flex-wrap">
                 <button onClick={() => onConfirm(idx)} className="bg-green-200 text-green-800 px-3 py-1 rounded text-xs">Confirmar</button>
@@ -48,7 +48,7 @@ export default function IngredientReviewTable({ ingredientes, onConfirm, onEdit,
                 <button onClick={() => onDelete(idx)} className="bg-red-200 text-red-800 px-3 py-1 rounded text-xs">Eliminar</button>
               </td>
               <td className="px-4 py-2 text-center">
-                {item.confirmado ? '✔️' : '⚠️'}
+                {item.confirm ? '✔️' : '⚠️'}
               </td>
             </tr>
           ))}

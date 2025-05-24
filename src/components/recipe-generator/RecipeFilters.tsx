@@ -20,22 +20,22 @@ import Checkbox from '@/components/shared/form/Checkbox';
 // Tipos
 import { RecipeGenerationRequest } from '@/types/recipe.types';
 
-const tiposDeComida = ['Desayuno', 'Almuerzo', 'Cena', 'Postre', 'Snack'];
+const typesOfFood = ['Desayuno', 'Almuerzo', 'Cena', 'Postre', 'Snack'];
 
 // Opciones para los selectores
-const tiempoOptions = [
+const timeOptions = [
   { value: 'menos de 15 minutos', label: '-15 min' },
   { value: '15 a 30 minutos', label: '15-30 min' },
   { value: 'más de 30 minutos', label: '+30 min' }
 ];
 
-const dificultadOptions = [
+const difficultyOptions = [
   { value: 'fácil', label: 'Fácil' },
   { value: 'media', label: 'Media' },
   { value: 'difícil', label: 'Difícil' }
 ];
 
-const dietaOptions = [
+const dietOptions = [
   { value: 'vegetariana', label: 'Vegetariana' },
   { value: 'vegana', label: 'Vegana' },
   { value: 'sin gluten', label: 'Sin gluten' },
@@ -43,18 +43,18 @@ const dietaOptions = [
 ];
 
 interface Filters {
-  tiempo: string;
-  dificultad: string;
-  tipos: string[];
-  dieta: string;
-  personas: number;
+  time: string;
+  difficulty: string;
+  types: string[];
+  diet: string;
+  people: number;
   useProfilePreferences: boolean;
 }
 
 interface Ingredient {
-  nombre: string;
-  fuente: string;
-  confirmado: boolean;
+  name: string;
+  origin: string;
+  confirm: boolean;
 }
 
 export default function RecipeFilters() {
@@ -65,11 +65,11 @@ export default function RecipeFilters() {
   const { setFilteredRecipes } = useRecipesStore();
 
   const [filters, setFilters] = useState<Filters>({
-    tiempo: '',
-    dificultad: '',
-    tipos: [],
-    dieta: '',
-    personas: 1,
+    time: '',
+    difficulty: '',
+    types: [],
+    diet: '',
+    people: 1,
     useProfilePreferences: false
   });
 
@@ -78,7 +78,7 @@ export default function RecipeFilters() {
   };
 
   const handleTiposChange = (newValues: string[]) => {
-    setFilters({ ...filters, tipos: newValues });
+    setFilters({ ...filters, types: newValues });
   };
 
   const handleProfilePreferencesChange = () => {
@@ -86,7 +86,7 @@ export default function RecipeFilters() {
   };
 
   const handleFinish = async () => { 
-    const ingredientNames = ingredients.map(ing => ing.nombre);
+    const ingredientNames = ingredients.map(ing => ing.name);
     
     const informationRecipe: RecipeGenerationRequest = {
       ingredients: ingredientNames,
@@ -141,32 +141,32 @@ export default function RecipeFilters() {
       <div className="grid grid-cols-2 gap-4">
         <Select
           name="tiempo"
-          value={filters.tiempo}
+          value={filters.time}
           onChange={handleChange}
-          options={tiempoOptions as any}
+          options={timeOptions as any}
           label="Tiempo de preparación"
         />
 
         <Select
-          name="dificultad"
-          value={filters.dificultad}
+          name="difficulty"
+          value={filters.difficulty}
           onChange={handleChange}
-          options={dificultadOptions as any}
+          options={difficultyOptions as any}
           label="Dificultad"
         />
 
         <Select
-          name="dieta"
-          value={filters.dieta}
+          name="diet"
+          value={filters.diet}
           onChange={handleChange}
-          options={dietaOptions as any}
+          options={dietOptions as any}
           label="Dieta"
         />
 
         <Input
           type="number"
-          name="personas"
-          value={filters.personas}
+          name="people"
+          value={filters.people}
           onChange={handleChange}
           label="Cantidad de personas"
           min="1"
@@ -176,8 +176,8 @@ export default function RecipeFilters() {
       <div className="grid grid-cols-2 gap-4 mt-6">
         <CheckboxGroup
           title="Tipo de comida"
-          options={tiposDeComida as any}
-          selectedValues={filters.tipos as any}
+          options={typesOfFood as any}
+          selectedValues={filters.types as any}
           onChange={handleTiposChange}
         />
 

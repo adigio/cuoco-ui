@@ -12,19 +12,19 @@ export type Recipe = {
     diet: string;
     people: number;
     profilePreferences: boolean;
-    tipos: string[];
+    types: string[];
 }
 
 
 export type RecipeGenerationRequest = {
     ingredients: string[];
     filters: {
-        tiempo: string;
-        dificultad: string;
-        dieta: string;
-        personas: number;
+        time: string;
+        difficulty: string;
+        diet: string;
+        people: number;
         useProfilePreferences: boolean;
-        tipos: string[];
+        types: string[];
     }
 }
 

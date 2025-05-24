@@ -2,10 +2,10 @@
 
 
 export const mocksIngredients = [    
-    { nombre: 'Tomate', fuente: 'imagen', confirmado: false },
-    { nombre: 'Queso', fuente: 'imagen', confirmado: false },
-    { nombre: 'Arroz', fuente: 'imagen', confirmado: false },
-    { nombre: 'Fideos', fuente: 'imagen', confirmado: false },
+    { name: 'Tomate', origin: 'imagen', confirm: false },
+    { name: 'Queso', origin: 'imagen', confirm: false },
+    { name: 'Arroz', origin: 'imagen', confirm: false },
+    { name: 'Fideos', origin: 'imagen', confirm: false },
 ]
 
 

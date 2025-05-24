@@ -10,30 +10,29 @@ import { ApiResponse, Recipe } from '@/types';
 
 export default function RecipePage({ params }: { params: { id: string } }) {
   const router = useRouter();
+  const recipeId = params.id;
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchRecipe = async () => {
-      if (!params.id) return;
-
-      let recipeId = params.id.toString();
-
       try {
-        const res: Recipe | undefined = await getRecipeById(recipeId);
-        if(res){
+        const res = await getRecipeById(recipeId);
+        if (res) {
           setRecipe(res);
         } else {
           setRecipe(null);
         }
-        
+      } catch (error) {
+        console.error('Error al obtener la receta:', error);
+        setRecipe(null);
       } finally {
         setLoading(false);
       }
     };
 
     fetchRecipe();
-  }, [params.id]);
+  }, [recipeId]);
 
 
   const handleBack = () => {

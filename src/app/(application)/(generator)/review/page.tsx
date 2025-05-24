@@ -34,13 +34,13 @@ export default function ReviewPage() {
 
   const openEditModal = (idx: number) => {
     setEditIndex(idx);
-    setNewName(ingredients[idx].nombre);
+    setNewName(ingredients[idx].name);
     setIsModalOpen(true);
   };
 
   const handleConfirmEdit = () => {
     if (newName.trim()) {
-      updateIngredient(editIndex, { nombre: newName.trim() });
+      updateIngredient(editIndex, { name: newName.trim() });
       setIsModalOpen(false);
     }
   };
@@ -55,7 +55,7 @@ export default function ReviewPage() {
 
   const handleFinish = () => {
     // Verificar si hay al menos un ingrediente confirmado
-    const hasConfirmedIngredients = ingredients.some(ing => ing.confirmado);
+    const hasConfirmedIngredients = ingredients.some(ing => ing.confirm);
     console.log(hasConfirmedIngredients);
     if (!hasConfirmedIngredients) {
       // Si no hay ingredientes confirmados, mostrar alerta
@@ -87,7 +87,7 @@ export default function ReviewPage() {
                 <thead className="text-gray-600 font-semibold text-base border-b border-[#f37b6a]">
                   <tr>
                     <th className="px-4 pb-2">Ingrediente</th>
-                    <th className="px-4 pb-2">Fuente</th>
+                    <th className="px-4 pb-2">Origen</th>
                     <th className="px-4 pb-2">Acciones</th>
                     <th className="px-4 pb-2">Confirmado</th>
                   </tr>
@@ -95,22 +95,22 @@ export default function ReviewPage() {
                 <tbody>
                   {ingredients.map((item, idx) => (
                     <tr key={idx} className="bg-white">
-                      <td className="px-4 py-2 text-[#f37b6a] font-medium">{item.nombre}</td>
+                      <td className="px-4 py-2 text-[#f37b6a] font-medium">{item.name}</td>
                       <td className="px-4 py-2 text-gray-600 capitalize">
-                        {item.fuente === 'manual' && 'Manual (texto)'}
-                        {item.fuente === 'voz' && 'Por voz'}
-                        {item.fuente === 'imagen' && 'Por imagen'}
+                        {item.origin === 'manual' && 'Manual (texto)'}
+                        {item.origin === 'voz' && 'Por voz'}
+                        {item.origin === 'imagen' && 'Por imagen'}
                       </td>
                       <td className="px-4 py-2 flex gap-2 flex-wrap">
                         <button
                           onClick={() => handleConfirm(idx)}
-                          disabled={item.confirmado}
-                          className={`${item.confirmado
+                          disabled={item.confirm}
+                          className={`${item.confirm
                             ? 'bg-gray-100 text-gray-400 cursor-default'
                             : 'bg-green-100 text-green-800 hover:bg-green-200'
                             } px-3 py-1 rounded-full text-xs transition`}
                         >
-                          {item.confirmado ? 'Confirmado' : 'Confirmar'}
+                          {item.confirm ? 'Confirmado' : 'Confirmar'}
                         </button>
                         <button
                           onClick={() => openEditModal(idx)}
@@ -126,7 +126,7 @@ export default function ReviewPage() {
                         </button>
                       </td>
                       <td className="px-4 py-2 text-xl text-center">
-                        {item.confirmado ? (
+                        {item.confirm ? (
                           <span className="text-green-500">✔️</span>
                         ) : (
                           <span className="text-orange-400">⚠️</span>

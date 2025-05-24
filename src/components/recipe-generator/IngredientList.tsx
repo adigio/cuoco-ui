@@ -3,9 +3,9 @@
 import React from 'react';
 
 interface Ingredient {
-  nombre: string;
-  fuente: string;
-  confirmado: boolean;
+  name: string;
+  origin: string;
+  confirm: boolean;
 }
 
 interface RecipeIngredientListProps {
@@ -31,7 +31,7 @@ export default function RecipeIngredientList({ ingredients, setIngredients, enab
             key={idx}
             className="bg-gray-200 text-sm px-3 py-1 rounded-full flex items-center gap-2"
           >
-            {item.nombre}
+            {item.name}
 
             {enabledDelete && setIngredients && (
               <button

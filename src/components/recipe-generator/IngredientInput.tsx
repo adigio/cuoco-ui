@@ -7,8 +7,8 @@ export default function RecipeIngredientInput() {
   const [inputValue, setInputValue] = useState<string>("");
   const addIngredient = useIngredientsStore(state => state.addIngredient);
   
-  const agregarIngrediente = (nombre: string, fuente = "manual", confirmado = true) => {
-    const agregado = addIngredient(nombre, fuente, confirmado);
+  const agregarIngrediente = (name: string, origin = "manual", confirm = true) => {
+    const agregado = addIngredient(name, origin, confirm);
     if (agregado) setInputValue("");
   };
 
