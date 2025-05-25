@@ -15,9 +15,14 @@ export default function NavbarHome() {
               alt="Comida casera"
               className="w-10 h-10 object-contain"
             />
+              <img
+                src="/logos/iso-blanco.png"
+                alt="Logo secundario"
+                className="w-15 h-15 object-contain transition-opacity duration-300"
+              />
           </div>
         </Link>
-        <nav className="flex items-center space-x-6 text-white text-sm">
+        <nav className="flex items-center space-x-6 text-white font-bold text-l">
           <Link href="/recipe-generator" className="hover:text-red-200">Generar Recetas</Link>
           <Link href="/favs" className="hover:text-red-200">Favoritos</Link>
           <Link href="/profile" className="hover:text-red-200">Perfil</Link>

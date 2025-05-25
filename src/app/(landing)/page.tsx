@@ -1,30 +1,25 @@
 import AboutUs from "@/components/landing/AboutUs";
 import Benefits from "@/components/landing/Benefits";
 import Header from "@/components/landing/Header";
-
+import WhyCuoco from "@/components/landing/WhyCouco";
 const benefitsItems = [
-  {
-    img: "/heladera_confundida.jpg",
-    imgAlt: "Find Freezer",
-    title: "¿Qué cocino hoy?",
-    subtitle: "Recetas que usan lo que ya tenés"
-  },
+  
   {
     img: "/escaneo_heladera.webp",
     imgAlt: "Scan",
-    title: "Usá lo que ya tenés",
+    title: "Mostrá lo que tenés en tu heladera o alacena.",
     subtitle: "Subí una foto, la IA hace el resto"
   },
   {
     img: "/plato.jpeg",
     imgAlt: "dish",
-    title: "Menos desperdicio",
+    title: "Te sugerimos recetas con lo que encontrás.",
     subtitle: "Aprovechá al máximo tu despensa"
   },
   {
     img: "/comiendo.jpg",
     imgAlt: "dish",
-    title: "Cociná sin estrés",
+    title: "Listo. Rápido, fácil y sin desperdicio.",
     subtitle: "Rápido, rico y sin vueltas"
   }
 ];
@@ -34,6 +29,7 @@ export default function LandingPage() {
       <main className="pt-16 md:pt-0 flex flex-col items-center">
       <Header/>  
       <Benefits items={benefitsItems}/>    
+      <WhyCuoco/>    
       <AboutUs/>
     </main>
   );
