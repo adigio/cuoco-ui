@@ -74,14 +74,14 @@ export default function NavbarLanding() {
         </button>
 
         {/* Menu para desktop */}
-        <div className="hidden lg:flex space-x-6 text-white font-bold flex items-center">
-          <Link href="#beneficios" className={`hover:text-red-200`}>
+        <div className="hidden lg:flex space-x-6 text-black font-bold flex items-center">
+          <Link href="#beneficios" className={`hover:text-red-500`}>
             Beneficios
           </Link>
-          <Link href="#aboutUs" className={`hover:text-red-200`}>
+          <Link href="#aboutUs" className={`hover:text-red-500`}>
             Sobre nosotros
           </Link>
-          <Link href="/signin" className={`hover:text-red-200`}>
+          <Link href="/signin" className={`hover:text-red-500`}>
             Iniciar Sesión
           </Link>
           <Link
