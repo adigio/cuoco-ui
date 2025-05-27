@@ -1,9 +1,6 @@
 // components/Container.jsx
-import React, { ReactNode } from 'react';
-
-interface ContainerProps {
-  children: ReactNode;
-}
+import React from 'react';
+import { ContainerProps } from '@/types/components/layout.types';
 
 export default function Container({ children }: ContainerProps) {
   return (

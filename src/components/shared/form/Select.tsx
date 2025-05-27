@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { SelectProps } from '@/types/components/form.types';
 
 /**
  * Componente Select personalizado y reutilizable
@@ -15,20 +16,6 @@ import React from 'react';
  * @param {boolean} disabled - Si el campo está deshabilitado
  */
 
-// TODO: cambiarlo a types
-interface SelectProps {
-  name: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  options: { value: string; label: string }[];
-  label?: string;
-  placeholder?: string;
-  className?: string;
-  labelClassName?: string;
-  selectClassName?: string;
-  required?: boolean;
-  disabled?: boolean;
-}
 export default function Select({
   name,
   value,

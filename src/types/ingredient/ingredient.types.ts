@@ -1,9 +1,13 @@
-
-export type Ingredient = {
+export interface Ingredient {
     name: string;
     origin: string;
     confirm: boolean;
-};
+}
+
+export interface IngredientFormData {
+    name: string;
+    origin: string;
+}
 
 export type IngredientsStore = {
     ingredients: Ingredient[];

@@ -1,23 +1,19 @@
 'use client';
 
 import React from 'react';
+import { Ingredient } from '@/types/ingredient/ingredient.types';
+import { RecipeIngredientListProps } from '@/types/components/recipe-generator.types';
 
-interface Ingredient {
-  name: string;
-  origin: string;
-  confirm: boolean;
-}
-
-interface RecipeIngredientListProps {
-  ingredients: Ingredient[];
-  setIngredients?: React.Dispatch<React.SetStateAction<Ingredient[]>>;
-  enabledDelete?: boolean;
-}
-
-export default function RecipeIngredientList({ ingredients, setIngredients, enabledDelete = true }: RecipeIngredientListProps) {
+export default function RecipeIngredientList({ 
+  ingredients, 
+  setIngredients,
+  enabledDelete = true 
+}: RecipeIngredientListProps) {
   const handleRemoveIngredient = (idx: number) => {
     if (setIngredients) {
-      setIngredients((prev) => prev.filter((_, i) => i !== idx));
+      setIngredients((prevIngredients: Ingredient[]) => 
+        prevIngredients.filter((_, i) => i !== idx)
+      );
     }
   };
 

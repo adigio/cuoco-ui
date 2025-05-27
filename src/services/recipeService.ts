@@ -1,4 +1,4 @@
-import { ApiResponse, Recipe, RecipeGenerationRequest } from "@/types";
+import { ApiResponse, Recipe, RecipeGenerationRequest, RecipeResponse } from "@/types";
 import axios from "axios";
 
 export const generateRecipes = async (informationRecipe: RecipeGenerationRequest) => {

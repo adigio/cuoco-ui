@@ -1,9 +1,5 @@
-import { ReactNode } from 'react';
-
-interface ContainerShadowProps {
-  children: ReactNode;
-  customClass?: string;
-}
+import React from 'react';
+import { ContainerShadowProps } from '@/types/components/layout.types';
 
 export default function ContainerShadow({ children, customClass = '' }: ContainerShadowProps) {
   return (

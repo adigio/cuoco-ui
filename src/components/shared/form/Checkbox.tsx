@@ -1,19 +1,7 @@
 'use client';
 
 import React from 'react';
-
-// TODO: cambiarlo a types
-interface CheckboxProps {
-  id?: string;
-  name: string;
-  checked: boolean;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  label: string;
-  className?: string;
-  labelClassName?: string;
-  checkboxClassName?: string;
-  disabled?: boolean;
-}
+import { CheckboxProps } from '@/types/components/form.types';
 
 export default function Checkbox({
   id,

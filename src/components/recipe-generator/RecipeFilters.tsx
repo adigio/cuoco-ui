@@ -18,9 +18,15 @@ import Input from '@/components/shared/form/Input';
 import Checkbox from '@/components/shared/form/Checkbox';
 
 // Tipos
-import { RecipeGenerationRequest } from '@/types/recipe.types';
+import { RecipeGenerationRequest, Filters } from '@/types';
 
-const typesOfFood = ['Desayuno', 'Almuerzo', 'Cena', 'Postre', 'Snack'];
+const typesOfFood = [
+  { value: 'Desayuno', label: 'Desayuno' },
+  { value: 'Almuerzo', label: 'Almuerzo' },
+  { value: 'Cena', label: 'Cena' },
+  { value: 'Postre', label: 'Postre' },
+  { value: 'Snack', label: 'Snack' }
+];
 
 // Opciones para los selectores
 const timeOptions = [
@@ -41,21 +47,6 @@ const dietOptions = [
   { value: 'sin gluten', label: 'Sin gluten' },
   { value: 'keto', label: 'Keto' }
 ];
-
-interface Filters {
-  time: string;
-  difficulty: string;
-  types: string[];
-  diet: string;
-  people: number;
-  useProfilePreferences: boolean;
-}
-
-interface Ingredient {
-  name: string;
-  origin: string;
-  confirm: boolean;
-}
 
 export default function RecipeFilters() {
   const { ingredients } = useIngredientsStore();
@@ -86,7 +77,7 @@ export default function RecipeFilters() {
   };
 
   const handleFinish = async () => { 
-    const ingredientNames = ingredients.map(ing => ing.name);
+    const ingredientNames = ingredients.map(ingredient => ingredient.name);
     
     const informationRecipe: RecipeGenerationRequest = {
       ingredients: ingredientNames,
@@ -176,8 +167,8 @@ export default function RecipeFilters() {
       <div className="grid grid-cols-2 gap-4 mt-6">
         <CheckboxGroup
           title="Tipo de comida"
-          options={typesOfFood as any}
-          selectedValues={filters.types as any}
+          options={typesOfFood}
+          selectedValues={filters.types}
           onChange={handleTiposChange}
         />
 

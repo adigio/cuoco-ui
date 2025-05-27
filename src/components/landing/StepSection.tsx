@@ -1,18 +1,7 @@
 import Image from "next/image";
+import { StepSectionProps } from "@/types/components/landing.types";
 
-interface StepSectionProps {
-  step: number;
-  title: string;
-  description: string;
-  image: string;
-  imageAlt: string;
-  buttonText?: string;
-  reverse?: boolean;
-  id?: string;
-  showConnector?: boolean;
-}
-
-const StepSection = ({
+export default function StepSection({
   step,
   title,
   description,
@@ -21,8 +10,8 @@ const StepSection = ({
   buttonText,
   reverse = false,
   id,
-  showConnector = true,
-}: StepSectionProps) => {
+  showConnector = true
+}: StepSectionProps) {
   return (
     <>
       <section id={id} className="relative w-full bg-transparent">
@@ -102,6 +91,4 @@ const StepSection = ({
       )}
     </>
   );
-};
-
-export default StepSection;
+}

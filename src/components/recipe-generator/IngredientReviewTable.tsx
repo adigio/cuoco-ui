@@ -1,22 +1,10 @@
 'use client';
 
 import React from 'react';
+import { IngredientReviewTableProps } from '@/types/components/recipe-generator.types';
 
-interface Ingredient {
-  name: string;
-  origin: string;
-  confirm: boolean;
-}
-
-interface IngredientReviewTableProps {
-  ingredientes: Ingredient[];
-  onConfirm: (index: number) => void;
-  onEdit: (index: number) => void;
-  onDelete: (index: number) => void;
-}
-
-export default function IngredientReviewTable({ ingredientes, onConfirm, onEdit, onDelete }: IngredientReviewTableProps) {
-  if (!ingredientes || ingredientes.length === 0) {
+export default function IngredientReviewTable({ ingredients, onConfirm, onEdit, onDelete }: IngredientReviewTableProps) {
+  if (!ingredients || ingredients.length === 0) {
     return (
       <p className="text-center text-gray-500 mt-6">
         No se detectaron ingredientes. Intenta subir otra imagen o dictar con voz.
@@ -36,14 +24,14 @@ export default function IngredientReviewTable({ ingredientes, onConfirm, onEdit,
           </tr>
         </thead>
         <tbody>
-          {ingredientes.map((item, idx) => (
+          {ingredients.map((item, idx) => (
             <tr key={idx} className="border-t">
               <td className="px-4 py-2 text-red-500">{item.name}</td>
               <td className="px-4 py-2">
                 {item.origin === 'manual' ? 'Manual (texto)' : item.origin === 'voz' ? 'Por voz' : 'Por imagen'}
               </td>
               <td className="px-4 py-2 flex gap-2 flex-wrap">
-                <button onClick={() => onConfirm(idx)} className="bg-green-200 text-green-800 px-3 py-1 rounded text-xs">Confirmar</button>
+ <button onClick={() => onConfirm(idx)} className="bg-green-200 text-green-800 px-3 py-1 rounded text-xs">Confirmar</button>
                 <button onClick={() => onEdit(idx)} className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded text-xs">Editar</button>
                 <button onClick={() => onDelete(idx)} className="bg-red-200 text-red-800 px-3 py-1 rounded text-xs">Eliminar</button>
               </td>

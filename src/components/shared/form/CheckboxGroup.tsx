@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Checkbox from './Checkbox';
+import { CheckboxGroupProps, SelectOption } from '@/types/components/form.types';
 
 /**
  * Componente de grupo de checkboxes personalizado y reutilizable
@@ -13,17 +14,6 @@ import Checkbox from './Checkbox';
  * @param {string} orientation - Orientación de los checkboxes ('horizontal' o 'vertical')
  */
 
-// TODO: cambiarlo a types
-interface CheckboxGroupProps {
-  title: string;
-  options: any[];
-  selectedValues: any[];
-  onChange: (values: any[]) => void;
-  className?: string;
-  titleClassName?: string;
-  checkboxGroupClassName?: string;
-  orientation?: 'horizontal' | 'vertical';
-}
 export default function CheckboxGroup({
   title,
   options = [],
@@ -36,7 +26,7 @@ export default function CheckboxGroup({
 }: CheckboxGroupProps) {
 
   // Función para manejar el cambio de un checkbox individual
-  const handleCheckboxChange = (value: any) => {
+  const handleCheckboxChange = (value: string) => {
     let newValues;
     
     if (selectedValues.includes(value)) {
@@ -57,14 +47,14 @@ export default function CheckboxGroup({
       )}
       
       <div className={`flex ${orientation === 'horizontal' ? 'flex-wrap gap-4' : 'flex-col gap-2'} ${checkboxGroupClassName}`}>
-        {options.map((option) => (
+        {options.map((option: SelectOption) => (
           <Checkbox
-            key={option.value || option}
-            id={`checkbox-${option.value || option}`}
-            name={`checkbox-${option.value || option}`}
-            checked={selectedValues.includes(option.value || option)}
-            onChange={() => handleCheckboxChange(option.value || option)}
-            label={option.label || option}
+            key={option.value}
+            id={`checkbox-${option.value}`}
+            name={`checkbox-${option.value}`}
+            checked={selectedValues.includes(option.value)}
+            onChange={() => handleCheckboxChange(option.value)}
+            label={option.label}
           />
         ))}
       </div>

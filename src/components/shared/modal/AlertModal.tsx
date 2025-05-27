@@ -1,14 +1,7 @@
 'use client';
 
 import React from 'react';
-
-// TODO: cambiarlo a types
-interface AlertModalProps {
-  show: boolean;
-  onClose: () => void;
-  title?: string;
-  children: React.ReactNode;
-}
+import { AlertModalProps } from '@/types/components/modal.types';
 
 export default function AlertModal({ show, onClose, title = 'Atención', children }: AlertModalProps) {
   if (!show) return null;

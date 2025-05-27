@@ -1,15 +1,7 @@
 'use client';
 
-import React, { ReactNode, ButtonHTMLAttributes } from 'react';
-
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'danger' | 'success' | 'purple' | 'facebook' | 'google';
-  size?: 'sm' | 'md' | 'lg';
-  className?: string;
-  fullWidth?: boolean;
-  outlined?: boolean;
-  children: ReactNode;
-}
+import React from 'react';
+import { ButtonProps } from '@/types/components/form.types';
 
 export default function Button({
   type = 'button',

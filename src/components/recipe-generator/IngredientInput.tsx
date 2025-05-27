@@ -7,13 +7,13 @@ export default function RecipeIngredientInput() {
   const [inputValue, setInputValue] = useState<string>("");
   const addIngredient = useIngredientsStore(state => state.addIngredient);
   
-  const agregarIngrediente = (name: string, origin = "manual", confirm = true) => {
+  const addIngrdient = (name: string, origin = "manual", confirm = true) => {
     const agregado = addIngredient(name, origin, confirm);
     if (agregado) setInputValue("");
   };
 
   const handleAddClick = () => {
-    agregarIngrediente(inputValue);
+    addIngrdient(inputValue);
   };
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value);
@@ -21,7 +21,7 @@ export default function RecipeIngredientInput() {
   const handleIngredientKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault(); // evita submit en formularios
-      agregarIngrediente(inputValue);
+      addIngrdient(inputValue);
     }
   };
 

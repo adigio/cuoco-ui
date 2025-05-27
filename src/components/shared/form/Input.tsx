@@ -1,6 +1,7 @@
 'use client';
 
-import React, { InputHTMLAttributes } from 'react';
+import React from 'react';
+import { InputProps } from '@/types/components/form.types';
 
 /**
  * Componente Input personalizado y reutilizable
@@ -18,12 +19,6 @@ import React, { InputHTMLAttributes } from 'react';
  * @param {number} min - Valor mínimo (para inputs numéricos)
  * @param {number} max - Valor máximo (para inputs numéricos)
  */
-interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'className'> {
-  label?: string;
-  className?: string;
-  inputClassName?: string;
-  labelClassName?: string;
-}
 
 export default function Input({
   type = 'text',

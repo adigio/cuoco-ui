@@ -1,4 +1,4 @@
-import { Recipe, RecipeGenerationRequest } from "@/types/recipe.types";
+import { Recipe, RecipeGenerationRequest } from "@/types/recipe/recipe.types";
 
 // Response de API generales
 export type ApiResponse<T> = {

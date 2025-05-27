@@ -1,10 +1,4 @@
-//TODO: componetizar en types 
-export interface BenefitCardProps {
-  img: string;
-  imgAlt: string;
-  title: string;
-  subtitle: string;
-}
+import { BenefitCardProps } from '@/types/components/landing.types';
 
 export default function BenefitCard({ img, imgAlt, title, subtitle }: BenefitCardProps) {
   return (

@@ -1,16 +1,16 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { getRecipeById } from '@/services/recipeService';
 import ChefLoader from '@/components/shared/ChefLoader';
 import BackgroundLayers from '@/components/shared/BackgroundLayers';
 import ContainerShadow from '@/components/shared/containers/ContainerShadow';
-import { ApiResponse, Recipe } from '@/types';
+import { PageProps, Recipe } from '@/types';
 
-export default function RecipePage({ params }: { params: { id: string } }) {
+export default function RecipePage({ params }: PageProps) {
   const router = useRouter();
-  const recipeId = params.id;
+  const { id: recipeId } = use(params);
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -18,10 +18,9 @@ export default function RecipePage({ params }: { params: { id: string } }) {
     const fetchRecipe = async () => {
       try {
         const res = await getRecipeById(recipeId);
-        if (res) {
+
+        if(res){
           setRecipe(res);
-        } else {
-          setRecipe(null);
         }
       } catch (error) {
         console.error('Error al obtener la receta:', error);
@@ -34,15 +33,12 @@ export default function RecipePage({ params }: { params: { id: string } }) {
     fetchRecipe();
   }, [recipeId]);
 
-
   const handleBack = () => {
     router.push('/results');
   };
 
   if (loading) {
-    return (
-      <ChefLoader text="...Receta..."/>
-    );
+    return <ChefLoader text="...Receta..."/>;
   }
 
   if (!recipe) {
@@ -53,6 +49,12 @@ export default function RecipePage({ params }: { params: { id: string } }) {
     );
   }
 
+  // Función auxiliar para obtener el nombre del ingrediente
+  const getIngredientName = (ingredient: any): string => {
+    if (typeof ingredient === 'string') return ingredient;
+    return ingredient?.name || 'Ingrediente desconocido';
+  };
+
   return (
     <>
       <BackgroundLayers />
@@ -60,7 +62,7 @@ export default function RecipePage({ params }: { params: { id: string } }) {
       <div className="w-full border-b-4 border-purple-400 mb-6"></div>
       
       <main className="flex-1 relative">
-        <ContainerShadow customClass={"container"}>
+        <ContainerShadow customClass="container">
           <h1 className="text-3xl font-bold mb-2">{recipe.name}</h1>
           <p className="text-gray-600 mb-4">{recipe.subtitle}</p>
 
@@ -75,7 +77,7 @@ export default function RecipePage({ params }: { params: { id: string } }) {
               <div className="bg-white p-4 rounded shadow">
                 <ul className="list-disc list-inside">
                   {recipe.ingredients.map((item, i) => (
-                    <li key={i}>{item}</li>
+                    <li key={i}>{getIngredientName(item)}</li>
                   ))}
                 </ul>
               </div>
@@ -84,7 +86,7 @@ export default function RecipePage({ params }: { params: { id: string } }) {
             <div>
               <h2 className="text-xl font-semibold mb-2">🛒 Necesitás comprar</h2>
               <div className="bg-white p-4 rounded shadow">
-                {recipe.missingIngredients.length === 0 ? (
+                {!recipe.missingIngredients?.length ? (
                   <p className="text-green-600">¡Tenés todo para cocinar! 👏</p>
                 ) : (
                   <ul className="list-disc list-inside text-red-500 font-semibold">

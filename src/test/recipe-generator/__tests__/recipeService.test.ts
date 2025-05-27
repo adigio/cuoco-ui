@@ -25,10 +25,11 @@ describe('Recipe Service', () => {
     };
 
     it('debería llamar a la API con los parámetros correctos', async () => {
-      const mockResponse = { recipes: mockRecipes };
-      mockedAxios.post.mockResolvedValueOnce({ data: mockResponse });
+      mockedAxios.post.mockResolvedValueOnce({ 
+        data: { recipes: mockRecipes }
+      });
 
-      const result = await generateRecipes(validRequest);
+      await generateRecipes(validRequest);
       
       expect(mockedAxios.post).toHaveBeenCalledWith(
         '/api/generate-recipes',
@@ -39,11 +40,10 @@ describe('Recipe Service', () => {
           }
         }
       );
-      expect(result).toEqual(mockResponse);
     });
 
     it('debería retornar las recetas cuando la API responde exitosamente', async () => {
-      const expectedRecipes = mockRecipes.slice(0, 2); // solo 2 recetas 
+      const expectedRecipes = mockRecipes.slice(0, 2); // Tomamos solo 2 recetas para el test
       mockedAxios.post.mockResolvedValueOnce({ 
         data: expectedRecipes
       });
