@@ -3,9 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function HeroHome() {
   const [saludo, setSaludo] = useState("");
+  console.log(useAuthStore((state) => state.user.name));
+
+  const user = useAuthStore((state) => state.user.name);
 
   useEffect(() => {
     const ahora = new Date();
@@ -20,7 +24,8 @@ export default function HeroHome() {
       nuevoSaludo = "¡Buenas noches";
     }
 
-    setSaludo(`${nuevoSaludo}, Aldana!`);
+
+    setSaludo(`${nuevoSaludo}, ${user}!`);
   }, []);
 
   return (

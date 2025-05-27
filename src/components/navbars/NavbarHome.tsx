@@ -3,7 +3,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
-
+import LogoutButton from '../shared/LogoutButton';
 export default function NavbarHome() {
   return (
     <header className="bg-[#f37b6a] py-3">
@@ -26,7 +26,7 @@ export default function NavbarHome() {
           <Link href="/recipe-generator" className="hover:text-red-200">Generar Recetas</Link>
           <Link href="/favs" className="hover:text-red-200">Favoritos</Link>
           <Link href="/profile" className="hover:text-red-200">Perfil</Link>
-          <Link href="/logout" className="hover:text-red-200"><FontAwesomeIcon icon={faSignOutAlt} /></Link>
+          <LogoutButton/>
         </nav>
 
       </div>

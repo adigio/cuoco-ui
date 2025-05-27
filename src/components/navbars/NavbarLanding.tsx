@@ -34,12 +34,14 @@ export default function NavbarLanding() {
               scrolled ? "text-red-400" : "text-white"
             }`}
           >
-            <img
-              src={scrolled ? "/logos/logo-blanco.png" : "/logos/logo-rosa.png"}
-              alt="Comida casera"
+            {scrolled && (
+             <img
+              src="/logos/logo-blanco.png"
               className="w-10 h-10 object-contain"
             />
 
+            )}
+           
             {scrolled && (
               <img
                 src="/logos/iso-blanco.png"
