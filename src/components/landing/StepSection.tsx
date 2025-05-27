@@ -57,7 +57,7 @@ const StepSection = ({
                 {description}
               </p>
               {buttonText && (
-                <button className="bg-red-300 hover:bg-red-400 transition text-white px-6 py-2 rounded">
+                <button className="background-color-nav-scrolled hover:bg-red-400 transition text-white px-6 py-2 rounded">
                   {buttonText}
                 </button>
               )}

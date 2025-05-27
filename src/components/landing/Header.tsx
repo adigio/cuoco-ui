@@ -42,7 +42,7 @@ export default function Header() {
           <div className="mt-7 md:mb-0 mb-5 md:mt-5 flex flex-col sm:flex-row gap-3">
             <button
               onClick={() => router.push("/recipe-generator")}
-              className="w-full sm:w-auto bg-red-400 hover:bg-red-600 text-white text-lg font-semibold py-3 px-14 rounded-lg shadow-lg transition"
+              className="w-full sm:w-auto background-color-nav-scrolled hover:bg-red-600 text-white text-lg font-semibold py-3 px-14 rounded-lg shadow-lg transition"
             >
               Comenzar!
             </button>
