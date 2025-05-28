@@ -5,6 +5,7 @@ import NavbarHome from "@/components/navbars/NavbarHome";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useHydrated } from "@/utils/useHydrated";
 
 interface Props {
   children: React.ReactNode;
@@ -12,15 +13,18 @@ interface Props {
 
 export default function AppLayout({ children }: Props) {
   const { isAuthenticated } = useAuthStore();
+  const hydrated = useHydrated(); //
   const router = useRouter();
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (hydrated && !isAuthenticated) {
       router.push('/');
     }
-  }, [isAuthenticated]);
+  }, [hydrated, isAuthenticated]);
 
-  // Evitá mostrar la vista hasta que sepamos si está autenticado
+  // Esperamos a que Zustand hidrate antes de renderizar o redirigir
+  if (!hydrated) return null;
+
   if (!isAuthenticated) return null;
 
   return (

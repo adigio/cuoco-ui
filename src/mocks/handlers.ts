@@ -41,10 +41,20 @@ export const handlers = [
     if (email === "test@cuoco.com" && password === "123456") {
       return HttpResponse.json({
         user: {
-          name: "Usuario de Prueba",
+          name: "Usuario Free",
           email,
           token: "fake-jwt-123",
-          premium: false
+          premium: false,
+        },
+      });
+    }
+    if (email === "premium@cuoco.com" && password === "123456") {
+      return HttpResponse.json({
+        user: {
+          name: "Usuario Premium",
+          email,
+          token: "fake-jwt-123",
+          premium: true,
         },
       });
     }
@@ -52,6 +62,28 @@ export const handlers = [
     return HttpResponse.json(
       { message: "Credenciales inválidas" },
       { status: 401 }
+    );
+  }),
+  http.post("/api/reset-password", async ({ request }) => {
+    const body = await request.json();
+
+    console.log("[MSW] Interceptando solicitud a /api/reset-password", body);
+
+    // Validación segura
+    if (!body || typeof body !== "object" || typeof body.email !== "string") {
+      return HttpResponse.json(
+        { message: "Falta un email válido" },
+        { status: 400 }
+      );
+    }
+
+    const email = body.email;
+
+    return HttpResponse.json(
+      {
+        message: `Se envió un correo de recuperación a ${email}`,
+      },
+      { status: 200 }
     );
   }),
 ];
