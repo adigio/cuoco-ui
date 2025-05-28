@@ -29,11 +29,9 @@ export default function SubscriptionModal({ isOpen, onClose }: SubscriptionModal
 
                     <div className="space-y-3 flex-grow">
                         <div className="flex items-start gap-2">
-                            <span>✓</span>
                             <p>Acceso a recetas y funcionalidades básicas.</p>
                         </div>
                         <div className="flex items-start gap-2">
-                            <span>✓</span>
                             <p>Tipo de dieta y nivel de cocina.</p>
                         </div>
                     </div>
@@ -59,19 +57,15 @@ export default function SubscriptionModal({ isOpen, onClose }: SubscriptionModal
 
                     <div className="space-y-3 flex-grow">
                         <div className="flex items-start gap-2">
-                            <span>✓</span>
                             <p>Acceso al Plan Básico</p>
                         </div>
                         <div className="flex items-start gap-2">
-                            <span>✓</span>
                             <p>Recetas ilimitadas</p>
                         </div>
                         <div className="flex items-start gap-2">
-                            <span>✓</span>
                             <p>Guardar recetas favoritas ilimitadas</p>
                         </div>
                         <div className="flex items-start gap-2">
-                            <span>✓</span>
                             <p>Guardar preferencias y filtro</p>
                         </div>
                     </div>
