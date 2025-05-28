@@ -8,6 +8,7 @@ import { useState } from "react";
 import Link from "next/link";
 import ModalPreferences from "@/components/shared/modal/ModalPreferences";
 import FoodPreferences from "@/components/profile/FoodPreferences";
+import SubscriptionModal from "@/components/shared/modal/SubscriptionModal";
 export default function Profile() {
   const { user } = useAuthStore();
   const email = user?.email ?? "";
@@ -27,6 +28,11 @@ export default function Profile() {
     "Alta en proteínas",
   ]);
   const [allergies, setAllergies] = useState(["Frutos secos", "Soja"]);
+  const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);  
+
+  const handleOpenSubscriptionModal = () => {
+    setIsSubscriptionModalOpen(true);
+  };
 
   const handleResetPassword = async () => {
     setLoading(true);
@@ -134,9 +140,18 @@ export default function Profile() {
                     <p className="mb-4 text-gray-800 font-medium">
                       Para guardar preferencias detalladas, actualizá tu plan
                     </p>
-                    <button className="px-6 py-2 bg-[#F37B6A] text-white rounded shadow-md font-semibold">
+                    <Button
+                      variant="primary"
+                      size="md"
+                      onClick={handleOpenSubscriptionModal}
+                    >
                       Se Premium
-                    </button>
+                    </Button>
+
+                    <SubscriptionModal
+                      isOpen={isSubscriptionModalOpen}
+                      onClose={() => setIsSubscriptionModalOpen(false)}
+                    />
                   </div>
                 )}
               </div>

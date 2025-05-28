@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { Ingredient } from '../ingredient/ingredient.types';
 
 export interface RecipeImageUploaderProps {
@@ -18,4 +19,15 @@ export interface IngredientReviewTableProps {
   onConfirm: (index: number) => void;
   onEdit: (index: number) => void;
   onDelete: (index: number) => void;
+}
+export interface RecipeCardProps {
+  recipe: {
+    id: number;
+    name: string;
+    image: string;
+    subtitle?: string;
+  };
+  customClass?: string;
+  children?: ReactNode;
+  colorFont?: string;
 }

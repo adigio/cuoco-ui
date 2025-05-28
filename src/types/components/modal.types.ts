@@ -7,6 +7,10 @@ export interface ModalBaseProps {
 
 export interface ModalProps extends ModalBaseProps {
   isOpen: boolean;
+  maxWidth?: string;
+  height?: string;
+  padding?: string;
+  containerClassName?: string;
 }
 
 export interface AlertModalProps extends ModalBaseProps {

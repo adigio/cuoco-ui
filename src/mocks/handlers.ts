@@ -1,5 +1,6 @@
 import { mocksIngredients } from "@/mocks/ingredients";
 import { mockDetailsRecipes, mockRecipes } from "@/mocks/recipes";
+import { User } from "@/store/useAuthStore";
 import { http, HttpResponse } from "msw";
 
 //Define como se responde a las APIs mockeadas
@@ -86,4 +87,52 @@ export const handlers = [
       { status: 200 }
     );
   }),
+  http.post("/api/register", async ({ request }) => {
+    const body = await request.json() as {
+      email: string;
+      password: string;
+      level: string;
+      diet: string;
+      foodNeeds: string[];
+      allergies: string[];
+    };
+
+    const mockUser: User & { preferences?: any } = {
+      name: "Nuevo Usuario",
+      email: body.email,
+      token: "fake-jwt-register-123",
+      premium: false,
+      preferences: {
+        level: body.level,
+        diet: body.diet,
+        foodNeeds: body.foodNeeds,
+        allergies: body.allergies
+      }
+    };
+
+    return HttpResponse.json({ user: mockUser });
+  }),
+
+  http.get("/api/profile", async ({ request }) => {
+    const authHeader = request.headers.get('Authorization');
+
+    if (!authHeader?.startsWith('Bearer ')) {
+      return HttpResponse.json({ message: 'No autorizado' }, { status: 401 });
+    }
+
+    const mockUser: User & { preferences?: any } = {
+      name: "Usuario Test",
+      email: "test@cuoco.com",
+      token: "fake-jwt-123",
+      premium: false,
+      preferences: {
+        level: "Medio",
+        diet: "Omnívoro",
+        foodNeeds: ["Sin lactosa"],
+        allergies: ["Ninguna en particular"]
+      }
+    };
+
+    return HttpResponse.json({ user: mockUser });
+  })
 ];

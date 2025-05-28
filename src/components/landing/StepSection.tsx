@@ -1,13 +1,15 @@
 import Image from "next/image";
 import { StepSectionProps } from "@/types/components/landing.types";
+import { ActionButton } from "@/components/shared/form/ActionButton";
 
 export default function StepSection({
   step,
   title,
-  description,
+  subtitle,
   image,
   imageAlt,
   buttonText,
+  buttonLink,
   reverse = false,
   id,
   showConnector = true
@@ -16,9 +18,44 @@ export default function StepSection({
     <>
       <section id={id} className="relative w-full bg-transparent">
         <div className="max-w-7xl mx-auto px-4 md:px-8 items-center">
+          {/* Vista Mobile */}
+          <div className="md:hidden mt-20">
+            <div className="text-center">
+              {/* Número y título */}
+              <div className="flex items-center justify-center mb-2">
+                <div className="w-14 h-14 rounded-full bg-[#f37b6a] text-white flex items-center justify-center text-5xl font-bold">
+                  {step}
+                </div>
+              </div>
+              <h2 className="text-3xl font-semibold mb-4">{title}</h2>
+              
+              {/* Solo el primer párrafo en mobile */}
+              {subtitle.length > 0 && (
+                <p className="text-gray-700 text-base mb-6">
+                  {subtitle[0]}
+                </p>
+              )}
+
+              {/* Imagen más pequeña en mobile */}
+              <div className="w-full flex justify-center">
+                <div className="w-[300px] h-[300px]">
+                  <Image
+                    src={image}
+                    alt={imageAlt}
+                    width={300}
+                    height={300}
+                    className="w-full h-full object-cover rounded-xl shadow-md"
+                  />
+                </div>
+              </div>
+
+              <ActionButton buttonText={buttonText} buttonLink={buttonLink} />
+            </div>
+          </div>
+          {/* Vista Desktop */}
           <div
-            className={`relative z-10 mt-20 flex flex-col md:flex-row items-center gap-16 ${
-              reverse ? "md:flex-row-reverse" : ""
+            className={`hidden md:flex relative z-10 mt-20 flex-row items-center gap-16 ${
+              reverse ? "flex-row-reverse" : ""
             }`}
           >
             {/* Imagen */}
@@ -42,14 +79,14 @@ export default function StepSection({
                 </div>
               </div>
               <h2 className="text-3xl font-semibold mb-4">{title}</h2>
-              <p className="text-gray-700 text-base mb-6 whitespace-pre-line">
-                {description}
-              </p>
-              {buttonText && (
-                <button className="background-color-nav-scrolled hover:bg-red-400 transition text-white px-6 py-2 rounded">
-                  {buttonText}
-                </button>
-              )}
+              <div className="space-y-4">
+                {subtitle.map((paragraph, index) => (
+                  <p key={index} className="text-gray-700 text-base">
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+              <ActionButton buttonText={buttonText} buttonLink={buttonLink} />
             </div>
           </div>
         </div>

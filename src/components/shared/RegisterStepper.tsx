@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import Input from '@/components/shared/form/Input'
 import Checkbox from '@/components/shared/form/Checkbox'
+import { useAuthStore } from '@/store/useAuthStore';
+import axios from 'axios';
 
 interface RegisterStepperProps {
   step: number;
@@ -23,6 +25,35 @@ export default function RegisterStepper({ step, onComplete }: RegisterStepperPro
   const toggleItem = (list: string[], setList: React.Dispatch<React.SetStateAction<string[]>>, item: string) => {
     setList((prev) => (prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]))
   }
+
+  const login = useAuthStore(state => state.login);
+
+  const handlePasswordStepComplete = async () => {
+    try {
+      const userData = {
+        email,
+        password,
+        level,
+        diet,
+        foodNeeds,
+        allergies
+      };
+  
+      //TODO: extraerlo a un service
+      const { data } = await axios.post('/api/register', userData);
+      
+      login({
+        name: data.user.name,
+        email: data.user.email,
+        premium: data.user.premium,
+        token: data.user.token
+      });
+      
+      onComplete();
+    } catch (error) {
+      console.error('Error en el registro:', error);
+    }
+  };
 
   const centeredWrapperClass = "flex flex-col justify-center items-center min-h-[60vh] px-4"
 
@@ -218,7 +249,7 @@ export default function RegisterStepper({ step, onComplete }: RegisterStepperPro
           />
           <button
             onClick={() => {
-              if (password === confirmPass && valid) onComplete()
+              if (password === confirmPass && valid) handlePasswordStepComplete()
             }}
             className="w-full bg-[#B362D8] hover:opacity-80  text-white font-semibold py-2 rounded transition"
           >
