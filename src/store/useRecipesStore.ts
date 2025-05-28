@@ -1,6 +1,6 @@
 'use client';
 
-import { Recipe } from '@/types/recipe.types';
+import { Recipe } from '@/types';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 

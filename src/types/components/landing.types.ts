@@ -1,14 +1,15 @@
 export interface StepSectionProps {
   step: number;
   title: string;
-  description: string;
+  subtitle: string[]; 
   image: string;
   imageAlt: string;
   buttonText?: string;
+  buttonLink?: string;
   reverse?: boolean;
   id?: string;
   showConnector?: boolean;
-} 
+}
 
 export interface BenefitCardProps {
   img: string;

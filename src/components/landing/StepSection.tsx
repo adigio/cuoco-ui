@@ -59,9 +59,9 @@ export default function StepSection({
       {showConnector && step !== 4 && (
         <div className="hidden md:flex justify-center relative z-0 h-[100px] -mt-6">
           <svg
-            width="800"
-            height="100"
-            viewBox="0 0 800 100"
+            width="1000"
+            height="140"
+            viewBox="0 0 1000 140"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             className={`${reverse ? "rotate-180" : ""}`}
@@ -69,20 +69,20 @@ export default function StepSection({
             <defs>
               <marker
                 id="arrowhead"
-                markerWidth="10"
-                markerHeight="10"
-                refX="5"
-                refY="5"
+                markerWidth="12"
+                markerHeight="12"
+                refX="12"
+                refY="6"
                 orient="auto"
               >
-                <polygon points="0 0, 10 5, 0 10" fill="#f37b6a" />
+                <polygon points="0 0, 12 6, 0 12" fill="#f37b6a" />
               </marker>
             </defs>
             <path
-              d="M0 50 C200 100, 600 0, 800 50"
+              d="M0 70 Q 125 20, 250 70 T 500 70 T 750 70 T 1000 70"
               stroke="#d1d5db"
               strokeWidth="3"
-              strokeDasharray="10,6"
+              strokeDasharray="8,6"
               fill="none"
               markerEnd="url(#arrowhead)"
             />
