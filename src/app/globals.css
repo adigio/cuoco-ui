@@ -3,8 +3,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --background-color-nav-scrolled: rgba(242, 127, 108, 92); 
-
+  --background-color-nav-scrolled: rgba(242, 127, 108, 92);  
 }
 
 @theme inline {

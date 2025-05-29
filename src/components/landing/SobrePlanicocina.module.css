@@ -1,7 +1,6 @@
   .section {
     padding: 4rem 2rem;
-    width: 100%;
-    background-color: white; 
+    width: 100%; 
     position: relative;
   }
   @media(max-width: 768px) {
