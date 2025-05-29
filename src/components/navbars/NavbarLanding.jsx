@@ -26,6 +26,7 @@ export default function NavbarLanding() {
         scrolled ? "background-color-nav-scrolled shadow text-red-400" : "bg-transparent text-white"
         }`}>
       <div className="flex justify-between items-center">
+        <Link href="/">
         <div className={`text-3xl ${scrolled ? "text-red-400" : "text-white"}`}>
           <img
             src={scrolled ? "/logos/logo-blanco.png" : "/logos/logo-rosa.png"}
@@ -33,7 +34,7 @@ export default function NavbarLanding() {
             className="w-10 h-10 object-contain"
           />
         </div>
-
+      </Link>
         {/* Botón para mobile  */}
         <button 
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -54,17 +55,17 @@ export default function NavbarLanding() {
 
         {/* Menu para desktop */}
         <div className="hidden lg:flex space-x-6 text-white font-bold flex items-center">
-          <Link href="/beneficios" className={`hover:text-red-200`}>
+          <Link href="#beneficios" className={`hover:text-red-200`}>
             Beneficios
           </Link>
-          <Link href="/sobre-nosotros" className={`hover:text-red-200`}>
+          <Link href="#aboutUs" className={`hover:text-red-200`}>
             Sobre nosotros
           </Link>
-          <Link href="/iniciar-sesion" className={`hover:text-red-200`}>
+          <Link href="/signin" className={`hover:text-red-200`}>
             Iniciar Sesión
           </Link>
           <Link
-            href="/registrarse"
+            href="/signup"
             className={`"block px-6 py-2 rounded-lg ${scrolled ? "bg-white text-red-400": "hover:bg-red-400 hover:shadow-lg hover:text-white bg-white text-red-400"}   transition-all duration-300"}`} 
           >
             Registrarse
@@ -90,14 +91,14 @@ export default function NavbarLanding() {
             Sobre nosotros
           </Link>
           <Link 
-            href="/iniciar-sesion" 
+            href="/signin" 
             className={`text-center font-bold ${scrolled ? "text-red-400 hover:text-red-600" : "text-white hover:text-red-200"}`}
             onClick={() => setIsMenuOpen(false)}
           >
             Iniciar Sesión
           </Link>
           <Link
-            href="/registrarse"
+            href="/signup"
             className={`text-center font-bold ${scrolled ? "bg-red-400 text-white" : "bg-white text-red-400"} px-6 py-2 rounded-lg hover:bg-red-500 hover:text-white transition-all duration-300`}
             onClick={() => setIsMenuOpen(false)}
           >
