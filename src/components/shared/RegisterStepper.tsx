@@ -55,7 +55,7 @@ export default function RegisterStepper({ step, onComplete }: RegisterStepperPro
     }
   };
 
-  const centeredWrapperClass = "flex flex-col justify-center items-center min-h-[60vh] px-4"
+  const centeredWrapperClass = "flex flex-col justify-center items-center min-h-[40vh] px-4"
 
   // STEP 1: E-mail
   if (step === 1) {

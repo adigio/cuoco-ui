@@ -32,11 +32,10 @@ export default function SignIn() {
       setLoading(true);
       console.log("Form submitted:", formData);
 
-     const response : User = await login (formData.email ,formData.password); 
-     console.log("Login exitoso:", response);
-     if (response) {
-       useAuthStore.getState().login(response.user);
-     }
+      const response = await login(formData.email, formData.password);
+      console.log("Login exitoso:", response);
+      useAuthStore.getState().login(response.user);
+      
       // redirige después del login exitoso
       router.push("/home");
     } catch (error: any) {
@@ -48,7 +47,7 @@ export default function SignIn() {
   };
 
   return (
-    
+
     <div className="relative min-h-screen w-full overflow-hidden">
       {loading && (
         <div className="signin-loader-wrapper">
@@ -56,8 +55,8 @@ export default function SignIn() {
         </div>
       )}
 
-      <div className="min-h-screen bg-[url('/fondo-ingredientes-signup.png')] bg-cover bg-no-repeat bg-center px-4 py-10 flex items-center justify-center">
-        <div className="bg-white/90 rounded-3xl p-6 max-w-xl w-full space-y-4 shadow-xl backdrop-blur">
+      <div className="min-h-screen bg-[url('/auth/signin-mobile.png')] md:bg-[url('/auth/signin.png')] bg-cover bg-no-repeat bg-center flex items-center justify-center md:justify-end px-4 md:px-16">
+        <div className="bg-white/90 rounded-3xl p-6 w-full md:max-w-md space-y-4 shadow-xl mx-4 md:mx-0">
           <h2 className="text-2xl font-semibold mb-6 text-center">
             Bienvenido de nuevo
           </h2>
