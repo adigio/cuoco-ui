@@ -19,3 +19,7 @@ export type GenerateRecipesResponse = {
 export type GetRecipeByIdResponse = {
   recipe: Recipe;
 } 
+
+export type GetMealPrepByIdResponse = {
+  recipe: Recipe;
+} 

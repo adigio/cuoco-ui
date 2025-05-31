@@ -3,7 +3,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --background-color-nav-scrolled: rgba(242, 127, 108, 92);  
+  --background-color-primary: rgba(242, 127, 108, 92);  
+  --background-color-primary-soft: rgba(242, 127, 108, 0.6) 
 }
 
 @theme inline {
@@ -25,12 +26,25 @@ body {
   color: var(--foreground);
   font-family: var(--font-montserrat);
 }
+ 
 
-
-/* Navbar */
-
-.background-color-nav-scrolled{
-  background-color: var(--background-color-nav-scrolled);
+.background-color-primary{
+  background-color: var(--background-color-primary);
+}
+.text-color-primary{
+color: var(--background-color-primary);
+}
+.background-color-primary-soft{
+  background-color: var(--background-color-primary-soft);
+}
+.text-color-primary-soft{
+  color: var(--background-color-primary-soft);
+}
+.border-color-primary{
+border-color: var(--background-color-primary);
+}
+.border-color-primary-soft{
+ border-color: var(--background-color-primary-soft);
 }
 
 

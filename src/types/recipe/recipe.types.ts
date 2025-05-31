@@ -1,4 +1,4 @@
-import { Ingredient } from '../ingredient/ingredient.types';
+import { Ingredient } from "../ingredient/ingredient.types";
 
 export interface Filters {
   time: string;
@@ -7,6 +7,14 @@ export interface Filters {
   diet: string;
   people: number;
   useProfilePreferences: boolean;
+}
+export interface FiltersMealprep {
+  difficulty: string; // Ej: "fácil", "media", "difícil"
+  types: string[]; // Ej: ["Desayuno", "Almuerzo"]
+  diet: string; // Ej: "sin gluten", "vegana"
+  useProfilePreferences: boolean; // Si se deben tener en cuenta preferencias
+  days: number; // Cantidad de días del meal prep
+  freezerAvailable: boolean; // Si hay freezer para conservar comida
 }
 
 export interface Recipe {
@@ -53,12 +61,45 @@ export interface RecipeGenerationRequest {
     people: number;
     useProfilePreferences: boolean;
     types: string[];
-  }
+  };
 }
+export interface MealPrepGenerationRequest {
+  ingredients: string[];
+  filters: {
+    difficulty: string; // Ej: "fácil", "media", "difícil"
+    types: string[]; // Ej: ["Desayuno", "Almuerzo"]
+    diet: string; // Ej: "sin gluten", "vegana"
+    useProfilePreferences: boolean; // Si se deben tener en cuenta preferencias
+    days: number; // Cantidad de días del meal prep
+    freezerAvailable: boolean; // Si hay freezer para conservar comida
+  };
+} 
+
+export interface MealPrep {
+  id: string;
+  title: string;
+  estimatedCookingTime: number;
+  totalPortions: number;
+
+  recipes: {
+    id: string;
+    title: string;
+    image: string;
+  }[];
+
+  steps: {
+    title: string;
+    instructions: string[];
+    estimatedTime: number;
+  }[];
+}
+
+
+export type MealPrepResponse = MealPrep[];
 
 export interface RecipeResponse {
   recipes: Recipe[];
-} 
+}
 
 export interface PageProps {
   params: Promise<{ id: string }>;

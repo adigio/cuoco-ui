@@ -15,7 +15,8 @@ export default function ReviewPage() {
     ingredients,
     removeIngredient,
     updateIngredient,
-    confirmIngredient
+    confirmIngredient,
+    mode
   } = useIngredientsStore();
 
   const router = useRouter();
@@ -64,7 +65,11 @@ export default function ReviewPage() {
     }
 
     // Redirigir a la página de resultados
-    router.push('/filters');
+     if (mode === 'meal-prep') {
+      router.push('/meal-prep-filters');
+    } else {
+      router.push('/filters');
+    }
   };
 
   return (

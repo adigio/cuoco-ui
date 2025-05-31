@@ -1,54 +1,56 @@
-'use client';
+"use client";
 
-import { generateRecipes } from '@/services/recipeService';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import React from 'react';
- 
-// Contexto Zustand 
-import { useIngredientsStore } from '@/store/useIngredientsStore';
-import { useRecipesStore } from '@/store/useRecipesStore';
+import { generateRecipes } from "@/services/recipeService";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import React from "react";
+
+// Contexto Zustand
+import { useIngredientsStore } from "@/store/useIngredientsStore";
+import { useRecipesStore } from "@/store/useRecipesStore";
 
 // Componentes
-import CheckboxGroup from '@/components/shared/form/CheckboxGroup';
-import ChefLoader from '@/components/shared/ChefLoader';
+import CheckboxGroup from "@/components/shared/form/CheckboxGroup";
+import ChefLoader from "@/components/shared/ChefLoader";
 import RecipeIngredientList from "@/components/recipe-generator/IngredientList";
-import Select from '@/components/shared/form/Select';
-import Input from '@/components/shared/form/Input';
-import Checkbox from '@/components/shared/form/Checkbox';
+import Select from "@/components/shared/form/Select";
+import Input from "@/components/shared/form/Input";
+import Checkbox from "@/components/shared/form/Checkbox";
+import { useAuthStore } from "@/store/useAuthStore";
 
 // Tipos
-import { RecipeGenerationRequest, Filters } from '@/types';
+import { RecipeGenerationRequest, Filters } from "@/types";
 
 const typesOfFood = [
-  { value: 'Desayuno', label: 'Desayuno' },
-  { value: 'Almuerzo', label: 'Almuerzo' },
-  { value: 'Cena', label: 'Cena' },
-  { value: 'Postre', label: 'Postre' },
-  { value: 'Snack', label: 'Snack' }
+  { value: "Desayuno", label: "Desayuno" },
+  { value: "Almuerzo", label: "Almuerzo" },
+  { value: "Cena", label: "Cena" },
+  { value: "Postre", label: "Postre" },
+  { value: "Snack", label: "Snack" },
 ];
 
 // Opciones para los selectores
 const timeOptions = [
-  { value: 'menos de 15 minutos', label: '-15 min' },
-  { value: '15 a 30 minutos', label: '15-30 min' },
-  { value: 'más de 30 minutos', label: '+30 min' }
+  { value: "menos de 15 minutos", label: "-15 min" },
+  { value: "15 a 30 minutos", label: "15-30 min" },
+  { value: "más de 30 minutos", label: "+30 min" },
 ];
 
 const difficultyOptions = [
-  { value: 'fácil', label: 'Fácil' },
-  { value: 'media', label: 'Media' },
-  { value: 'difícil', label: 'Difícil' }
+  { value: "fácil", label: "Fácil" },
+  { value: "media", label: "Media" },
+  { value: "difícil", label: "Difícil" },
 ];
 
 const dietOptions = [
-  { value: 'vegetariana', label: 'Vegetariana' },
-  { value: 'vegana', label: 'Vegana' },
-  { value: 'sin gluten', label: 'Sin gluten' },
-  { value: 'keto', label: 'Keto' }
+  { value: "vegetariana", label: "Vegetariana" },
+  { value: "vegana", label: "Vegana" },
+  { value: "sin gluten", label: "Sin gluten" },
+  { value: "keto", label: "Keto" },
 ];
 
 export default function RecipeFilters() {
+  const isPremium = useAuthStore((state) => state.user?.premium);
   const { ingredients } = useIngredientsStore();
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
@@ -56,15 +58,17 @@ export default function RecipeFilters() {
   const { setFilteredRecipes } = useRecipesStore();
 
   const [filters, setFilters] = useState<Filters>({
-    time: '',
-    difficulty: '',
+    time: "",
+    difficulty: "",
     types: [],
-    diet: '',
+    diet: "",
     people: 1,
-    useProfilePreferences: false
+    useProfilePreferences: false,
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
 
@@ -73,16 +77,19 @@ export default function RecipeFilters() {
   };
 
   const handleProfilePreferencesChange = () => {
-    setFilters(prev => ({ ...prev, useProfilePreferences: !prev.useProfilePreferences }));
+    setFilters((prev) => ({
+      ...prev,
+      useProfilePreferences: !prev.useProfilePreferences,
+    }));
   };
 
-  const handleFinish = async () => { 
-    const ingredientNames = ingredients.map(ingredient => ingredient.name);
-    
+  const handleFinish = async () => {
+    const ingredientNames = ingredients.map((ingredient) => ingredient.name);
+
     const informationRecipe: RecipeGenerationRequest = {
       ingredients: ingredientNames,
-      filters: filters
-    }
+      filters: filters,
+    };
 
     try {
       setLoading(true);
@@ -94,14 +101,16 @@ export default function RecipeFilters() {
       if (generatedRecipes && generatedRecipes.length > 0) {
         setFilteredRecipes(generatedRecipes);
         console.log("Recetas generadas correctamente:", generatedRecipes);
-        router.push('/results');
+        router.push("/results");
       } else {
         setError("No se pudieron generar recetas. Intenta con otros filtros.");
         setLoading(false);
       }
     } catch (error) {
       console.error("Error al generar recetas:", error);
-      setError("Ocurrió un error al generar las recetas. Por favor, intenta de nuevo.");
+      setError(
+        "Ocurrió un error al generar las recetas. Por favor, intenta de nuevo."
+      );
       setLoading(false);
     }
   };
@@ -116,10 +125,7 @@ export default function RecipeFilters() {
       <h2 className="text-xl font-semibold text-gray-800 mb-4">
         Ingredientes seleccionados
       </h2>
-      <RecipeIngredientList
-        ingredients={ingredients}
-        enabledDelete={false}
-      />
+      <RecipeIngredientList ingredients={ingredients} enabledDelete={false} />
       <hr className="my-6" />
       <h2 className="text-3xl font-semibold mb-4 text-center">Filtros</h2>
 
@@ -129,64 +135,96 @@ export default function RecipeFilters() {
         </div>
       )}
 
+        <div className="relative">
+          {!isPremium && (
+            <div className="absolute inset-0 bg-white/70 backdrop-blur-sm z-10 flex items-center justify-center text-center px-4 rounded">
+              <div className="text-gray-700 text-sm flex flex-col items-center gap-2">
+                <span className="text-color-primary text-xl">Haz tu prueba sin filtros</span>
+                <p className="font-semibold text-base">
+                  🔒 Filtros disponibles solo para usuarios Premium
+                </p>
+                <p className="text-sm text-gray-600">
+                  Suscribite para personalizar tus recetas según tus
+                  preferencias.
+                </p>
+                <button
+                  onClick={() => router.push("/profile")} 
+                  className="mt-2 bg-[#f37b6a] text-white text-sm px-4 py-2 rounded hover:bg-[#e36455] transition"
+                >
+                  Hacete Premium
+                </button>
+              </div>
+            </div>
+          )}
       <div className="grid grid-cols-2 gap-4">
-        <Select
-          name="tiempo"
-          value={filters.time}
-          onChange={handleChange}
-          options={timeOptions as any}
-          label="Tiempo de preparación"
-        />
 
-        <Select
-          name="difficulty"
-          value={filters.difficulty}
-          onChange={handleChange}
-          options={difficultyOptions as any}
-          label="Dificultad"
-        />
+          <fieldset
+            disabled={!isPremium}
+            className={`${!isPremium ? "opacity-50" : ""}`}
+          >
+            <div className="grid grid-cols-2 gap-4">
+              <Select
+                name="tiempo"
+                value={filters.time}
+                onChange={handleChange}
+                options={timeOptions as any}
+                label="Tiempo de preparación"
+              />
 
-        <Select
-          name="diet"
-          value={filters.diet}
-          onChange={handleChange}
-          options={dietOptions as any}
-          label="Dieta"
-        />
+              <Select
+                name="difficulty"
+                value={filters.difficulty}
+                onChange={handleChange}
+                options={difficultyOptions as any}
+                label="Dificultad"
+              />
 
-        <Input
-          type="number"
-          name="people"
-          value={filters.people}
-          onChange={handleChange}
-          label="Cantidad de personas"
-          min="1"
-        />
-      </div>
+              <Select
+                name="diet"
+                value={filters.diet}
+                onChange={handleChange}
+                options={dietOptions as any}
+                label="Dieta"
+              />
 
-      <div className="grid grid-cols-2 gap-4 mt-6">
-        <CheckboxGroup
-          title="Tipo de comida"
-          options={typesOfFood}
-          selectedValues={filters.types}
-          onChange={handleTiposChange}
-        />
+              <Input
+                type="number"
+                name="people"
+                value={filters.people}
+                onChange={handleChange}
+                label="Cantidad de personas"
+                min="1"
+              />
+            </div>
 
-        <div>
-          <h3 className={`text-lg font-medium mb-2 text-gray-800`}>Preferencias de perfil</h3>
-          <Checkbox
-            id="profile-preferences"
-            name="profile-preferences"
-            checked={filters.useProfilePreferences}
-            onChange={handleProfilePreferencesChange}
-            label="Tener en cuenta las preferencias del perfil configurado"
-          />
+            <div className="grid grid-cols-2 gap-4 mt-6">
+              <CheckboxGroup
+                title="Tipo de comida"
+                options={typesOfFood}
+                selectedValues={filters.types}
+                onChange={handleTiposChange}
+              />
+
+              <div>
+                <h3 className={`text-lg font-medium mb-2 text-gray-800`}>
+                  Preferencias de perfil
+                </h3>
+                <Checkbox
+                  id="profile-preferences"
+                  name="profile-preferences"
+                  checked={filters.useProfilePreferences}
+                  onChange={handleProfilePreferencesChange}
+                  label="Tener en cuenta las preferencias del perfil configurado"
+                />
+              </div>
+            </div>
+          </fieldset>
         </div>
       </div>
 
       <div className="flex justify-between mt-8">
         <button
-          onClick={() => router.push('/review')}
+          onClick={() => router.push("/review")}
           className="bg-gray-200 text-gray-800 px-6 py-2 rounded hover:bg-gray-300 transition"
           disabled={loading}
         >
@@ -197,7 +235,11 @@ export default function RecipeFilters() {
           onClick={handleFinish}
           disabled={loading}
           className={`
-            ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-[#f37b6a] hover:bg-[#e36455] cursor-pointer"} 
+            ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-[#f37b6a] hover:bg-[#e36455] cursor-pointer"
+            } 
             text-white px-6 py-2 rounded transition
           `}
         >

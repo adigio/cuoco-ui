@@ -17,9 +17,9 @@ export default function RecipeGeneratorPage() {
   const [showModal, setShowModal] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { ingredients, addIngredient, addMultipleIngredients } = useIngredientsStore();
+  const { ingredients, addIngredient, addMultipleIngredients, mode } = useIngredientsStore();
   const router = useRouter();
-
+  console.log(mode)
   const handleContinue = async () => {
     // Validar si hay al menos una imagen o un ingrediente
     if (images.length === 0 && ingredients.length === 0) {

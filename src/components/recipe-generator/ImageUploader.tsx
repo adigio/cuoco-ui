@@ -5,18 +5,27 @@ import RecipeIngredientInput from '@/components/recipe-generator/IngredientInput
 import RecipeIngredientList from '@/components/recipe-generator/IngredientList';
 import ContainerShadow from '@/components/shared/containers/ContainerShadow';
 import { RecipeImageUploaderProps } from '@/types/components/recipe-generator.types';
-
+import { useAuthStore } from '@/store/useAuthStore';
 interface Ingredient {
   name: string;
   origin: string;
   confirm: boolean;
 }
-
 export default function RecipeImageUploader({ images, setImages, ingredients, addIngredient }: RecipeImageUploaderProps) {
+  const isPremium = useAuthStore((state) => state.user?.premium); // 👈 mover acá
+
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
+    const maxImages = isPremium ? 5 : 1;
+
+    if (images.length + files.length > maxImages) {
+      alert(`Solo podés subir un máximo de ${maxImages} imagen${maxImages > 1 ? 'es' : ''}.`);
+      return;
+    }
+
     setImages((prev) => [...prev, ...files]);
   };
+
 
   return (
     <>
@@ -29,6 +38,7 @@ export default function RecipeImageUploader({ images, setImages, ingredients, ad
             multiple
             accept="image/*"
             className="hidden"
+            capture="environment"
             id="upload-mobile"
             onChange={handleImageUpload}
           />
