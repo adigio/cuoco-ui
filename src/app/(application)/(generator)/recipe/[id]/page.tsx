@@ -3,7 +3,7 @@
 import React, { useEffect, useState, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { getRecipeById } from '@/services/recipeService';
-import ChefLoader from '@/components/shared/ChefLoader';
+import ChefLoader from '@/components/shared/loaders/ChefLoader';
 import BackgroundLayers from '@/components/shared/BackgroundLayers';
 import ContainerShadow from '@/components/shared/containers/ContainerShadow';
 import { PageProps, Recipe } from '@/types';

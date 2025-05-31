@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { UserPreferences } from '@/types/auth/auth.types';
 import PreferencesSteps from './PreferencesSteps';
 import { PreferencesContainerProps, CookingLevel, DietType } from '@/types/components/preferences.types';
+import { BRAND_COLORS } from '@/constants/colors';
 
 export default function PreferencesContainer({
   initialPreferences,
@@ -77,7 +78,10 @@ export default function PreferencesContainer({
         {[1, 2, 3].map((n) => (
           <span 
             key={n} 
-            className={`w-2 h-2 rounded-full ${n === currentStep ? 'bg-[#75C24B]' : 'bg-gray-300'}`}
+            className="w-2 h-2 rounded-full"
+            style={{ 
+              backgroundColor: n === currentStep ? BRAND_COLORS.primary : '#D1D5DB'
+            }}
           />
         ))}
       </div>

@@ -5,7 +5,7 @@ import Input from '@/components/shared/form/Input'
 import Checkbox from '@/components/shared/form/Checkbox'
 import { useAuthStore } from '@/store/useAuthStore';
 import axios from 'axios';
-import PreferencesContainer from './preferences/PreferencesContainer';
+import PreferencesContainer from '../shared/preferences/PreferencesContainer';
 
 interface RegisterStepperProps {
   step: number;
@@ -134,14 +134,6 @@ export default function RegisterStepper({ step, onComplete, onBack }: RegisterSt
             title="Personaliza tus recetas"
             submitButtonText="Continuar"
           />
-          {onBack && (
-            <button
-              onClick={onBack}
-              className="mt-4 w-full bg-gray-200 text-gray-800 px-6 py-2 rounded hover:bg-gray-300 transition"
-            >
-              Atrás
-            </button>
-          )}
         </div>
       </div>
     )

@@ -4,11 +4,11 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import "./signin.css";
 import Button from "@/components/shared/form/Button";
-import ChefLoader from "@/components/shared/ChefLoader";
+import ChefLoader from "@/components/shared/loaders/ChefLoader";
 import Input from "@/components/shared/form/Input";
 import { useAuthStore } from "@/store/useAuthStore";
 import { login } from '@/services/authService';
-import { User } from "@/store/useAuthStore";
+
 export default function SignIn() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);

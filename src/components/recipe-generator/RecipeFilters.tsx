@@ -11,7 +11,7 @@ import { useRecipesStore } from '@/store/useRecipesStore';
 
 // Componentes
 import CheckboxGroup from '@/components/shared/form/CheckboxGroup';
-import ChefLoader from '@/components/shared/ChefLoader';
+import ChefLoader from '@/components/shared/loaders/ChefLoader';
 import RecipeIngredientList from "@/components/recipe-generator/IngredientList";
 import Select from '@/components/shared/form/Select';
 import Input from '@/components/shared/form/Input';

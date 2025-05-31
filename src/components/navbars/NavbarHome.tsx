@@ -3,7 +3,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
-import LogoutButton from '../shared/LogoutButton';
+import LogoutButton from './LogoutButton';
 export default function NavbarHome() {
   return (
     <header className="bg-[#f37b6a] py-3">

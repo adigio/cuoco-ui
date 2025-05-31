@@ -7,9 +7,8 @@ import {
 } from '@heroicons/react/24/outline'
 import { useState } from 'react'
 import Link from 'next/link'
-import RegisterModal from '@/components/shared/RegisterModal'
-import RegisterStepper from '@/components/shared/RegisterStepper'
-import RegisterStepBox from '@/components/shared/RegisterStepBox'
+import RegisterStepper from '@/components/auth/RegisterStepper'
+import RegisterStepBox from '@/components/auth/RegisterStepBox'
 import Modal from '@/components/shared/modal/Modal'
 
 type StepKey = 'email' | 'prefs' | 'password';
