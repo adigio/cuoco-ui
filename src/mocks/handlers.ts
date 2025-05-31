@@ -1,6 +1,6 @@
 import { mocksIngredients } from "@/mocks/ingredients";
 import { mockDetailsRecipes, mockRecipes } from "@/mocks/recipes";
-import { User } from "@/store/useAuthStore";
+import { User } from "@/types/auth/auth.types";
 import { http, HttpResponse } from "msw";
 
 //Define como se responde a las APIs mockeadas
@@ -28,9 +28,8 @@ export const handlers = [
     return HttpResponse.json(mockDetailsRecipes[id], { status: 200 });
   }),
   http.post("/api/login", async ({ request }) => {
-    const body = await request.json(); // <-- ¡esto es clave!
+    const body = await request.json();
 
-    // Protección contra `undefined`
     if (!body || typeof body !== "object") {
       return HttpResponse.json({ message: "Bad request" }, { status: 400 });
     }
@@ -46,6 +45,13 @@ export const handlers = [
           email,
           token: "fake-jwt-123",
           premium: false,
+          preferences: {
+            cookingLevel: "Medio",
+            diet: "Omnívoro",
+            dietaryRestrictions: ["Sin lactosa"],
+            allergies: ["Ninguna"],
+            favoriteCuisines: []
+          }
         },
       });
     }
@@ -56,6 +62,13 @@ export const handlers = [
           email,
           token: "fake-jwt-123",
           premium: true,
+          preferences: {
+            cookingLevel: "Alto",
+            diet: "Vegetariano",
+            dietaryRestrictions: ["Sin gluten"],
+            allergies: ["Maní"],
+            favoriteCuisines: []
+          }
         },
       });
     }
@@ -97,16 +110,17 @@ export const handlers = [
       allergies: string[];
     };
 
-    const mockUser: User & { preferences?: any } = {
+    const mockUser: User = {
       name: "Nuevo Usuario",
       email: body.email,
       token: "fake-jwt-register-123",
-      premium: false,
+      premium: true,
       preferences: {
-        level: body.level,
-        diet: body.diet,
-        foodNeeds: body.foodNeeds,
-        allergies: body.allergies
+        cookingLevel: body.level as "Bajo" | "Medio" | "Alto",
+        diet: body.diet as "Omnívoro" | "Vegetariano" | "Vegano" | "Otro",
+        dietaryRestrictions: body.foodNeeds,
+        allergies: body.allergies,
+        favoriteCuisines: []
       }
     };
 
@@ -120,16 +134,17 @@ export const handlers = [
       return HttpResponse.json({ message: 'No autorizado' }, { status: 401 });
     }
 
-    const mockUser: User & { preferences?: any } = {
+    const mockUser: User = {
       name: "Usuario Test",
       email: "test@cuoco.com",
       token: "fake-jwt-123",
       premium: false,
       preferences: {
-        level: "Medio",
+        cookingLevel: "Medio",
         diet: "Omnívoro",
-        foodNeeds: ["Sin lactosa"],
-        allergies: ["Ninguna en particular"]
+        dietaryRestrictions: ["Sin lactosa"],
+        allergies: ["Ninguna en particular"],
+        favoriteCuisines: []
       }
     };
 

@@ -4,13 +4,15 @@ import { useAuthStore } from "@/store/useAuthStore";
 import ContainerShadow from "@/components/shared/containers/ContainerShadow";
 import Button from "@/components/shared/form/Button";
 import { recoverPassword } from "@/services/recoverPassword";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import ModalPreferences from "@/components/shared/modal/ModalPreferences";
-import FoodPreferences from "@/components/profile/FoodPreferences";
+import PreferencesModal from "@/components/shared/modal/PreferencesModal";
+import PreferencesDisplay from "@/components/shared/preferences/PreferencesDisplay";
 import SubscriptionModal from "@/components/shared/modal/SubscriptionModal";
+import { UserPreferences } from "@/types/auth/auth.types";
+
 export default function Profile() {
-  const { user } = useAuthStore();
+  const { user, updateUser } = useAuthStore();
   const email = user?.email ?? "";
   const isPremium = user?.premium ?? false;
   const premiumLabel = isPremium ? "PREMIUM" : "FREE";
@@ -20,18 +22,39 @@ export default function Profile() {
   const [done, setDone] = useState(false);
   const [message, setMessage] = useState("");
   const [editMode, setEditMode] = useState(false);
-  const [subStep, setSubStep] = useState(1);
-  const [level, setLevel] = useState("Medio");
-  const [diet, setDiet] = useState("Vegetariano");
-  const [foodNeeds, setFoodNeeds] = useState([
-    "Sin lactosa",
-    "Alta en proteínas",
-  ]);
-  const [allergies, setAllergies] = useState(["Frutos secos", "Soja"]);
-  const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);  
+  const [preferences, setPreferences] = useState<UserPreferences | undefined>(user?.preferences);
+  const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (user?.preferences) {
+      setPreferences(user.preferences);
+    }
+  }, [user?.preferences]);
 
   const handleOpenSubscriptionModal = () => {
     setIsSubscriptionModalOpen(true);
+  };
+
+  const handleSavePreferences = async (newPreferences: UserPreferences) => {
+    try {
+      //TODO: guardar preferencias (SERVICE) 
+      console.log('Guardando preferencias:', newPreferences);
+      
+      // Actualizar el estado local
+      setPreferences(newPreferences);
+      
+      // Actualizar el store
+      if (user) {
+        updateUser({
+          ...user,
+          preferences: newPreferences
+        });
+      }
+      
+      setEditMode(false);
+    } catch (error) {
+      console.error('Error al guardar preferencias:', error);
+    }
   };
 
   const handleResetPassword = async () => {
@@ -40,7 +63,7 @@ export default function Profile() {
     try {
       const result = await recoverPassword(email);
       console.log(result);
-      setMessage(result.message); // guardás el mensaje del backend
+      setMessage(result.message);
       setDone(true);
     } catch (error: any) {
       alert(error.message);
@@ -105,35 +128,10 @@ export default function Profile() {
                 </h3>
 
                 {isPremium ? (
-                  <div className="space-y-2 text-base">
-                    <p>
-                      <span className="font-bold text-gray-700">Dieta:</span>{" "}
-                      <span className="text-[#F37B6A]">Vegetariana</span>
-                    </p>
-                    <p>
-                      <span className="font-bold text-gray-700">
-                        Nivel de cocina:
-                      </span>{" "}
-                      <span className="text-[#F37B6A]">Casera</span>
-                    </p>
-                    <p>
-                      <span className="font-bold text-gray-700">
-                        Restricciones:
-                      </span>{" "}
-                      <span className="text-[#F37B6A]">Sin lactosa</span>
-                    </p>
-                    <p>
-                      <span className="font-bold text-gray-700">Alergias:</span>{" "}
-                      <span className="text-[#F37B6A]">Maní, Pescado</span>
-                    </p>
-
-                    <button
-                      className="mt-4 px-4 py-2 bg-gray-300 rounded shadow-sm text-sm font-semibold"
-                      onClick={() => setEditMode(true)}
-                    >
-                      Corregir
-                    </button>
-                  </div>
+                  <PreferencesDisplay
+                    preferences={preferences}
+                    onEdit={() => setEditMode(true)}
+                  />
                 ) : (
                   <div className="bg-[#FFD8CF] p-6 rounded-xl text-center">
                     <div className="text-4xl mb-4">🔒</div>
@@ -147,11 +145,6 @@ export default function Profile() {
                     >
                       Se Premium
                     </Button>
-
-                    <SubscriptionModal
-                      isOpen={isSubscriptionModalOpen}
-                      onClose={() => setIsSubscriptionModalOpen(false)}
-                    />
                   </div>
                 )}
               </div>
@@ -167,41 +160,18 @@ export default function Profile() {
               </Link>
             </div>
           </div>
-          <ModalPreferences
+
+          <PreferencesModal
             isOpen={editMode}
             onClose={() => setEditMode(false)}
-          >
-            <FoodPreferences
-              level={level}
-              setLevel={setLevel}
-              diet={diet}
-              setDiet={setDiet}
-              foodNeeds={foodNeeds}
-              setFoodNeeds={setFoodNeeds}
-              allergies={allergies}
-              setAllergies={setAllergies}
-              subStep={1} // Podés controlar esto con botones también
-            />
-            
-            <div className="mt-4 flex justify-end gap-2">
-              <button
-                onClick={() => setEditMode(false)}
-                className="px-4 py-2 bg-gray-300 rounded"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={() => {
-                  // Acá podés hacer tu POST/PUT con Axios
-                  console.log({ level, diet, foodNeeds, allergies });
-                  setEditMode(false);
-                }}
-                className="px-4 py-2 bg-green-500 text-white rounded"
-              >
-                Guardar
-              </button>
-            </div>
-          </ModalPreferences>
+            onSave={handleSavePreferences}
+            initialPreferences={preferences}
+          />
+
+          <SubscriptionModal
+            isOpen={isSubscriptionModalOpen}
+            onClose={() => setIsSubscriptionModalOpen(false)}
+          />
         </main>
       </ContainerShadow>
     </>

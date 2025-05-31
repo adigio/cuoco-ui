@@ -1,30 +1,27 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, SetStateAction } from 'react'
 import Input from '@/components/shared/form/Input'
 import Checkbox from '@/components/shared/form/Checkbox'
 import { useAuthStore } from '@/store/useAuthStore';
 import axios from 'axios';
+import PreferencesContainer from './preferences/PreferencesContainer';
 
 interface RegisterStepperProps {
   step: number;
   onComplete: () => void;
+  onBack?: () => void;
 }
 
-export default function RegisterStepper({ step, onComplete }: RegisterStepperProps) {
+export default function RegisterStepper({ step, onComplete, onBack }: RegisterStepperProps) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPass, setConfirmPass] = useState('')
-  const [level, setLevel] = useState('')
-  const [diet, setDiet] = useState('')
+  const [cookingLevel, setCookingLevel] = useState<'Bajo' | 'Medio' | 'Alto'>('Medio')
+  const [diet, setDiet] = useState<'Omnívoro' | 'Vegetariano' | 'Vegano' | 'Otro'>('Omnívoro')
   const [foodNeeds, setFoodNeeds] = useState<string[]>([])
   const [allergies, setAllergies] = useState<string[]>([])
-  const [subStep, setSubStep] = useState(1)
   const [termsAccepted, setTermsAccepted] = useState(false)
-
-  const toggleItem = (list: string[], setList: React.Dispatch<React.SetStateAction<string[]>>, item: string) => {
-    setList((prev) => (prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]))
-  }
 
   const login = useAuthStore(state => state.login);
 
@@ -33,20 +30,29 @@ export default function RegisterStepper({ step, onComplete }: RegisterStepperPro
       const userData = {
         email,
         password,
-        level,
-        diet,
-        foodNeeds,
-        allergies
+        preferences: {
+          cookingLevel,
+          diet,
+          dietaryRestrictions: foodNeeds,
+          allergies,
+          favoriteCuisines: []
+        }
       };
   
-      //TODO: extraerlo a un service
       const { data } = await axios.post('/api/register', userData);
       
       login({
         name: data.user.name,
         email: data.user.email,
         premium: data.user.premium,
-        token: data.user.token
+        token: data.user.token,
+        preferences: {
+          cookingLevel: data.user.preferences.cookingLevel,
+          diet: data.user.preferences.diet,
+          dietaryRestrictions: data.user.preferences.dietaryRestrictions,
+          allergies: data.user.preferences.allergies,
+          favoriteCuisines: []
+        }
       });
       
       onComplete();
@@ -100,103 +106,42 @@ export default function RegisterStepper({ step, onComplete }: RegisterStepperPro
   if (step === 2) {
     return (
       <div className={centeredWrapperClass}>
-        <div className="space-y-4 w-full max-w-md">
-          {subStep === 1 && (
-            <>
-              <h3 className="text-xl font-semibold text-gray-800">¿Cómo es tu alimentación?</h3>
-              <label className="block font-medium mt-2">Nivel de cocina:</label>
-              <div className="flex gap-2">
-                {['Bajo', 'Medio', 'Alto'].map((nivel) => (
-                  <button
-                    key={nivel}
-                    className={`px-4 py-2 rounded-full border ${
-                      level === nivel ? 'bg-[#75C24B] text-white' : 'bg-white text-gray-700'
-                    }`}
-                    onClick={() => setLevel(nivel)}
-                  >
-                    {nivel}
-                  </button>
-                ))}
-              </div>
-
-              <label className="block font-medium mt-4">Dieta según estilo alimentario:</label>
-              <div className="space-y-2">
-                {['Omnívoro', 'Vegetariano', 'Vegano', 'Otro'].map((d) => (
-                  <label key={d} className="flex items-center gap-2">
-                    <input type="radio" name="diet" value={d} checked={diet === d} onChange={() => setDiet(d)} />
-                    <span>{d}</span>
-                  </label>
-                ))}
-              </div>
-            </>
+        <div className="w-full max-w-md">
+          <PreferencesContainer
+            initialPreferences={{
+              cookingLevel,
+              diet,
+              dietaryRestrictions: foodNeeds,
+              allergies,
+              favoriteCuisines: []
+            }}
+            onComplete={(preferences) => {
+              if (preferences.cookingLevel) {
+                setCookingLevel(preferences.cookingLevel as SetStateAction<'Bajo' | 'Medio' | 'Alto'>);
+              }
+              if (preferences.diet) {
+                setDiet(preferences.diet as SetStateAction<'Omnívoro' | 'Vegetariano' | 'Vegano' | 'Otro'>);
+              }
+              if (preferences.dietaryRestrictions) {
+                setFoodNeeds(preferences.dietaryRestrictions);
+              }
+              if (preferences.allergies) {
+                setAllergies(preferences.allergies);
+              }
+              onComplete();
+            }}
+            showBackButton={true}
+            title="Personaliza tus recetas"
+            submitButtonText="Continuar"
+          />
+          {onBack && (
+            <button
+              onClick={onBack}
+              className="mt-4 w-full bg-gray-200 text-gray-800 px-6 py-2 rounded hover:bg-gray-300 transition"
+            >
+              Atrás
+            </button>
           )}
-
-          {subStep === 2 && (
-            <>
-              <h3 className="text-xl font-semibold text-gray-800">¿Tenés alguna necesidad alimentaria especial?</h3>
-              <div className="space-y-2">
-                {['Sin gluten', 'Sin lactosa', 'Alta en proteínas', 'Keto', 'Ninguna en particular'].map((item) => (
-                  <Checkbox
-                    key={item}
-                    id={`food-need-${item}`}
-                    name={`food-need-${item}`}
-                    checked={foodNeeds.includes(item)}
-                    onChange={() => toggleItem(foodNeeds, setFoodNeeds, item)}
-                    label={item}
-                  />
-                ))}
-              </div>
-            </>
-          )}
-
-          {subStep === 3 && (
-            <>
-              <h3 className="text-xl font-semibold text-gray-800">¿Qué ingredientes evitás o te generan alergia?</h3>
-              <div className="space-y-2">
-                {['Leche', 'Frutos secos', 'Soja', 'Crustáceos', 'Huevo', 'Pescados', 'Cereales', 'Maní', 'Otro', 'Ninguna en particular'].map(
-                  (item) => (
-                    <Checkbox
-                      key={item}    
-                      id={`allergy-${item}`}
-                      name={`allergy-${item}`}
-                      checked={allergies.includes(item)}
-                      onChange={() => toggleItem(allergies, setAllergies, item)}
-                      label={item}
-                    />
-                  )
-                )}
-              </div>
-            </>
-          )}
-
-          <div className="flex justify-between pt-4">
-            {subStep > 1 ? (
-              <button className="bg-gray-200 text-gray-800 px-6 py-2 rounded hover:bg-gray-300 transition" onClick={() => setSubStep(subStep - 1)}>
-                Atrás
-              </button>
-            ) : (
-              <div></div>
-            )}
-            
-            {subStep < 3 ? (
-              <button className="bg-[#f37b6a] text-white px-6 py-2 rounded hover:bg-[#e36455] transition" onClick={() => setSubStep(subStep + 1)}>
-                Siguiente
-              </button>
-            ) : (
-              <button
-                className="bg-[#f37b6a] text-white px-6 py-2 rounded hover:bg-[#e36455] transition"
-                onClick={() => onComplete()}
-              >
-                Guardar preferencias
-              </button>
-            )}
-          </div>
-
-          <div className="flex justify-center mt-2 gap-2">
-            {[1, 2, 3].map((n) => (
-              <span key={n} className={`w-3 h-3 rounded-full ${n === subStep ? 'bg-[#75C24B]' : 'bg-gray-300'}`}></span>
-            ))}
-          </div>
         </div>
       </div>
     )
@@ -208,7 +153,7 @@ export default function RegisterStepper({ step, onComplete }: RegisterStepperPro
 
     return (
       <div className={centeredWrapperClass}>
-        <div className="space-y-4 text-center w-full max-w-md">
+        <div className="space-y-4 text-left w-full max-w-md">
           <h3 className="text-2xl font-bold text-gray-800">Creá tu contraseña</h3>
           <p className="text-sm text-gray-500">Mantené tu cuenta protegida.</p>
           <Input
@@ -247,14 +192,24 @@ export default function RegisterStepper({ step, onComplete }: RegisterStepperPro
             required
             inputClassName="rounded-xl p-3"
           />
-          <button
-            onClick={() => {
-              if (password === confirmPass && valid) handlePasswordStepComplete()
-            }}
-            className="w-full bg-[#B362D8] hover:opacity-80  text-white font-semibold py-2 rounded transition"
-          >
-            Finalizar
-          </button>
+          <div className="flex gap-4 mt-4">
+            {onBack && (
+              <button
+                onClick={onBack}
+                className="flex-1 bg-gray-200 text-gray-800 px-6 py-2 rounded hover:bg-gray-300 transition"
+              >
+                Atrás
+              </button>
+            )}
+            <button
+              onClick={() => {
+                if (password === confirmPass && valid) handlePasswordStepComplete()
+              }}
+              className="flex-1 bg-[#B362D8] hover:opacity-80 text-white font-semibold py-2 rounded transition"
+            >
+              Finalizar
+            </button>
+          </div>
         </div>
       </div>
     )

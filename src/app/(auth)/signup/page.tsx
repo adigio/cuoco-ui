@@ -14,6 +14,7 @@ import Modal from '@/components/shared/modal/Modal'
 
 type StepKey = 'email' | 'prefs' | 'password';
 
+const stepOrder: StepKey[] = ['email', 'prefs', 'password'];
 
 export default function SignupPage() {
   const [currentStep, setCurrentStep] = useState<StepKey | null>(null)
@@ -30,6 +31,15 @@ export default function SignupPage() {
     })
     setCurrentStep(null)
   }
+
+  const handleBack = (fromStep: StepKey) => {
+    const currentIndex = stepOrder.indexOf(fromStep);
+    if (currentIndex > 0) {
+      const previousStep = stepOrder[currentIndex - 1];
+      setCompletedSteps(prev => prev.filter(step => step !== previousStep));
+      setCurrentStep(previousStep);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[url('/auth/signup.png')] bg-cover bg-no-repeat bg-center flex items-center justify-center px-4 md:px-16">
@@ -100,7 +110,11 @@ export default function SignupPage() {
           onClose={() => setCurrentStep(null)}
           showCloseButton={true}
         >
-          <RegisterStepper key="email" step={1} onComplete={() => handleComplete('email')} />
+          <RegisterStepper 
+            key="email" 
+            step={1} 
+            onComplete={() => handleComplete('email')} 
+          />
         </Modal>
 
         <Modal 
@@ -108,7 +122,12 @@ export default function SignupPage() {
           onClose={() => setCurrentStep(null)}
           showCloseButton
         >
-          <RegisterStepper key="prefs" step={2} onComplete={() => handleComplete('prefs')} />
+          <RegisterStepper 
+            key="prefs" 
+            step={2} 
+            onComplete={() => handleComplete('prefs')} 
+            onBack={() => handleBack('prefs')}
+          />
         </Modal>
 
         <Modal 
@@ -116,7 +135,12 @@ export default function SignupPage() {
           onClose={() => setCurrentStep(null)}
           showCloseButton
         >
-          <RegisterStepper key="password" step={3} onComplete={() => handleComplete('password')} />
+          <RegisterStepper 
+            key="password" 
+            step={3} 
+            onComplete={() => handleComplete('password')} 
+            onBack={() => handleBack('password')}
+          />
         </Modal>
 
       </div>
