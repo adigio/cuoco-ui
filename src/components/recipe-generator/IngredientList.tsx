@@ -6,17 +6,13 @@ import { RecipeIngredientListProps } from '@/types/components/recipe-generator.t
 
 export default function RecipeIngredientList({ 
   ingredients, 
-  setIngredients,
+  onRemove,
   enabledDelete = true 
-}: RecipeIngredientListProps) {
-  const handleRemoveIngredient = (idx: number) => {
-    if (setIngredients) {
-      setIngredients((prevIngredients: Ingredient[]) => 
-        prevIngredients.filter((_, i) => i !== idx)
-      );
-    }
-  };
-
+}: {
+  ingredients: Ingredient[];
+  onRemove?: (idx: number) => void;
+  enabledDelete?: boolean;
+}) {
   return (
     <div className="flex flex-wrap gap-2 mt-4">
       {ingredients.length === 0 ? (
@@ -28,14 +24,13 @@ export default function RecipeIngredientList({
             className="bg-gray-200 text-sm px-3 py-1 rounded-full flex items-center gap-2"
           >
             {item.name}
-
-            {enabledDelete && setIngredients && (
+            {enabledDelete && onRemove && (
               <button
-                onClick={() => handleRemoveIngredient(idx)}
-                className="text-gray-600 hover:text-red-500 font-bold"
+                onClick={() => onRemove(idx)}
+                className="bg-gray-200 text-gray-500 h-4 w-4 flex items-center justify-center text-xs rounded-full transition-colors"
                 title="Eliminar"
               >
-                ×
+                x
               </button>
             )}
           </span>

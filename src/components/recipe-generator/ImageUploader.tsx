@@ -5,17 +5,26 @@ import RecipeIngredientInput from '@/components/recipe-generator/IngredientInput
 import RecipeIngredientList from '@/components/recipe-generator/IngredientList';
 import ContainerShadow from '@/components/shared/containers/ContainerShadow';
 import { RecipeImageUploaderProps } from '@/types/components/recipe-generator.types';
-
-interface Ingredient {
-  name: string;
-  origin: string;
-  confirm: boolean;
-}
+import { useIngredientsStore } from '@/store/useIngredientsStore';
+import { Ingredient } from '@/types/ingredient/ingredient.types';
 
 export default function RecipeImageUploader({ images, setImages, ingredients, addIngredient }: RecipeImageUploaderProps) {
+  const removeIngredient = useIngredientsStore(state => state.removeIngredient);
+
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     setImages((prev) => [...prev, ...files]);
+  };
+
+  const handleDeleteImage = (index: number) => {
+    setImages((prev) => prev.filter((_, idx) => idx !== index));
+  };
+
+  const handleSetIngredients = (newIngredients: Ingredient[]) => {
+    const removedIndex = ingredients.findIndex((ing) => !newIngredients.includes(ing));
+    if (removedIndex !== -1) {
+      removeIngredient(removedIndex);
+    }
   };
 
   return (
@@ -48,12 +57,19 @@ export default function RecipeImageUploader({ images, setImages, ingredients, ad
           ) : (
             <div className='h-[300px] overflow-y-auto'>
               {images.map((img, idx) => (
-                <img
-                  key={`mobile-${idx}`}
-                  src={URL.createObjectURL(img)}
-                  alt={`img ${idx}`}
-                  className="w-full h-[180px] object-cover rounded mb-2"
-                />
+                <div key={`mobile-${idx}`} className="relative mb-2">
+                  <img
+                    src={URL.createObjectURL(img)}
+                    alt={`img ${idx}`}
+                    className="w-full h-[180px] object-cover rounded"
+                  />
+                  <button
+                    onClick={() => handleDeleteImage(idx)}
+                    className="absolute top-2 right-2 bg-gray-200 text-gray-500 h-4 w-4 flex items-center justify-center text-xs rounded-full transition-colors"
+                  >
+                    x
+                  </button>
+                </div>
               ))}
             </div>
           )}
@@ -64,6 +80,7 @@ export default function RecipeImageUploader({ images, setImages, ingredients, ad
           <RecipeIngredientInput />
           <RecipeIngredientList
             ingredients={ingredients}
+            onRemove={removeIngredient}
           />
         </div>
       </div>
@@ -90,6 +107,7 @@ export default function RecipeImageUploader({ images, setImages, ingredients, ad
             <RecipeIngredientInput />
             <RecipeIngredientList
               ingredients={ingredients}
+              onRemove={removeIngredient}
             />
           </div>
         </div>
@@ -104,12 +122,19 @@ export default function RecipeImageUploader({ images, setImages, ingredients, ad
           ) : (
             <div className='h-[300px] overflow-y-auto'>
               {images.map((img, idx) => (
-                <img
-                  key={`desktop-${idx}`}
-                  src={URL.createObjectURL(img)}
-                  alt={`img ${idx}`}
-                  className="w-full h-[180px] object-cover rounded mb-2"
-                />
+                <div key={`desktop-${idx}`} className="relative mb-2">
+                  <img
+                    src={URL.createObjectURL(img)}
+                    alt={`img ${idx}`}
+                    className="w-full h-[180px] object-cover rounded"
+                  />
+                  <button
+                    onClick={() => handleDeleteImage(idx)}
+                    className="absolute top-2 right-2 bg-gray-200 text-gray-500 h-4 w-4 flex items-center justify-center text-xs rounded-full transition-colors"
+                  >
+                    x
+                  </button>
+                </div>
               ))}
             </div>
           )}
