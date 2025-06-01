@@ -24,7 +24,7 @@ export interface RecipeCardProps {
   recipe: {
     id: number;
     name: string;
-    image: string;
+    image?: string;
     subtitle?: string;
   };
   customClass?: string;

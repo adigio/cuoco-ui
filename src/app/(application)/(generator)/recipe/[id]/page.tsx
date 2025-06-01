@@ -3,10 +3,11 @@
 import React, { useEffect, useState, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { getRecipeById } from '@/services/recipeService';
-import ChefLoader from '@/components/shared/loaders/ChefLoader';
 import BackgroundLayers from '@/components/shared/BackgroundLayers';
 import ContainerShadow from '@/components/shared/containers/ContainerShadow';
 import { PageProps, Recipe } from '@/types';
+import { BaseSkeleton } from '@/components/shared/skeleton/BaseSkeleton';
+import { RecipeDetailSkeleton } from '@/components/shared/skeleton/RecipeDetailSkeleton';
 
 export default function RecipePage({ params }: PageProps) {
   const router = useRouter();
@@ -33,13 +34,14 @@ export default function RecipePage({ params }: PageProps) {
     fetchRecipe();
   }, [recipeId]);
 
+  if (loading) {
+    return <RecipeDetailSkeleton />;
+  }
+
+
   const handleBack = () => {
     router.push('/results');
   };
-
-  if (loading) {
-    return <ChefLoader text="...Receta..."/>;
-  }
 
   if (!recipe) {
     return (
