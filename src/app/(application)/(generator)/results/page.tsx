@@ -13,6 +13,9 @@ import { faRotate } from '@fortawesome/free-solid-svg-icons';
 import Container from '@/components/shared/containers/Container';
 import BackgroundLayers from '@/components/shared/BackgroundLayers';
 import { RecipeCardSkeleton } from '@/components/shared/skeleton/RecipeCardSkeleton';
+import { FavoriteModal } from '@/components/shared/modal/FavoriteModal';
+import { RefreshModal } from '@/components/shared/modal/RefreshModal';
+import SubscriptionModal from '@/components/shared/modal/SubscriptionModal';
 
 
 export default function RecipeResultsPage() {
@@ -20,7 +23,12 @@ export default function RecipeResultsPage() {
   const { ingredients } = useIngredientsStore();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+  const [showFavoriteModal, setShowFavoriteModal] = useState(false);
+  const [showRefreshModal, setShowRefreshModal] = useState(false);
+  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);	
+  const [selectedRecipe, setSelectedRecipe] = useState<null | { id: number, name: string }>(null);
 
+  
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -29,16 +37,22 @@ export default function RecipeResultsPage() {
     return () => clearTimeout(timer);
   }, []); //de momento hasta que esté la integracion con el back
 
+  
+  const handleFavoriteClick = (recipe: { id: number, name: string }) => {
+    setSelectedRecipe(recipe);
+    setShowFavoriteModal(true);
+  };
+
+  const handleRefreshRecipe = (recipe: { id: number, name: string }) => {
+    setSelectedRecipe(recipe);
+    setShowRefreshModal(true);
+  };
 
 
   // Función para mostrar detalle de receta
   const handleViewRecipe = (recipeId: number) => {
     console.log('Ver detalle de receta:', recipeId);
     router.push(`/recipe/${recipeId}`);
-  };
-
-  const handleRefreshRecipe = (recipeId: number) => {
-    alert("Mostrar el alert modal. Si era user no premiun no.")
   };
 
   const handleBack = () => {
@@ -85,13 +99,13 @@ export default function RecipeResultsPage() {
                     <div className='flex items-center gap-3'>
                       <button 
                         className='cursor-pointer w-5 px-2' 
-                        onClick={() => handleRefreshRecipe(recipe.id)}
+                        onClick={() => handleRefreshRecipe({ id: recipe.id, name: recipe.name })}
                       >
                         <FontAwesomeIcon className='w-4 h-4' icon={faRotate} />
                       </button>
                       <button 
                         className='cursor-pointer w-4 px-2' 
-                        onClick={() => handleViewRecipe(recipe.id)}
+                        onClick={() => handleFavoriteClick({ id: recipe.id, name: recipe.name })}
                       >
                         <FontAwesomeIcon className='w-4 h-4' icon={faHeart} />
                       </button>
@@ -119,6 +133,39 @@ export default function RecipeResultsPage() {
           </button>
         </div>
       </div>
+
+
+      {selectedRecipe && (
+        <>
+          <FavoriteModal
+            recipeText={selectedRecipe.name}
+            isOpen={showFavoriteModal}
+            onClose={() => {
+              setShowFavoriteModal(false);
+              setSelectedRecipe(null);
+            }}
+            recipeId={selectedRecipe.id}
+          />
+          <RefreshModal
+            recipeText={selectedRecipe.name}
+            isPremium={false}
+            isOpen={showRefreshModal}
+            onClose={() => {
+              setShowRefreshModal(false);
+              setSelectedRecipe(null);
+            }}
+            onUpgrade={() => {
+              setShowRefreshModal(false);
+              setShowSubscriptionModal(true);
+            }}
+            recipeId={selectedRecipe.id}
+          />
+          <SubscriptionModal
+            isOpen={showSubscriptionModal}
+            onClose={() => setShowSubscriptionModal(false)}
+          />
+        </>
+      )}
     </main>
     </>
   );

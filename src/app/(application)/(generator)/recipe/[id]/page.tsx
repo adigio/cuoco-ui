@@ -6,7 +6,6 @@ import { getRecipeById } from '@/services/recipeService';
 import BackgroundLayers from '@/components/shared/BackgroundLayers';
 import ContainerShadow from '@/components/shared/containers/ContainerShadow';
 import { PageProps, Recipe } from '@/types';
-import { BaseSkeleton } from '@/components/shared/skeleton/BaseSkeleton';
 import { RecipeDetailSkeleton } from '@/components/shared/skeleton/RecipeDetailSkeleton';
 
 export default function RecipePage({ params }: PageProps) {
@@ -14,6 +13,7 @@ export default function RecipePage({ params }: PageProps) {
   const { id: recipeId } = use(params);
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     const fetchRecipe = async () => {
@@ -39,10 +39,6 @@ export default function RecipePage({ params }: PageProps) {
   }
 
 
-  const handleBack = () => {
-    router.push('/results');
-  };
-
   if (!recipe) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -55,6 +51,10 @@ export default function RecipePage({ params }: PageProps) {
   const getIngredientName = (ingredient: any): string => {
     if (typeof ingredient === 'string') return ingredient;
     return ingredient?.name || 'Ingrediente desconocido';
+  };
+
+  const handleBack = () => {
+    router.push('/results');
   };
 
   return (
