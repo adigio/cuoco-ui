@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useEffect, useState, use } from 'react';
 import { useRouter } from 'next/navigation';
@@ -7,6 +7,7 @@ import BackgroundLayers from '@/components/shared/BackgroundLayers';
 import ContainerShadow from '@/components/shared/containers/ContainerShadow';
 import { PageProps, Recipe } from '@/types';
 import { RecipeDetailSkeleton } from '@/components/shared/skeleton/RecipeDetailSkeleton';
+import TimeAndFavorite from '@/components/meal-prep/TimeAndFavorite';
 
 export default function RecipePage({ params }: PageProps) {
   const router = useRouter();
@@ -20,11 +21,11 @@ export default function RecipePage({ params }: PageProps) {
       try {
         const res = await getRecipeById(recipeId);
 
-        if(res){
+        if (res) {
           setRecipe(res);
         }
       } catch (error) {
-        console.error('Error al obtener la receta:', error);
+        console.error("Error al obtener la receta:", error);
         setRecipe(null);
       } finally {
         setLoading(false);
@@ -35,7 +36,7 @@ export default function RecipePage({ params }: PageProps) {
   }, [recipeId]);
 
   if (loading) {
-    return <RecipeDetailSkeleton />;
+    return <RecipeDetailSkeleton  />;
   }
 
 
@@ -46,11 +47,15 @@ export default function RecipePage({ params }: PageProps) {
       </div>
     );
   }
+   const handleFavRecipe = (recipeId: number) => {
+    console.log("GUARDAR A FAVS:", recipeId);
+    // router.push(`/recipe/${recipeId}`);
+  };
 
   // Función auxiliar para obtener el nombre del ingrediente
   const getIngredientName = (ingredient: any): string => {
-    if (typeof ingredient === 'string') return ingredient;
-    return ingredient?.name || 'Ingrediente desconocido';
+    if (typeof ingredient === "string") return ingredient;
+    return ingredient?.name || "Ingrediente desconocido";
   };
 
   const handleBack = () => {
@@ -60,16 +65,22 @@ export default function RecipePage({ params }: PageProps) {
   return (
     <>
       <BackgroundLayers />
-      
+
       <div className="w-full border-b-4 border-purple-400 mb-6"></div>
-      
+
       <main className="flex-1 relative">
         <ContainerShadow customClass="container">
-          <h1 className="text-3xl font-bold mb-2">{recipe.name}</h1>
+          <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+            <h1 className="text-3xl font-bold">{recipe.name}</h1>
+            <TimeAndFavorite
+              minutes={recipe.preparationTime}
+              onToggleFavorite={() => handleFavRecipe(recipe.id)}
+            />
+          </div>
+
           <p className="text-gray-600 mb-4">{recipe.subtitle}</p>
 
           <div className="flex items-center gap-4 text-sm text-red-500 mb-6">
-            <span>⏱️ {recipe.preparationTime} min</span>
             <span>💪 {recipe.difficulty}</span>
           </div>
 
@@ -86,7 +97,9 @@ export default function RecipePage({ params }: PageProps) {
             </div>
 
             <div>
-              <h2 className="text-xl font-semibold mb-2">🛒 Necesitás comprar</h2>
+              <h2 className="text-xl font-semibold mb-2">
+                🛒 Necesitás comprar
+              </h2>
               <div className="bg-white p-4 rounded shadow">
                 {!recipe.missingIngredients?.length ? (
                   <p className="text-green-600">¡Tenés todo para cocinar! 👏</p>

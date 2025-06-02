@@ -23,8 +23,9 @@ export default function NavbarHome() {
           </div>
         </Link>
         <nav className="flex items-center space-x-6 text-white font-bold text-l">
-          <Link href="/recipe-generator" className="hover:text-red-200">Generar Recetas</Link>
+          <Link href="/home" className="hover:text-red-200">Generar Recetas</Link>
           <Link href="/favs" className="hover:text-red-200">Favoritos</Link>
+          <Link href="/calendar" className="hover:text-red-200">Calendario</Link>
           <Link href="/profile" className="hover:text-red-200">Perfil</Link>
           <LogoutButton/>
         </nav>

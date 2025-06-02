@@ -1,7 +1,9 @@
 import { mocksIngredients } from "@/mocks/ingredients";
 import { mockDetailsRecipes, mockRecipes } from "@/mocks/recipes";
+import { mealPreps } from "@/mocks/mealprep";
 import { User } from "@/types/auth/auth.types";
 import { http, HttpResponse } from "msw";
+import { MealPrepGenerationRequest } from "@/types"; // Asegurate de tener estos tipos
 
 //Define como se responde a las APIs mockeadas
 
@@ -101,7 +103,7 @@ export const handlers = [
     );
   }),
   http.post("/api/register", async ({ request }) => {
-    const body = await request.json() as {
+    const body = (await request.json()) as {
       email: string;
       password: string;
       level: string;
@@ -120,18 +122,18 @@ export const handlers = [
         diet: body.diet as "Omnívoro" | "Vegetariano" | "Vegano" | "Otro",
         dietaryRestrictions: body.foodNeeds,
         allergies: body.allergies,
-        favoriteCuisines: []
-      }
+        favoriteCuisines: [],
+      },
     };
 
     return HttpResponse.json({ user: mockUser });
   }),
 
   http.get("/api/profile", async ({ request }) => {
-    const authHeader = request.headers.get('Authorization');
+    const authHeader = request.headers.get("Authorization");
 
-    if (!authHeader?.startsWith('Bearer ')) {
-      return HttpResponse.json({ message: 'No autorizado' }, { status: 401 });
+    if (!authHeader?.startsWith("Bearer ")) {
+      return HttpResponse.json({ message: "No autorizado" }, { status: 401 });
     }
 
     const mockUser: User = {
@@ -144,10 +146,52 @@ export const handlers = [
         diet: "Omnívoro",
         dietaryRestrictions: ["Sin lactosa"],
         allergies: ["Ninguna en particular"],
-        favoriteCuisines: []
-      }
+        favoriteCuisines: [],
+      },
     };
 
     return HttpResponse.json({ user: mockUser });
-  })
+  }),
+  http.post("/api/generate-meal-prep", async ({ request }) => {
+    const body = (await request.json()) as MealPrepGenerationRequest;
+
+    console.log("[MSW] Interceptando solicitud a /api/generate-meal-prep");
+
+    return HttpResponse.json(mealPreps, { status: 200 });
+  }),
+  http.get("/api/meal-prep/:id", ({ params }) => {
+    const id = Number(params.id);
+    const mealPrep = mealPreps.find((m) => m.id === id);
+
+    if (mealPrep) {
+      return HttpResponse.json(mealPrep);
+    } else {
+      return HttpResponse.json({ message: "No encontrado" }, { status: 404 });
+    }
+  }),
+  http.get('/api/fav/recipes', ({ request }) => {
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get('page') || 1);
+    console.log("[MSW] Interceptando solicitud a /api/fav/recipes");
+
+    return HttpResponse.json({
+      data: [
+        { id: 1, title: 'Receta mock' },
+        { id: 2, title: 'Otra receta mock' }
+      ],
+      currentPage: page,
+      totalPages: 1,
+    });
+  }),
+
+  // También mock de mealpreps
+  http.get('/api/fav/mealpreps', ({ request }) => {
+        console.log("[MSW] Interceptando solicitud a /api/fav/mealpreps");
+
+    return HttpResponse.json({
+      data: [{ id: 1, title: 'MealPrep Mock' }],
+      currentPage: 1,
+      totalPages: 1,
+    });
+  }),
 ];

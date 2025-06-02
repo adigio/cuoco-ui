@@ -4,12 +4,21 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useIngredientsStore } from "@/store/useIngredientsStore";
+import { useRouter } from "next/navigation";
 
 export default function HeroHome() {
   const [saludo, setSaludo] = useState("");
-  console.log(useAuthStore((state) => state.user.name));
+  console.log(useAuthStore((state) => state.user?.name));
+  const user = useAuthStore((state) => state.user?.name);
+  const isPremium = useAuthStore((state) => state.user?.premium);
+  const setMode = useIngredientsStore((state) => state.setMode);
+  const router = useRouter();
 
-  const user = useAuthStore((state) => state.user.name);
+  const handleClick = (mode: "meal-prep" | "cook-now") => {
+    setMode(mode);
+    router.push("/recipe-generator");
+  };
 
   useEffect(() => {
     const ahora = new Date();
@@ -23,7 +32,6 @@ export default function HeroHome() {
     } else {
       nuevoSaludo = "¡Buenas noches";
     }
-
 
     setSaludo(`${nuevoSaludo}, ${user}!`);
   }, []);
@@ -45,11 +53,37 @@ export default function HeroHome() {
         <h1 className="text-black text-3xl md:text-5xl font-semibold mb-6">
           {saludo}
         </h1>
-        <Link href="recipe-generator">
-          <button className="px-6 py-3 background-color-nav-scrolled text-white rounded-lg hover:brightness-90 transition">
-            Empezá a cocinar con lo que tenés
-          </button>
-        </Link>
+        <div className="flex gap-x-4">
+          <Link href="recipe-generator">
+            <button className="px-6 py-3 background-color-primary text-white rounded-lg hover:brightness-90 transition">
+              Receta Rápida
+            </button>
+          </Link>
+          <Link href="recipe-generator">
+            <button className="px-6 py-3 background-color-primary text-white rounded-lg hover:brightness-90 transition">
+              Empezá a cocinar con lo que tenés
+            </button>
+          </Link>
+          <div className="relative inline-block">
+            {!isPremium && (
+              <span className="absolute -top-2 -right-2 bg-yellow-500 text-white text-xs px-2 py-0.5 rounded-full shadow">
+                Premium
+              </span>
+            )}
+
+            <button
+              onClick={() => handleClick("meal-prep")}
+              disabled={!isPremium}
+              className={`px-6 py-3 rounded-lg transition ${
+                isPremium
+                  ? "background-color-primary text-white hover:brightness-90"
+                  : "bg-gray-400 text-gray-200 cursor-not-allowed"
+              }`}
+            >
+              Meal Prep
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

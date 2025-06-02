@@ -5,14 +5,22 @@ import RecipeIngredientInput from '@/components/recipe-generator/IngredientInput
 import RecipeIngredientList from '@/components/recipe-generator/IngredientList';
 import ContainerShadow from '@/components/shared/containers/ContainerShadow';
 import { RecipeImageUploaderProps } from '@/types/components/recipe-generator.types';
-import { useIngredientsStore } from '@/store/useIngredientsStore';
+import { useAuthStore } from '@/store/useAuthStore';import { useIngredientsStore } from '@/store/useIngredientsStore';
 import { Ingredient } from '@/types/ingredient/ingredient.types';
-
 export default function RecipeImageUploader({ images, setImages, ingredients, addIngredient }: RecipeImageUploaderProps) {
   const removeIngredient = useIngredientsStore(state => state.removeIngredient);
 
+  const isPremium = useAuthStore((state) => state.user?.premium); // 👈 mover acá
+
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
+    const maxImages = isPremium ? 5 : 1;
+
+    if (images.length + files.length > maxImages) {
+      alert(`Solo podés subir un máximo de ${maxImages} imagen${maxImages > 1 ? 'es' : ''}.`);
+      return;
+    }
+
     setImages((prev) => [...prev, ...files]);
   };
 
@@ -27,6 +35,7 @@ export default function RecipeImageUploader({ images, setImages, ingredients, ad
     }
   };
 
+
   return (
     <>
       {/* mobile */}
@@ -38,6 +47,7 @@ export default function RecipeImageUploader({ images, setImages, ingredients, ad
             multiple
             accept="image/*"
             className="hidden"
+            capture="environment"
             id="upload-mobile"
             onChange={handleImageUpload}
           />

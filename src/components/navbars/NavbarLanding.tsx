@@ -23,7 +23,7 @@ export default function NavbarLanding() {
     <nav
       className={`fixed top-0 left-0 w-full z-50 py-4 px-8 transition-all duration-300 ${
         scrolled
-          ? "background-color-nav-scrolled shadow text-red-400"
+          ? "background-color-primary shadow text-red-400"
           : "bg-transparent text-white"
       }`}
     >
@@ -109,7 +109,7 @@ export default function NavbarLanding() {
       >
         <div
           className={`flex flex-col space-y-4 p-6 ${
-            scrolled ? "bg-white shadow-lg" : "background-color-nav-scrolled"
+            scrolled ? "bg-white shadow-lg" : "background-color-primary"
           }`}
         >
           <Link

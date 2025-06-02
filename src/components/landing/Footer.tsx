@@ -1,7 +1,7 @@
 import Link from 'next/link';
 export default function Footer() {
     return (
-      <footer className="background-color-nav-scrolled py-8 mt-6 relative" style={{ zIndex: "1", backgroundColor: "#f37b6a" }}>
+      <footer className="background-color-primary py-8 mt-6 relative" style={{ zIndex: "1", backgroundColor: "#f37b6a" }}>
         <div className="container mx-auto px-4 flex justify-between items-center">
           {/* Columna 1: Icono y texto */}
           <div className="flex items-center space-x-2">
