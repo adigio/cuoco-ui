@@ -1,5 +1,5 @@
 "use client";
-import ChefLoader from "@/components/shared/ChefLoader";
+import ChefLoader from "@/components/shared/loaders/ChefLoader";
 
 export default function Favs() {
   return (

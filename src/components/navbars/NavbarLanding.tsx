@@ -77,7 +77,7 @@ export default function NavbarLanding() {
 
         {/* Menu para desktop */}
         <div className="hidden lg:flex space-x-6 text-black font-bold flex items-center">
-          <Link href="#beneficios" className={`hover:text-red-500`}>
+          <Link href="#benefits" className={`hover:text-red-500`}>
             Beneficios
           </Link>
           <Link href="#aboutUs" className={`hover:text-red-500`}>
