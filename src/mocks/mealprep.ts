@@ -8,13 +8,13 @@ export interface Recipe {
 export interface Step {
   title: string;
   instructions: string[];
-  estimatedTime: number; // en minutos
+  estimatedTime: number;
 }
 
 export interface MealPrep {
   id: number;
   title: string;
-  observation: String;
+  observation: string;
   estimatedCookingTime: number;
   totalPortions: number;
   ingredients: String[];

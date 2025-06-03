@@ -23,7 +23,7 @@ export const generateMealPrepRecipes = async (requestData: MealPrepGenerationReq
   }
   
 };
-export const getMealPrepById = async (id: string) => { 
+export const getMealPrepById = async (id: number) => { 
   try {
     // Simulación de delay para mostrar el loader (solo para desarrollo)
     await new Promise(resolve => setTimeout(resolve, 1500));
