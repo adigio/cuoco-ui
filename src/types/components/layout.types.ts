@@ -8,6 +8,10 @@ export interface ContainerProps {
 
 export interface ContainerShadowProps extends ContainerProps {}
 
+export interface ContainerCardDetailProps extends ContainerProps {
+  title?: string;
+}
+
 export type IconProps = Omit<SVGProps<SVGSVGElement>, "ref"> & {
   title?: string;
   titleId?: string;

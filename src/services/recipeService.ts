@@ -1,4 +1,4 @@
-import { ApiResponse, Recipe, RecipeGenerationRequest, RecipeResponse } from "@/types";
+import { ApiResponse, Recipe, RecipeDetail, RecipeGenerationRequest, RecipeResponse } from "@/types";
 import axios from "axios";
 
 export const generateRecipes = async (informationRecipe: RecipeGenerationRequest) => {
@@ -27,7 +27,7 @@ export const getRecipeById = async (id: string) => {
     // Simulación de delay para mostrar el loader (solo para desarrollo)
     await new Promise(resolve => setTimeout(resolve, 1500));
         
-    const response: ApiResponse<Recipe>  = await axios.get(`/api/recipe/${id}`,  
+    const response: ApiResponse<RecipeDetail>  = await axios.get(`/api/recipe/${id}`,  
       {
         headers: {
           'Content-Type': 'application/json'
