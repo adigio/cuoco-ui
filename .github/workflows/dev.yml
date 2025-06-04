@@ -2,7 +2,8 @@ name: Deploy in development
 
 on:
   push:
-    branches: [release]
+    branches:
+      - 'release/**'
 
 jobs:
   deploy:
