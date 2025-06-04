@@ -6,11 +6,13 @@ import { faClock, faHeart } from "@fortawesome/free-solid-svg-icons";
 interface TimeAndFavoriteProps {
   minutes: number;
   onToggleFavorite: () => void;
+  isFavorite?: boolean;
 }
 
 const TimeAndFavorite: React.FC<TimeAndFavoriteProps> = ({
   minutes,
   onToggleFavorite,
+  isFavorite = false,
 }) => {
   const hrs = Math.floor(minutes / 60);
   const mins = String(minutes % 60).padStart(2, "0");
