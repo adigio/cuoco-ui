@@ -1,4 +1,5 @@
 // components/IngredientsList.tsx
+import ContainerCardDetail from "@/components/shared/containers/ContainerCardDetail";
 import React from "react";
 
 interface IngredientsListProps {
@@ -6,15 +7,13 @@ interface IngredientsListProps {
 }
 
 const IngredientsList: React.FC<IngredientsListProps> = ({ ingredients }) => (
-  <div className="bg-white shadow rounded-lg p-4">
-    <h3 className="text-md font-bold mb-2">Ingredientes necesarios</h3>
-    <hr className="border-gray-200 mb-4" />
+  <ContainerCardDetail title="Ingredientes necesarios">
     <ul className="list-disc list-inside text-sm text-gray-700">
       {ingredients.map((ingredient, i) => (
         <li key={i}>{ingredient}</li>
       ))}
     </ul>
-  </div>
+  </ContainerCardDetail>
 );
 
 export default IngredientsList;
