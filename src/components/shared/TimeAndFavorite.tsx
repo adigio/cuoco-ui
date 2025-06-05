@@ -1,7 +1,9 @@
-// components/TimeAndFavorite.tsx
+// components/shared/TimeAndFavorite.tsx
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClock, faHeart } from "@fortawesome/free-solid-svg-icons";
+import { faClock } from "@fortawesome/free-solid-svg-icons";
+import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons";
+import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons";
 
 interface TimeAndFavoriteProps {
   minutes: number;
@@ -27,14 +29,21 @@ const TimeAndFavorite: React.FC<TimeAndFavoriteProps> = ({
 
       {/* Botón favorito */}
       <button
-        className="border-2 border-[#f27f6c] rounded-full p-2 hover:text-red-600 hover:border-red-600 transition"
+        className={`border-2 rounded-full p-2 transition ${
+          isFavorite 
+            ? 'border-red-600 text-red-600' 
+            : 'border-[#f27f6c] hover:text-red-600 hover:border-red-600'
+        }`}
         onClick={onToggleFavorite}
-        aria-label="Agregar a favoritos"
+        aria-label={isFavorite ? "Quitar de favoritos" : "Agregar a favoritos"}
       >
-        <FontAwesomeIcon icon={faHeart} className="w-6 h-6" />
+        <FontAwesomeIcon 
+          icon={isFavorite ? faHeartSolid : faHeartRegular} 
+          className="w-6 h-6" 
+        />
       </button>
     </div>
   );
 };
 
-export default TimeAndFavorite;
+export default TimeAndFavorite; 

@@ -1,6 +1,6 @@
 import React from "react";
 import { RecipeDetail } from "@/types/recipe/recipe.types";
-import TimeAndFavorite from "@/components/meal-prep/TimeAndFavorite";
+import TimeAndFavorite from "@/components/shared/TimeAndFavorite";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 

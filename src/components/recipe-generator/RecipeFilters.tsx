@@ -121,7 +121,7 @@ export default function RecipeFilters() {
   }
 
   return (
-    <div className="flex flex-col  bg-[#fefefe] p-6">
+    <div className="flex flex-col bg-[#fefefe] p-6">
       <h2 className="text-xl font-semibold text-gray-800 mb-4">
         Ingredientes seleccionados
       </h2>
@@ -135,91 +135,94 @@ export default function RecipeFilters() {
         </div>
       )}
 
-        <div className="relative">
-          {!isPremium && (
-            <div className="absolute inset-0 bg-white/70 backdrop-blur-sm z-10 flex items-center justify-center text-center px-4 rounded">
-              <div className="text-gray-700 text-sm flex flex-col items-center gap-2">
-                <span className="text-color-primary text-xl">Haz tu prueba sin filtros</span>
-                <p className="font-semibold text-base">
-                  🔒 Filtros disponibles solo para usuarios Premium
-                </p>
-                <p className="text-sm text-gray-600">
-                  Suscribite para personalizar tus recetas según tus
-                  preferencias.
-                </p>
-                <button
-                  onClick={() => router.push("/profile")} 
-                  className="mt-2 bg-[#f37b6a] text-white text-sm px-4 py-2 rounded hover:bg-[#e36455] transition"
-                >
-                  Hacete Premium
-                </button>
-              </div>
+      <div className="relative w-full">
+        {!isPremium && (
+          <div className="absolute inset-0 bg-white/70 backdrop-blur-sm z-10 flex items-center justify-center text-center px-4 rounded">
+            <div className="text-gray-700 text-sm flex flex-col items-center gap-2">
+              <span className="text-color-primary text-xl">Haz tu prueba sin filtros</span>
+              <p className="font-semibold text-base">
+                🔒 Filtros disponibles solo para usuarios Premium
+              </p>
+              <p className="text-sm text-gray-600">
+                Suscribite para personalizar tus recetas según tus
+                preferencias.
+              </p>
+              <button
+                onClick={() => router.push("/profile")}
+                className="mt-2 bg-[#f37b6a] text-white text-sm px-4 py-2 rounded hover:bg-[#e36455] transition"
+              >
+                Hacete Premium
+              </button>
             </div>
-          )}
-      <div className="grid grid-cols-2 gap-4">
+          </div>
+        )}
 
-          <fieldset
-            disabled={!isPremium}
-            className={`${!isPremium ? "opacity-50" : ""}`}
-          >
-            <div className="grid grid-cols-2 gap-4">
-              <Select
-                name="tiempo"
-                value={filters.time}
-                onChange={handleChange}
-                options={timeOptions as any}
-                label="Tiempo de preparación"
-              />
+        <fieldset
+          disabled={!isPremium}
+          className={`${!isPremium ? "opacity-50" : ""} w-full`}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <Select
+              name="tiempo"
+              value={filters.time}
+              onChange={handleChange}
+              options={timeOptions as any}
+              label="Tiempo de preparación"
+            />
 
-              <Select
-                name="difficulty"
-                value={filters.difficulty}
-                onChange={handleChange}
-                options={difficultyOptions as any}
-                label="Dificultad"
-              />
+            <Select
+              name="difficulty"
+              value={filters.difficulty}
+              onChange={handleChange}
+              options={difficultyOptions as any}
+              label="Dificultad"
+            />
 
-              <Select
-                name="diet"
-                value={filters.diet}
-                onChange={handleChange}
-                options={dietOptions as any}
-                label="Dieta"
-              />
+            <Select
+              name="diet"
+              value={filters.diet}
+              onChange={handleChange}
+              options={dietOptions as any}
+              label="Dieta"
+            />
 
-              <Input
-                type="number"
-                name="people"
-                value={filters.people}
-                onChange={handleChange}
-                label="Cantidad de personas"
-                min="1"
-              />
-            </div>
+            <Input
+              type="number"
+              name="people"
+              value={filters.people}
+              onChange={handleChange}
+              label="Cantidad de personas"
+              min="1"
+            />
+          </div>
 
-            <div className="grid grid-cols-2 gap-4 mt-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <h3 className="text-lg font-medium mb-2 text-gray-800">
+                Tipo de comida
+              </h3>
               <CheckboxGroup
-                title="Tipo de comida"
+                title=""
                 options={typesOfFood}
                 selectedValues={filters.types}
                 onChange={handleTiposChange}
               />
-
-              <div>
-                <h3 className={`text-lg font-medium mb-2 text-gray-800`}>
-                  Preferencias de perfil
-                </h3>
-                <Checkbox
-                  id="profile-preferences"
-                  name="profile-preferences"
-                  checked={filters.useProfilePreferences}
-                  onChange={handleProfilePreferencesChange}
-                  label="Tener en cuenta las preferencias del perfil configurado"
-                />
-              </div>
             </div>
-          </fieldset>
-        </div>
+
+            <div>
+              <h3 className="text-lg font-medium mb-2 text-gray-800">
+                Preferencias de perfil
+              </h3>
+              <Checkbox
+                id="profile-preferences"
+                name="profile-preferences"
+                checked={filters.useProfilePreferences}
+                onChange={handleProfilePreferencesChange}
+                label="Tener en cuenta las preferencias del perfil configurado"
+              />
+            </div>
+          </div>
+        </fieldset>
       </div>
 
       <div className="flex justify-between mt-8">
@@ -235,10 +238,9 @@ export default function RecipeFilters() {
           onClick={handleFinish}
           disabled={loading}
           className={`
-            ${
-              loading
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-[#f37b6a] hover:bg-[#e36455] cursor-pointer"
+            ${loading
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-[#f37b6a] hover:bg-[#e36455] cursor-pointer"
             } 
             text-white px-6 py-2 rounded transition
           `}

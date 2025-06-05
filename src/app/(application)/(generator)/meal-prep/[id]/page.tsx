@@ -12,7 +12,7 @@ import MealPrepSteps from "@/components/meal-prep/MealPrepSteps";
 import ObservationInfo from "@/components/meal-prep/ObservationInfo";
 import IngredientsList from "@/components/meal-prep/IngredientList";
 import PortionSummary from "@/components/meal-prep/PortionSummary";
-import TimeAndFavorite from "@/components/meal-prep/TimeAndFavorite";
+import TimeAndFavorite from "@/components/shared/TimeAndFavorite";
 export default function MealPrepPage({ params }: PageProps) {
   const router = useRouter();
   const { id: mealPrepId } = use(params);
