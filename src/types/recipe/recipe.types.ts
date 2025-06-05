@@ -17,6 +17,7 @@ export interface FiltersMealprep {
   freezerAvailable: boolean; // Si hay freezer para conservar comida
 }
 
+// Tipos de la API
 export interface Recipe {
   id: number;
   name: string;
@@ -40,6 +41,53 @@ export interface Recipe {
   updatedAt?: Date;
 }
 
+export interface RecipeResponse {
+  recipes: Recipe[];
+}
+
+export interface RecipeDetailStep {
+  number: number;
+  title?: string;
+  description: string;
+  image?: string;
+}
+
+export interface RecipeDetailSection {
+  section: string;
+  steps: RecipeDetailStep[];
+}
+
+export interface RecipeDetailIngredient {
+  quantity: string;
+  description: string;
+  have: boolean;
+}
+
+export interface RecipeDetailIngredientGroup {
+  section: string;
+  items: RecipeDetailIngredient[];
+}
+
+export interface RecipeDetailMissingIngredient {
+  quantity: string;
+  description: string;
+}
+
+export interface RecipeDetail {
+  id: number;
+  name: string;
+  subtitle: string;
+  time: number;
+  servings: number;
+  difficulty: string;
+  isFavorite: boolean;
+  stepBlocks: RecipeDetailSection[];
+  ingredients: RecipeDetailIngredientGroup[];
+  missingIngredients: RecipeDetailMissingIngredient[];
+  observation?: string;
+}
+
+// Tipos para formularios y requests
 export interface RecipeFormData {
   name: string;
   description: string;
@@ -63,6 +111,11 @@ export interface RecipeGenerationRequest {
     types: string[];
   };
 }
+
+export interface PageProps {
+  params: Promise<{ id: string }>;
+}
+
 export interface MealPrepGenerationRequest {
   ingredients: string[];
   filters: {
@@ -73,20 +126,24 @@ export interface MealPrepGenerationRequest {
     days: number; // Cantidad de días del meal prep
     freezerAvailable: boolean; // Si hay freezer para conservar comida
   };
-} 
+}
+
+export interface MealPrepRecipe {
+  id: string;
+  title: string;
+  image: string;
+  portions?: number;
+}
 
 export interface MealPrep {
-  id: string;
+  id: number;
   title: string;
   estimatedCookingTime: number;
   totalPortions: number;
-
-  recipes: {
-    id: string;
-    title: string;
-    image: string;
-  }[];
-
+  ingredients: string[];
+  observation?: string;
+  description?: string;
+  recipes: MealPrepRecipe[];
   steps: {
     title: string;
     instructions: string[];
@@ -94,13 +151,4 @@ export interface MealPrep {
   }[];
 }
 
-
 export type MealPrepResponse = MealPrep[];
-
-export interface RecipeResponse {
-  recipes: Recipe[];
-}
-
-export interface PageProps {
-  params: Promise<{ id: string }>;
-}

@@ -2,22 +2,30 @@
 
 import { MealPrep } from "@/types";
 import React, { ReactNode } from 'react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+
 interface Props {
   mealPrep: MealPrep;
-  onClick: () => void;
+  onClick?: () => void;
   children?: ReactNode;
 }
-export default function MealPrepCard({ mealPrep, children }: Props) {
 
-  const handleRefreshRecipe = (id: number) => {
-    // Guardás el ID seleccionado o redirigís (ver más adelante)
-    console.log(`MealPrep seleccionado: ${id}`);
-    // router.push(`/meal-prep/${id}`);
+export default function MealPrepCard({ mealPrep, onClick, children }: Props) {
+  const router = useRouter();
+
+  const handleClick = () => {
+    if (onClick) {
+      onClick();
+    } else {
+      router.push(`/meal-prep/${mealPrep.id}`);
+    }
   };
 
   return (
     <div
       className="cursor-pointer w-full bg-white shadow-md rounded-lg p-4 mb-6 hover:shadow-lg transition"
+      onClick={handleClick}
     >
       <h3 className="text-xl font-bold mb-2">{mealPrep.title}</h3>
 
@@ -28,23 +36,22 @@ export default function MealPrepCard({ mealPrep, children }: Props) {
             className="flex-1 bg-gray-100 rounded p-3 flex flex-col items-start"
           >
             {recipe.image && (
-              <a className="w-full" href={`/meal-prep/${mealPrep.id}`}>
-                <img
+              <div className="w-full relative h-32">
+                <Image
                   src={recipe.image}
                   alt={recipe.title}
-                  onClick={(e) => handleRefreshRecipe(mealPrep.id)}
-                  className="w-full h-32 object-cover rounded mb-2"
+                  fill
+                  className="object-cover rounded"
                 />
-              </a>
+              </div>
             )}
             <h4 className="font-semibold text-md">{recipe.title}</h4>
           </div>
         ))}
-
       </div>
 
       {children &&
-        <div className="p-4">{children}</div>}
+        <div className="p-4" onClick={e => e.stopPropagation()}>{children}</div>}
     </div>
   );
 }

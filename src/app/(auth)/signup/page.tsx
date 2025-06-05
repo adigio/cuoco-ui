@@ -7,6 +7,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import RegisterStepper from '@/components/auth/RegisterStepper'
 import RegisterStepBox from '@/components/auth/RegisterStepBox'
 import Modal from '@/components/shared/modal/Modal'
@@ -43,11 +44,14 @@ export default function SignupPage() {
   return (
     <div className="min-h-screen bg-[url('/auth/signup.png')] bg-cover bg-no-repeat bg-center flex items-center justify-center px-4 md:px-16">
       <div className="flex flex-col items-center justify-start">
-        <img
-          src="/logos/logo_coral.png"
-          alt="Cuoco Logo"
-          className="w-48 mb-8"
-        />
+        <div className="relative w-48 h-48 mb-8">
+          <Image
+            src="/logos/logo_coral.png"
+            alt="Cuoco Logo"
+            fill
+            className="object-contain"
+          />
+        </div>
         <div className="bg-white/90 rounded-3xl p-6 w-full md:max-w-md space-y-4 shadow-xl mx-4 md:mx-0">
           {registerFinished ? (
             <div className="text-center space-y-4">

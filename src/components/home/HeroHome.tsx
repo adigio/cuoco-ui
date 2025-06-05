@@ -39,7 +39,7 @@ export default function HeroHome() {
     }
 
     setSaludo(`${nuevoSaludo}, ${user}!`);
-  }, []);
+  }, [user]);
 
   const handleSend = async () => {
     if (!fastRecipeName.trim()) return;

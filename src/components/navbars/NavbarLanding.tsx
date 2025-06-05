@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 
 export default function NavbarLanding() {
@@ -35,18 +36,22 @@ export default function NavbarLanding() {
             }`}
           >
             {scrolled && (
-             <img
-              src="/logos/logo-blanco.png"
-              className="w-10 h-10 object-contain"
-            />
-
+              <Image
+                src="/logos/logo-blanco.png"
+                alt="Logo principal"
+                width={40}
+                height={40}
+                className="object-contain"
+              />
             )}
            
             {scrolled && (
-              <img
+              <Image
                 src="/logos/iso-blanco.png"
                 alt="Logo secundario"
-                className="w-15 h-15 object-contain transition-opacity duration-300"
+                width={60}
+                height={60}
+                className="object-contain transition-opacity duration-300"
               />
             )}
           </div>

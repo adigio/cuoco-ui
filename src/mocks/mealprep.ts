@@ -1,5 +1,5 @@
 export interface Recipe {
-  id: string;
+  id: number;
   title: string;
   portions: number;
   image: string;
@@ -49,21 +49,21 @@ export const mealPreps: MealPrep[] = [
     ],
     recipes: [
       {
-        id: "rec-1",
+        id: 1,
         title: "Pollo al curry con arroz integral",
         portions: 4,
         image:
           "https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?auto=format&fit=crop&w=800&q=80",
       },
       {
-        id: "rec-2",
+        id: 2,
         title: "Wrap de atún con vegetales",
         portions: 4,
         image:
           "https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?auto=format&fit=crop&w=800&q=80",
       },
       {
-        id: "rec-3",
+        id: 3,
         title: "Galletas de avena y banana",
         portions: 4,
         image:
@@ -120,21 +120,21 @@ export const mealPreps: MealPrep[] = [
     ],
     recipes: [
       {
-        id: "rec-4",
+        id: 4,
         title: "Buddha bowl de quinoa",
         portions: 4,
         image:
           "https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?auto=format&fit=crop&w=800&q=80",
       },
       {
-        id: "rec-5",
+        id: 5,
         title: "Tacos de lentejas",
         portions: 4,
         image:
           "https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?auto=format&fit=crop&w=800&q=80",
       },
       {
-        id: "rec-6",
+        id: 6,
         title: "Barritas de avena y dátiles",
         portions: 4,
         image:
@@ -197,21 +197,21 @@ export const mealPreps: MealPrep[] = [
     ],
     recipes: [
       {
-        id: "rec-7",
+        id: 7,
         title: "Pasta boloñesa",
         portions: 4,
         image:
           "https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?auto=format&fit=crop&w=800&q=80",
       },
       {
-        id: "rec-8",
+        id: 8,
         title: "Tarta de espinaca y queso",
         portions: 4,
         image:
           "https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?auto=format&fit=crop&w=800&q=80",
       },
       {
-        id: "rec-9",
+        id: 9,
         title: "Muffins de zanahoria",
         portions: 4,
         image:

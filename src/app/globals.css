@@ -4,7 +4,8 @@
   --background: #ffffff;
   --foreground: #171717;
   --background-color-primary: rgba(242, 127, 108, 92);  
-  --background-color-primary-soft: rgba(242, 127, 108, 0.6) 
+  --background-color-primary-soft: rgba(242, 127, 108, 0.6);
+  --color-primary-medium: #f27f6c;
 }
 
 @theme inline {
@@ -26,7 +27,6 @@ body {
   color: var(--foreground);
   font-family: var(--font-montserrat);
 }
- 
 
 .background-color-primary{
   background-color: var(--background-color-primary);
@@ -44,7 +44,14 @@ color: var(--background-color-primary);
 border-color: var(--background-color-primary);
 }
 .border-color-primary-soft{
- border-color: var(--background-color-primary-soft);
+  border-color: var(--background-color-primary-soft);
 }
 
 
+.text-color-primary-medium {
+  color: var(--color-primary-medium);
+}
+
+.border-color-primary-medium {
+  border-color: var(--color-primary-medium);
+}

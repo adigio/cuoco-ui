@@ -4,11 +4,15 @@ export default function AboutUs() {
   return (
     <section className="relative  bg-white py-20 px-4 md:px-20 overflow-hidden" id="aboutUs">
       {/* Fondo decorativo (esquina inferior derecha) */}
-      <img
-        src="/decorativos.png" // reemplazá por el archivo real si es necesario
-        alt="Decoración de ingredientes"
-        className="hidden md:block absolute bottom-0 right-0 w-64 pointer-events-none z-0"
-      />
+     <div className="hidden md:block absolute bottom-0 right-0 w-64 pointer-events-none z-0">
+        <Image
+          src="/decorativos.png"
+          alt="Decoración de ingredientes"
+          width={256}
+          height={256}
+          className="w-full h-auto"
+        />
+      </div>
 
       <div className="relative z-10 max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
         {/* Imagen de comida */}

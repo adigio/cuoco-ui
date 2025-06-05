@@ -6,11 +6,12 @@ import RecipeCard from "@/components/shared/cards/RecipeCard";
 import MealPrepCard from "@/components/meal-prep/MealPrepCard";
 import Pagination from "@/components/shared/Pagination";
 import { getFavRecipes, getFavMealPreps } from "@/services/favsService";
+import { Ingredient, MealPrep, Recipe } from "@/types";
 
 export default function Favs() {
   const [loading, setLoading] = useState(true);
 
-  const [recipes, setRecipes] = useState([]);
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [recipesPage, setRecipesPage] = useState(1);
   const [recipesTotalPages, setRecipesTotalPages] = useState(1);
   const [mealPreps, setMealPreps] = useState([]);
@@ -18,52 +19,55 @@ export default function Favs() {
   const [mealPrepsTotalPages, setMealPrepsTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchTermMealPrep, setSearchTermMealPrep] = useState("");
+
   useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const [recipesRes, mealPrepsRes] = await Promise.all([
+          getFavRecipes(recipesPage),
+          getFavMealPreps(mealPrepsPage),
+        ]);
+
+        // Asegurarse de que sea plano si viene anidado
+        const recipesList = Array.isArray(recipesRes.data[0])
+          ? recipesRes.data.flat()
+          : recipesRes.data;
+
+        const mealPrepsList = Array.isArray(mealPrepsRes.data[0])
+          ? mealPrepsRes.data.flat()
+          : mealPrepsRes.data;
+
+        // Setear estados para mapear
+        setRecipes(recipesList);
+        setMealPreps(mealPrepsList);
+
+        setRecipesTotalPages(recipesRes.totalPages);
+        setMealPrepsTotalPages(mealPrepsRes.totalPages);
+      } catch (err) {
+        console.error("Error al traer favoritos", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchData();
   }, [recipesPage, mealPrepsPage]);
 
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const [recipesRes, mealPrepsRes] = await Promise.all([
-        getFavRecipes(recipesPage),
-        getFavMealPreps(mealPrepsPage),
-      ]);
-
-      // Asegurarse de que sea plano si viene anidado
-      const recipesList = Array.isArray(recipesRes.data[0])
-        ? recipesRes.data.flat()
-        : recipesRes.data;
-
-      const mealPrepsList = Array.isArray(mealPrepsRes.data[0])
-        ? mealPrepsRes.data.flat()
-        : mealPrepsRes.data;
-
-      // Setear estados para mapear
-      setRecipes(recipesList);
-      setMealPreps(mealPrepsList);
-
-      setRecipesTotalPages(recipesRes.totalPages);
-      setMealPrepsTotalPages(mealPrepsRes.totalPages);
-
-      console.log(recipesRes, mealPrepsRes);
-    } catch (err) {
-      console.error("Error al traer favoritos", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   if (loading) return <ChefLoader text="Cargando tus favoritos..." />;
-  const filteredRecipes = recipes.filter((recipe) => {
+  const filteredRecipes = recipes.filter((recipe: Recipe) => {
     const term = searchTerm.toLowerCase();
     return (
       recipe.name.toLowerCase().includes(term) ||
-      recipe.instructions.toLowerCase().includes(term) ||
-      recipe.ingredients.some((ing) => ing.toLowerCase().includes(term))
+      recipe.instructions.some(instruction =>
+        instruction.toLowerCase().includes(term)
+      ) ||
+      recipe.ingredients.some((ing: Ingredient) =>
+        ing.name?.toLowerCase().includes(term)
+      )
     );
   });
-  const filteredMealPreps = mealPreps.filter((mp) => {
+  const filteredMealPreps = mealPreps.filter((mp: MealPrep) => {
     const term = searchTermMealPrep.toLowerCase();
     return (
       mp.title?.toLowerCase().includes(term) ||
@@ -117,8 +121,8 @@ export default function Favs() {
           </p>
         ) : (
           <div className="grid grid-cols-1 gap-4">
-            {filteredMealPreps.map((mp) => (
-              <MealPrepCard key={mp.id} mealPrep={mp} />
+            {filteredMealPreps.map((mp: MealPrep) => (
+              <MealPrepCard key={mp.id} mealPrep={mp} onClick={() => { }} />
             ))}
           </div>
         )}

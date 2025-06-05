@@ -20,7 +20,7 @@ export default function AppLayout({ children }: Props) {
     if (hydrated && !isAuthenticated) {
       router.push('/');
     }
-  }, [hydrated, isAuthenticated]);
+  }, [hydrated, isAuthenticated, router]);
 
   // Esperamos a que Zustand hidrate antes de renderizar o redirigir
   if (!hydrated) return null;

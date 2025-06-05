@@ -1,12 +1,40 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import RecipeIngredientInput from '@/components/recipe-generator/IngredientInput';
 import RecipeIngredientList from '@/components/recipe-generator/IngredientList';
 import ContainerShadow from '@/components/shared/containers/ContainerShadow';
 import { RecipeImageUploaderProps } from '@/types/components/recipe-generator.types';
-import { useAuthStore } from '@/store/useAuthStore';import { useIngredientsStore } from '@/store/useIngredientsStore';
+import { useAuthStore } from '@/store/useAuthStore';
+import { useIngredientsStore } from '@/store/useIngredientsStore';
 import { Ingredient } from '@/types/ingredient/ingredient.types';
+
+// Componente para manejar imágenes locales
+function LocalImage({ file, alt, className }: { file: File, alt: string, className?: string }) {
+  const [objectUrl, setObjectUrl] = useState<string>('');
+
+  useEffect(() => {
+    const url = URL.createObjectURL(file);
+    setObjectUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [file]);
+
+  if (!objectUrl) return null;
+
+  return (
+    <div className={className || ''} style={{ position: 'relative', width: '100%', height: '180px' }}>
+      <Image
+        src={objectUrl}
+        alt={alt}
+        fill
+        style={{ objectFit: 'cover' }}
+        className="rounded"
+      />
+    </div>
+  );
+}
+
 export default function RecipeImageUploader({ images, setImages, ingredients, addIngredient }: RecipeImageUploaderProps) {
   const removeIngredient = useIngredientsStore(state => state.removeIngredient);
 
@@ -68,10 +96,10 @@ export default function RecipeImageUploader({ images, setImages, ingredients, ad
             <div className='h-[300px] overflow-y-auto'>
               {images.map((img, idx) => (
                 <div key={`mobile-${idx}`} className="relative mb-2">
-                  <img
-                    src={URL.createObjectURL(img)}
+                  <LocalImage
+                    file={img}
                     alt={`img ${idx}`}
-                    className="w-full h-[180px] object-cover rounded"
+                    className="w-full"
                   />
                   <button
                     onClick={() => handleDeleteImage(idx)}
@@ -133,10 +161,10 @@ export default function RecipeImageUploader({ images, setImages, ingredients, ad
             <div className='h-[300px] overflow-y-auto'>
               {images.map((img, idx) => (
                 <div key={`desktop-${idx}`} className="relative mb-2">
-                  <img
-                    src={URL.createObjectURL(img)}
+                  <LocalImage
+                    file={img}
                     alt={`img ${idx}`}
-                    className="w-full h-[180px] object-cover rounded"
+                    className="w-full"
                   />
                   <button
                     onClick={() => handleDeleteImage(idx)}

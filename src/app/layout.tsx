@@ -7,7 +7,10 @@ config.autoAddCss = false;
 
 import "@/lib/fontawesome";
 import ClientProvider from "@/context/ClientProvider";
-import { Props } from "next/script";
+
+interface LayoutProps {
+  children: React.ReactNode;
+}
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -20,7 +23,7 @@ export const metadata = {
   description: "Arma tu próxima comida como un chef",
 };
 
-export default function RootLayout({ children }: Props) {
+export default function RootLayout({ children }: LayoutProps) {
   return (
     <html lang="en">
       <head>
