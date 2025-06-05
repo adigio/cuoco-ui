@@ -51,7 +51,7 @@ export const handlers = [
             cookingLevel: "Medio",
             diet: "Omnívoro",
             dietaryRestrictions: ["Sin lactosa"],
-            allergies: ["Ninguna"],
+            allergies: [],
             favoriteCuisines: []
           }
         },
@@ -104,6 +104,7 @@ export const handlers = [
   }),
   http.post("/api/register", async ({ request }) => {
     const body = (await request.json()) as {
+      name: string;
       email: string;
       password: string;
       level: string;

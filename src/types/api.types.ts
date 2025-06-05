@@ -3,7 +3,7 @@ import { Recipe, RecipeGenerationRequest } from "@/types/recipe/recipe.types";
 // Response de API generales
 export type ApiResponse<T> = {
   data?: T;
-  error?: string;
+  error?: boolean;
   status: number;
 }
 

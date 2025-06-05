@@ -5,12 +5,21 @@ import { Ingredient } from "@/types";
  * Analizador principal que se puede cambiar a real cuando esté la API.
  */
 export const analyzeImagesWithAPI = async (images: File[] | string[]): Promise<Ingredient[]> => {
-  try {    
+  console.log("analizando imagenes con API", images );
+  try { 
+    const formData = new FormData();
+    
+    images.forEach((image, index) => {
+      if (image instanceof File) {
+        formData.append(`images`, image);
+      }
+    });
+
     const response = await axios.post('/api/analyze-images', 
-      { images },
+      formData,
       {
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'multipart/form-data'
         }
       }
     );
