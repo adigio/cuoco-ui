@@ -13,11 +13,11 @@ export default function Favs() {
   const [recipes, setRecipes] = useState([]);
   const [recipesPage, setRecipesPage] = useState(1);
   const [recipesTotalPages, setRecipesTotalPages] = useState(1);
-
   const [mealPreps, setMealPreps] = useState([]);
   const [mealPrepsPage, setMealPrepsPage] = useState(1);
   const [mealPrepsTotalPages, setMealPrepsTotalPages] = useState(1);
-
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTermMealPrep, setSearchTermMealPrep] = useState("");
   useEffect(() => {
     fetchData();
   }, [recipesPage, mealPrepsPage]);
@@ -30,12 +30,23 @@ export default function Favs() {
         getFavMealPreps(mealPrepsPage),
       ]);
 
-      setRecipes(recipesRes.data);
-      setRecipesTotalPages(recipesRes.totalPages);
+      // Asegurarse de que sea plano si viene anidado
+      const recipesList = Array.isArray(recipesRes.data[0])
+        ? recipesRes.data.flat()
+        : recipesRes.data;
 
-      setMealPreps(mealPrepsRes.data);
+      const mealPrepsList = Array.isArray(mealPrepsRes.data[0])
+        ? mealPrepsRes.data.flat()
+        : mealPrepsRes.data;
+
+      // Setear estados para mapear
+      setRecipes(recipesList);
+      setMealPreps(mealPrepsList);
+
+      setRecipesTotalPages(recipesRes.totalPages);
       setMealPrepsTotalPages(mealPrepsRes.totalPages);
-      console.log(recipesRes, mealPrepsRes)
+
+      console.log(recipesRes, mealPrepsRes);
     } catch (err) {
       console.error("Error al traer favoritos", err);
     } finally {
@@ -44,20 +55,42 @@ export default function Favs() {
   };
 
   if (loading) return <ChefLoader text="Cargando tus favoritos..." />;
+  const filteredRecipes = recipes.filter((recipe) => {
+    const term = searchTerm.toLowerCase();
+    return (
+      recipe.name.toLowerCase().includes(term) ||
+      recipe.instructions.toLowerCase().includes(term) ||
+      recipe.ingredients.some((ing) => ing.toLowerCase().includes(term))
+    );
+  });
+  const filteredMealPreps = mealPreps.filter((mp) => {
+    const term = searchTermMealPrep.toLowerCase();
+    return (
+      mp.title?.toLowerCase().includes(term) ||
+      mp.description?.toLowerCase().includes(term)
+    );
+  });
 
   return (
     <main className="pt-16 md:pt-8 px-4 max-w-5xl mx-auto flex flex-col gap-12">
       {/* Recetas favoritas */}
       <section>
         <h2 className="text-2xl font-semibold mb-4">Recetas Favoritas</h2>
-        {recipes.length === 0 ? (
-          <p className="text-gray-500">No tenés recetas favoritas todavía.</p>
-        ) : (
+        <input
+          type="text"
+          placeholder="Buscar por nombre, ingrediente o instrucción..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="mb-4 px-4 py-2 border rounded w-full"
+        />
+        {recipes.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {recipes.map((recipe) => (
+            {filteredRecipes.map((recipe) => (
               <RecipeCard key={recipe.id} recipe={recipe} />
             ))}
           </div>
+        ) : (
+          <p className="text-gray-500">No tenés recetas favoritas aún.</p>
         )}
         {recipesTotalPages > 1 && (
           <Pagination
@@ -71,13 +104,20 @@ export default function Favs() {
       {/* MealPrep favoritos */}
       <section>
         <h2 className="text-2xl font-semibold mb-4">Meal Preps Favoritos</h2>
-        {mealPreps.length === 0 ? (
+        <input
+          type="text"
+          placeholder="Buscar meal prep..."
+          value={searchTermMealPrep}
+          onChange={(e) => setSearchTermMealPrep(e.target.value)}
+          className="mb-4 px-4 py-2 border rounded w-full"
+        />
+        {filteredMealPreps.length === 0 ? (
           <p className="text-gray-500">
-            No tenés meal preps guardados todavía.
+            No se encontraron meal preps que coincidan.
           </p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {mealPreps.map((mp) => (
+          <div className="grid grid-cols-1 gap-4">
+            {filteredMealPreps.map((mp) => (
               <MealPrepCard key={mp.id} mealPrep={mp} />
             ))}
           </div>

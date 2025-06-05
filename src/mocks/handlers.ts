@@ -52,8 +52,8 @@ export const handlers = [
             diet: "Omnívoro",
             dietaryRestrictions: ["Sin lactosa"],
             allergies: ["Ninguna"],
-            favoriteCuisines: []
-          }
+            favoriteCuisines: [],
+          },
         },
       });
     }
@@ -69,8 +69,8 @@ export const handlers = [
             diet: "Vegetariano",
             dietaryRestrictions: ["Sin gluten"],
             allergies: ["Maní"],
-            favoriteCuisines: []
-          }
+            favoriteCuisines: [],
+          },
         },
       });
     }
@@ -116,7 +116,7 @@ export const handlers = [
       name: "Nuevo Usuario",
       email: body.email,
       token: "fake-jwt-register-123",
-      premium: true,
+      premium: false,
       preferences: {
         cookingLevel: body.level as "Bajo" | "Medio" | "Alto",
         diet: body.diet as "Omnívoro" | "Vegetariano" | "Vegano" | "Otro",
@@ -169,29 +169,61 @@ export const handlers = [
       return HttpResponse.json({ message: "No encontrado" }, { status: 404 });
     }
   }),
-  http.get('/api/fav/recipes', ({ request }) => {
+  http.get("/api/fav/recipes", ({ request }) => {
     const url = new URL(request.url);
-    const page = Number(url.searchParams.get('page') || 1);
-    console.log("[MSW] Interceptando solicitud a /api/fav/recipes");
+    const page = Number(url.searchParams.get("page") || 1);
+    const limit = Number(url.searchParams.get("limit") || 2); // valor por defecto
+
+    console.log("[MSW] Interceptando solicitud a /api/fav/recipes", {
+      page,
+      limit,
+    });
+
+    // Suponiendo que mockRecipes es un array plano
+    const allRecipes = mockRecipes;
+    const start = (page - 1) * limit;
+    const end = start + limit;
+
+    const paginated = allRecipes.slice(start, end);
+    const totalPages = Math.ceil(allRecipes.length / limit);
 
     return HttpResponse.json({
-      data: [
-        { id: 1, title: 'Receta mock' },
-        { id: 2, title: 'Otra receta mock' }
-      ],
+      data: paginated,
       currentPage: page,
-      totalPages: 1,
+      totalPages,
     });
   }),
 
   // También mock de mealpreps
-  http.get('/api/fav/mealpreps', ({ request }) => {
-        console.log("[MSW] Interceptando solicitud a /api/fav/mealpreps");
+  http.get("/api/fav/mealpreps", ({ request }) => {
+    console.log("[MSW] Interceptando solicitud a /api/fav/mealpreps");
+
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get("page") || "1");
+    const limit = Number(url.searchParams.get("limit") || "2");
+
+    // Datos simulados (puede venir de tu archivo de mocks)
+    const allMealPreps = mealPreps; // tu array original
+    const start = (page - 1) * limit;
+    const end = start + limit;
+
+    const paginated = allMealPreps.slice(start, end);
+    const totalPages = Math.ceil(allMealPreps.length / limit);
 
     return HttpResponse.json({
-      data: [{ id: 1, title: 'MealPrep Mock' }],
-      currentPage: 1,
-      totalPages: 1,
+      data: paginated,
+      currentPage: page,
+      totalPages,
     });
+  }),
+
+  http.post("/api/getRecipe", async ({ request }) => {
+    const body = (await request.json()) as { nombre: string };
+
+    console.log("[MSW] Interceptando receta rápida:", body);
+
+    const nombre = body.nombre || "sin-nombre";
+
+    return HttpResponse.json(mockDetailsRecipes[1], { status: 200 });
   }),
 ];
