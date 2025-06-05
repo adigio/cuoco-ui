@@ -6,11 +6,12 @@ import RecipeCard from "@/components/shared/cards/RecipeCard";
 import MealPrepCard from "@/components/meal-prep/MealPrepCard";
 import Pagination from "@/components/shared/Pagination";
 import { getFavRecipes, getFavMealPreps } from "@/services/favsService";
+import { MealPrep, Recipe } from "@/types";
 
 export default function Favs() {
   const [loading, setLoading] = useState(true);
 
-  const [recipes, setRecipes] = useState([]);
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [recipesPage, setRecipesPage] = useState(1);
   const [recipesTotalPages, setRecipesTotalPages] = useState(1);
 
@@ -19,29 +20,28 @@ export default function Favs() {
   const [mealPrepsTotalPages, setMealPrepsTotalPages] = useState(1);
 
   useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const [recipesRes, mealPrepsRes] = await Promise.all([
+          getFavRecipes(recipesPage),
+          getFavMealPreps(mealPrepsPage),
+        ]);
+
+        setRecipes(recipesRes.data);
+        setRecipesTotalPages(recipesRes.totalPages);
+
+        setMealPreps(mealPrepsRes.data);
+        setMealPrepsTotalPages(mealPrepsRes.totalPages);
+      } catch (err) {
+        console.error("Error al traer favoritos", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
     fetchData();
   }, [recipesPage, mealPrepsPage]);
-
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const [recipesRes, mealPrepsRes] = await Promise.all([
-        getFavRecipes(recipesPage),
-        getFavMealPreps(mealPrepsPage),
-      ]);
-
-      setRecipes(recipesRes.data);
-      setRecipesTotalPages(recipesRes.totalPages);
-
-      setMealPreps(mealPrepsRes.data);
-      setMealPrepsTotalPages(mealPrepsRes.totalPages);
-      console.log(recipesRes, mealPrepsRes)
-    } catch (err) {
-      console.error("Error al traer favoritos", err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   if (loading) return <ChefLoader text="Cargando tus favoritos..." />;
 
@@ -77,8 +77,8 @@ export default function Favs() {
           </p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {mealPreps.map((mp) => (
-              <MealPrepCard key={mp.id} mealPrep={mp} />
+            {mealPreps.map((mp: MealPrep) => (
+              <MealPrepCard key={mp.id} mealPrep={mp} onClick={() => {}} />
             ))}
           </div>
         )}

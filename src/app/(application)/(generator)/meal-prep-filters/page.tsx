@@ -9,13 +9,6 @@ import React from "react";
 import { useIngredientsStore } from "@/store/useIngredientsStore";
 import { useMealPrepStore } from "@/store/useMealPrepStore";
 
-//compoenentes
-import CheckboxGroup from "@/components/shared/form/CheckboxGroup";
-import ChefLoader from "@/components/shared/ChefLoader";
-import RecipeIngredientList from "@/components/recipe-generator/IngredientList";
-import Select from "@/components/shared/form/Select";
-import Input from "@/components/shared/form/Input";
-import Checkbox from "@/components/shared/form/Checkbox";
 
 // Tipos
 import { MealPrepGenerationRequest, FiltersMealprep } from "@/types";

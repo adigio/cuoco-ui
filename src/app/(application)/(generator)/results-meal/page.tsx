@@ -9,20 +9,26 @@ import { useRouter } from "next/navigation";
 import { useMealPrepStore } from "@/store/useMealPrepStore";
 //Componentes
 import MealPrepCard from "@/components/meal-prep/MealPrepCard"; 
+
 export default function RecipeResultsPage() {
   const mealPreps = useMealPrepStore((state) => state.mealPreps);
   const router = useRouter();
-  const handleFavMealPrep = (mealPrepId: number) => { 
-    // router.push(`/recipe/${recipeId}`);
+
+  const handleFavMealPrep = (e: React.MouseEvent, mealPrepId: number) => {
+    e.stopPropagation();
+    // TODO: Implementar lógica de favoritos
+    console.log("Guardar a favoritos:", mealPrepId);
   };
 
-  const handleRefreshRecipe = (mealPrepId: number) => {
+  const handleRefreshRecipe = (e: React.MouseEvent, mealPrepId: number) => {
+    e.stopPropagation();
     alert("Mostrar el alert modal. Si era user no premiun no.");
   };
 
   const handleBack = () => {
     router.push("/filters");
   };
+
   return (
     <div className="max-w-5xl mx-auto p-6">
       <h2 className="text-2xl font-bold mb-6">Resultados del Meal Prep</h2>
@@ -41,13 +47,13 @@ export default function RecipeResultsPage() {
             <div className="flex items-center gap-3">
               <button
                 className="cursor-pointer w-5 px-2"
-                onClick={() => handleRefreshRecipe(prep.id)}
+                onClick={(e) => handleRefreshRecipe(e, prep.id)}
               >
                 <FontAwesomeIcon className="w-4 h-4" icon={faRotate} />
               </button>
               <button
                 className="cursor-pointer w-4 px-2"
-                onClick={() => handleFavMealPrep(prep.id)}
+                onClick={(e) => handleFavMealPrep(e, prep.id)}
               >
                 <FontAwesomeIcon className="w-4 h-4" icon={faHeart} />
               </button>

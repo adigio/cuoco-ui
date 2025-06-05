@@ -7,7 +7,7 @@ import { persist } from 'zustand/middleware';
 type MealPrepState = {
   mealPreps: MealPrep[];
   setMealPreps: (mealPreps: MealPrep[]) => void;
-  getMealPrepById: (id: string) => MealPrep | undefined;
+  getMealPrepById: (id: number) => MealPrep | undefined;
   clearMealPreps: () => void;
 };
 

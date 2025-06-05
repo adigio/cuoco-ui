@@ -7,8 +7,6 @@ import ChefLoader from "@/components/shared/loaders/ChefLoader";
 import BackgroundLayers from "@/components/shared/BackgroundLayers";
 import ContainerShadow from "@/components/shared/containers/ContainerShadow";
 import { MealPrep, PageProps } from "@/types";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClock, faHeart } from "@fortawesome/free-regular-svg-icons";
 import RecipeTags from "@/components/meal-prep/RecipeTags";
 import MealPrepSteps from "@/components/meal-prep/MealPrepSteps";
 import ObservationInfo from "@/components/meal-prep/ObservationInfo";
@@ -92,7 +90,7 @@ export default function MealPrepPage({ params }: PageProps) {
             <aside className="w-full lg:w-1/4 flex flex-col gap-6">
               <PortionSummary recipes={mealPrep.recipes} />
               <IngredientsList ingredients={mealPrep.ingredients} />
-              <ObservationInfo observation={mealPrep.observation} />
+              {mealPrep.observation && <ObservationInfo observation={mealPrep.observation} />}
             </aside>
           </div>
           <div className="flex justify-center mt-8">
