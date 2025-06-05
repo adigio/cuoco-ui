@@ -34,7 +34,7 @@ export default function HeroHome() {
     }
 
     setSaludo(`${nuevoSaludo}, ${user}!`);
-  }, []);
+  }, [user]);
 
   return (
     <div className="relative w-full h-[80vh] bg-white pt-24 overflow-hidden">

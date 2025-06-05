@@ -126,7 +126,14 @@ export interface MealPrepGenerationRequest {
     days: number; // Cantidad de días del meal prep
     freezerAvailable: boolean; // Si hay freezer para conservar comida
   };
-} 
+}
+
+export interface MealPrepRecipe {
+  id: string;
+  title: string;
+  image: string;
+  portions?: number;
+}
 
 export interface MealPrep {
   id: number;
@@ -134,12 +141,8 @@ export interface MealPrep {
   estimatedCookingTime: number;
   totalPortions: number;
   ingredients: string[];
-  recipes: {
-    id: string;
-    title: string;
-    image: string;
-  }[];
-
+  observation?: string;
+  recipes: MealPrepRecipe[];
   steps: {
     title: string;
     instructions: string[];
