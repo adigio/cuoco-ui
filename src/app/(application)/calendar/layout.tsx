@@ -2,9 +2,12 @@
 'use client';
 
 import Container from '@/components/shared/containers/Container';
-import { Props } from 'next/script';
 
-export default function GeneratorRootLayout({ children }: Props) {
+interface LayoutProps {
+  children: React.ReactNode;
+}
+
+export default function CalendarLayout({ children }: LayoutProps) {
   return (
     <Container>
       {children}

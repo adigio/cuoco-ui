@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { CalendarRecipe } from '@/types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
@@ -41,11 +42,12 @@ export default function RecipeCard({ recipe, onDelete, onAdd, isEmpty = false }:
       <div className="h-full p-3 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
         <div className="flex flex-col h-full">
           {recipe.img && (
-            <div className="w-full h-16 mb-2">
-              <img
-                src={recipe.img}
-                alt={recipe.title}
-                className="w-full h-full object-cover rounded"
+            <div className="relative w-full h-16 mb-2">
+              <Image
+                src={recipe.img || '/images/default-recipe.jpg'}
+                alt={recipe.title || 'Receta sin título'}
+                fill
+                className="object-cover rounded"
               />
             </div>
           )}
