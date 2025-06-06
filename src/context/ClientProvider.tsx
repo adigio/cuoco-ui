@@ -4,7 +4,7 @@ import { Props } from "next/script";
 import { useEffect, useState } from "react";
 import ChefLoader from "@/components/shared/loaders/ChefLoader";
 export default function ClientProvider({ children }: Props) {
-  const [mswReady, setMswReady] = useState(process.env.NODE_ENV !== 'development');
+  const [mswReady, setMswReady] = useState(process.env.NODE_ENV !== 'development' && process.env.NEXT_PUBLIC_ENABLE_MSW !== 'true');
 
   useEffect(() => {
     const initMSW = async () => {
@@ -20,7 +20,7 @@ export default function ClientProvider({ children }: Props) {
       }
     };
 
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === 'development' || process.env.NEXT_PUBLIC_ENABLE_MSW === 'true') {
       initMSW();
     }
   }, []);

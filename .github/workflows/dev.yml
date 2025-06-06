@@ -24,7 +24,7 @@ jobs:
 
     - name: Build Next.js app
       run: |
-        NODE_ENV=development npm run build
+        NEXT_PUBLIC_USE_MSW=true npm run build
 
     - name: Prepare deployment folder
       run: |
