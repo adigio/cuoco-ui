@@ -6,7 +6,8 @@ import { create } from 'zustand';
 
 export const useIngredientsStore = create<IngredientsStore>((set, get) => ({
   ingredients: [],
-
+   mode: null,
+  setMode: (mode) => set({ mode }),
   addIngredient: (name, origin = 'manual', confirm = true) => {
     if (!name || name.trim() === '') {
       console.error('El nombre del ingrediente no puede estar vacío');

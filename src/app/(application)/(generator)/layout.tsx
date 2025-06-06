@@ -2,9 +2,11 @@
 'use client';
 
 import Container from '@/components/shared/containers/Container';
-import { Props } from 'next/script';
+interface LayoutProps {
+  children: React.ReactNode;
+}
 
-export default function GeneratorRootLayout({ children }: Props) {
+export default function GeneratorRootLayout({ children }: LayoutProps) {
   return (
     <Container>
       {children}

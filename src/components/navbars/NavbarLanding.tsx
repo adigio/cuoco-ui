@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 
 export default function NavbarLanding() {
@@ -23,7 +24,7 @@ export default function NavbarLanding() {
     <nav
       className={`fixed top-0 left-0 w-full z-50 py-4 px-8 transition-all duration-300 ${
         scrolled
-          ? "background-color-nav-scrolled shadow text-red-400"
+          ? "background-color-primary shadow text-red-400"
           : "bg-transparent text-white"
       }`}
     >
@@ -35,18 +36,22 @@ export default function NavbarLanding() {
             }`}
           >
             {scrolled && (
-             <img
-              src="/logos/logo-blanco.png"
-              className="w-10 h-10 object-contain"
-            />
-
+              <Image
+                src="/logos/logo-blanco.png"
+                alt="Logo principal"
+                width={40}
+                height={40}
+                className="object-contain"
+              />
             )}
            
             {scrolled && (
-              <img
+              <Image
                 src="/logos/iso-blanco.png"
                 alt="Logo secundario"
-                className="w-15 h-15 object-contain transition-opacity duration-300"
+                width={60}
+                height={60}
+                className="object-contain transition-opacity duration-300"
               />
             )}
           </div>
@@ -77,7 +82,7 @@ export default function NavbarLanding() {
 
         {/* Menu para desktop */}
         <div className="hidden lg:flex space-x-6 text-black font-bold flex items-center">
-          <Link href="#beneficios" className={`hover:text-red-500`}>
+          <Link href="#benefits" className={`hover:text-red-500`}>
             Beneficios
           </Link>
           <Link href="#aboutUs" className={`hover:text-red-500`}>
@@ -109,7 +114,7 @@ export default function NavbarLanding() {
       >
         <div
           className={`flex flex-col space-y-4 p-6 ${
-            scrolled ? "bg-white shadow-lg" : "background-color-nav-scrolled"
+            scrolled ? "bg-white shadow-lg" : "background-color-primary"
           }`}
         >
           <Link

@@ -11,6 +11,7 @@ export interface ModalProps extends ModalBaseProps {
   height?: string;
   padding?: string;
   containerClassName?: string;
+  showCloseButton?: boolean;
 }
 
 export interface AlertModalProps extends ModalBaseProps {

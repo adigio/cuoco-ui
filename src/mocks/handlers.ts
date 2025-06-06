@@ -1,7 +1,9 @@
 import { mocksIngredients } from "@/mocks/ingredients";
 import { mockDetailsRecipes, mockRecipes } from "@/mocks/recipes";
-import { User } from "@/store/useAuthStore";
+import { mealPreps } from "@/mocks/mealprep";
+import { User } from "@/types/auth/auth.types";
 import { http, HttpResponse } from "msw";
+import { MealPrepGenerationRequest } from "@/types"; // Asegurate de tener estos tipos
 
 //Define como se responde a las APIs mockeadas
 
@@ -28,9 +30,8 @@ export const handlers = [
     return HttpResponse.json(mockDetailsRecipes[id], { status: 200 });
   }),
   http.post("/api/login", async ({ request }) => {
-    const body = await request.json(); // <-- ¡esto es clave!
+    const body = await request.json();
 
-    // Protección contra `undefined`
     if (!body || typeof body !== "object") {
       return HttpResponse.json({ message: "Bad request" }, { status: 400 });
     }
@@ -46,6 +47,13 @@ export const handlers = [
           email,
           token: "fake-jwt-123",
           premium: false,
+          preferences: {
+            cookingLevel: "Medio",
+            diet: "Omnívoro",
+            dietaryRestrictions: ["Sin lactosa"],
+            allergies: [],
+            favoriteCuisines: []
+          }
         },
       });
     }
@@ -56,6 +64,13 @@ export const handlers = [
           email,
           token: "fake-jwt-123",
           premium: true,
+          preferences: {
+            cookingLevel: "Alto",
+            diet: "Vegetariano",
+            dietaryRestrictions: ["Sin gluten"],
+            allergies: ["Maní"],
+            favoriteCuisines: [],
+          },
         },
       });
     }
@@ -88,7 +103,8 @@ export const handlers = [
     );
   }),
   http.post("/api/register", async ({ request }) => {
-    const body = await request.json() as {
+    const body = (await request.json()) as {
+      name: string;
       email: string;
       password: string;
       level: string;
@@ -97,42 +113,118 @@ export const handlers = [
       allergies: string[];
     };
 
-    const mockUser: User & { preferences?: any } = {
+    const mockUser: User = {
       name: "Nuevo Usuario",
       email: body.email,
       token: "fake-jwt-register-123",
       premium: false,
       preferences: {
-        level: body.level,
-        diet: body.diet,
-        foodNeeds: body.foodNeeds,
-        allergies: body.allergies
-      }
+        cookingLevel: body.level as "Bajo" | "Medio" | "Alto",
+        diet: body.diet as "Omnívoro" | "Vegetariano" | "Vegano" | "Otro",
+        dietaryRestrictions: body.foodNeeds,
+        allergies: body.allergies,
+        favoriteCuisines: [],
+      },
     };
 
     return HttpResponse.json({ user: mockUser });
   }),
 
   http.get("/api/profile", async ({ request }) => {
-    const authHeader = request.headers.get('Authorization');
+    const authHeader = request.headers.get("Authorization");
 
-    if (!authHeader?.startsWith('Bearer ')) {
-      return HttpResponse.json({ message: 'No autorizado' }, { status: 401 });
+    if (!authHeader?.startsWith("Bearer ")) {
+      return HttpResponse.json({ message: "No autorizado" }, { status: 401 });
     }
 
-    const mockUser: User & { preferences?: any } = {
+    const mockUser: User = {
       name: "Usuario Test",
       email: "test@cuoco.com",
       token: "fake-jwt-123",
       premium: false,
       preferences: {
-        level: "Medio",
+        cookingLevel: "Medio",
         diet: "Omnívoro",
-        foodNeeds: ["Sin lactosa"],
-        allergies: ["Ninguna en particular"]
-      }
+        dietaryRestrictions: ["Sin lactosa"],
+        allergies: ["Ninguna en particular"],
+        favoriteCuisines: [],
+      },
     };
 
     return HttpResponse.json({ user: mockUser });
-  })
+  }),
+  http.post("/api/generate-meal-prep", async ({ request }) => {
+    const body = (await request.json()) as MealPrepGenerationRequest;
+
+    console.log("[MSW] Interceptando solicitud a /api/generate-meal-prep");
+
+    return HttpResponse.json(mealPreps, { status: 200 });
+  }),
+  http.get("/api/meal-prep/:id", ({ params }) => {
+    const id = Number(params.id);
+    const mealPrep = mealPreps.find((m) => m.id === id);
+
+    if (mealPrep) {
+      return HttpResponse.json(mealPrep);
+    } else {
+      return HttpResponse.json({ message: "No encontrado" }, { status: 404 });
+    }
+  }),
+  http.get("/api/fav/recipes", ({ request }) => {
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get("page") || 1);
+    const limit = Number(url.searchParams.get("limit") || 2); // valor por defecto
+
+    console.log("[MSW] Interceptando solicitud a /api/fav/recipes", {
+      page,
+      limit,
+    });
+
+    // Suponiendo que mockRecipes es un array plano
+    const allRecipes = mockRecipes;
+    const start = (page - 1) * limit;
+    const end = start + limit;
+
+    const paginated = allRecipes.slice(start, end);
+    const totalPages = Math.ceil(allRecipes.length / limit);
+
+    return HttpResponse.json({
+      data: paginated,
+      currentPage: page,
+      totalPages,
+    });
+  }),
+
+  // También mock de mealpreps
+  http.get("/api/fav/mealpreps", ({ request }) => {
+    console.log("[MSW] Interceptando solicitud a /api/fav/mealpreps");
+
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get("page") || "1");
+    const limit = Number(url.searchParams.get("limit") || "2");
+
+    // Datos simulados (puede venir de tu archivo de mocks)
+    const allMealPreps = mealPreps; // tu array original
+    const start = (page - 1) * limit;
+    const end = start + limit;
+
+    const paginated = allMealPreps.slice(start, end);
+    const totalPages = Math.ceil(allMealPreps.length / limit);
+
+    return HttpResponse.json({
+      data: paginated,
+      currentPage: page,
+      totalPages,
+    });
+  }),
+
+  http.post("/api/getRecipe", async ({ request }) => {
+    const body = (await request.json()) as { nombre: string };
+
+    console.log("[MSW] Interceptando receta rápida:", body);
+
+    const nombre = body.nombre || "sin-nombre";
+
+    return HttpResponse.json(mockDetailsRecipes[1], { status: 200 });
+  }),
 ];

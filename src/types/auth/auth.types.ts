@@ -17,9 +17,10 @@ export interface RegisterFormData {
 
 export interface UserPreferences {
   dietaryRestrictions?: string[];
-  cookingLevel?: 'beginner' | 'intermediate' | 'advanced';
+  cookingLevel?: 'Bajo' | 'Medio' | 'Alto';
   favoriteCuisines?: string[];
   allergies?: string[];
+  diet?: 'Omnívoro' | 'Vegetariano' | 'Vegano' | 'Otro';
 }
 
 // Tipos para el proceso de inicio de sesión
@@ -27,4 +28,13 @@ export interface LoginFormData {
   email: string;
   password: string;
   rememberMe?: boolean;
+}
+
+// Tipo para el usuario
+export interface User {
+  email: string;
+  name?: string;
+  premium?: boolean;
+  token?: string;
+  preferences?: UserPreferences;
 } 

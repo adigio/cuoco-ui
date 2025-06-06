@@ -1,28 +1,38 @@
 "use client";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function Header() {
   const router = useRouter();
   return (
     <div className="relative w-full h-[80vh] md:h-[80vh] lg:h-screen mt-17 md:mt-0">
-      <img
-        src="landing/imagen_landing_principal.png"
-        alt="Comida"
-        className="hidden md:block w-full h-full object-cover"
-      />
-      <img
-        src="landing/imagen_landing_principal_mobile.png"
-        alt="Comida"
-        className="block sm:hidden w-full h-full object-cover"
-      />
+      <div className="hidden md:block relative w-full h-full">
+        <Image
+          src="/landing/imagen_landing_principal.png"
+          alt="Comida"
+          fill
+          className="object-cover"
+          priority
+        />
+      </div>
+      <div className="block sm:hidden relative w-full h-full">
+        <Image
+          src="/landing/imagen_landing_principal_mobile.png"
+          alt="Comida"
+          fill
+          className="object-cover"
+          priority
+        />
+      </div>
       <div className="absolute inset-0 flex items-start md:items-center">
         <div className="text-left px-4 md:pl-20 pb-[30%] md:pb-0 sm:pt-0 w-full md:w-[45%] lg:w-[45%]">
           {/* Logo */}
-          <div className="mb-4 hidden md:block">
-            <img
+          <div className="mb-4 hidden md:block relative w-[360px] h-[360px]">
+            <Image
               src="/logos/logo_coral.png"
               alt="Logo secundario"
-              className="w-[360px] h-[360px] object-contain transition-opacity duration-300"
+              fill
+              className="object-contain transition-opacity duration-300"
             />
           </div>
 
@@ -42,7 +52,7 @@ export default function Header() {
           <div className="mt-7 md:mb-0 mb-5 md:mt-5 flex flex-col sm:flex-row gap-3">
             <button
               onClick={() => router.push("/recipe-generator")}
-              className="w-full sm:w-auto background-color-nav-scrolled hover:bg-red-600 text-white text-lg font-semibold py-3 px-14 rounded-lg shadow-lg transition"
+              className="w-full sm:w-auto background-color-primary hover:bg-red-600 text-white text-lg font-semibold py-3 px-14 rounded-lg shadow-lg transition"
             >
               Comenzar!
             </button>
