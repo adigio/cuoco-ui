@@ -27,5 +27,5 @@ jobs:
           if [[ "${{ github.base_ref }}" == "main" ]]; then
             NODE_ENV=production npm run build
           else
-            NEXT_PUBLIC_USE_MSW=true npm run build
+            NEXT_PUBLIC_ENABLE_MSW=true npm run build
           fi

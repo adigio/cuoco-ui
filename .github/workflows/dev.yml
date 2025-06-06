@@ -24,7 +24,7 @@ jobs:
 
     - name: Build Next.js app
       run: |
-        NEXT_PUBLIC_USE_MSW=true npm run build
+        NEXT_PUBLIC_ENABLE_MSW=true npm run build
 
     - name: Prepare deployment folder
       run: |
