@@ -8,10 +8,24 @@ import Modal from '@/components/shared/modal/Modal';
 // Datos de ejemplo
 const mockSchedule: WeeklySchedule = [
   {
-    jueves: [],
+    jueves: [
+         {
+        id: "5",
+        title: "Pancakes",
+        img: "/platos/pancakes.PNG",
+        mealType: "Desayuno"
+      }
+    ],
   },
   {
-    viernes: [],
+    viernes: [
+        {
+        id: "6",
+        title: "Budin",
+        img: "/platos/budin.PNG",
+        mealType: "Merienda"
+      }
+    ],
   },
   {
     sabado: [],
@@ -21,13 +35,13 @@ const mockSchedule: WeeklySchedule = [
       {
         id: "1",
         title: "Pollo con zapallitos",
-        img: "https://www.saludable.com.ar/wp-content/uploads/2019/05/pollo-con-zapallitos-saludable-como-puedes-1.jpg",
+        img: "/platos/pollo_zapallitos.PNG",
         mealType: "Almuerzo"
       },
       {
         id: "2",
         title: "Ensalada César",
-        img: "https://example.com/ensalada-cesar.jpg",
+        img: "/platos/ensalada_cesar.PNG",
         mealType: "Cena"
       }
     ]
@@ -37,13 +51,13 @@ const mockSchedule: WeeklySchedule = [
       {
         id: "3",
         title: "Pasta al pesto",
-        img: "https://example.com/pasta-pesto.jpg",
+        img: "/platos/pasta_al_pesto.PNG",
         mealType: "Almuerzo"
       },
       {
         id: "4",
         title: "Salmón grillado",
-        img: "https://example.com/salmon.jpg",
+        img: "/platos/salmon.PNG",
         mealType: "Cena"
       }
     ]
