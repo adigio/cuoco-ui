@@ -5,10 +5,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 import LogoutButton from './LogoutButton';
 import SubscriptionModal from '../shared/modal/SubscriptionModal';
+import { useAuthStore } from "@/store/useAuthStore";
+import { useRouter } from "next/navigation";
 export default function NavbarHome() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSubModalOpen, setIsSubModalOpen] = useState(false);
-  
+    const logout = useAuthStore((state) => state.logout);
+    const router = useRouter();
   // Aquí obtendrías si el usuario es premium (desde tu contexto o store)
   const isPremium = false; // reemplaza por tu lógica real
   
@@ -20,7 +23,10 @@ export default function NavbarHome() {
       setIsSubModalOpen(true);
     }
   };
-
+  const handleLogout = () => {
+    logout();                
+    router.push("/");   
+  };
   return (
     <>
       <nav className="fixed top-0 left-0 w-full z-50 py-4 px-8 background-color-primary shadow transition-all duration-300">
@@ -134,11 +140,18 @@ export default function NavbarHome() {
 
           <Link
             href="/profile"
-            className="block text-center font-bold bg-red-400 text-white px-6 py-2 rounded-lg hover:bg-red-500 transition-all duration-300"
+           className="block text-center font-bold text-red-400 hover:text-red-600 mb-4"
             onClick={() => setIsMenuOpen(false)}
           >
             Perfil
           </Link>
+           <button
+                onClick={handleLogout}
+                  className="block mx-auto font-bold text-red-400 hover:text-red-600 mb-4 relative"
+                title="Cerrar sesión"
+              >
+              Cerra Sesión
+              </button>
         </div>
       </nav>
 
