@@ -76,7 +76,7 @@ export default function Favs() {
   });
 
   return (
-    <main className="pt-16 md:pt-8 px-4 max-w-5xl mx-auto flex flex-col gap-12">
+    <main className="pt-16 md:pt-8 px-4 max-w-5xl mx-auto flex flex-col gap-12  mt-20 ">
       {/* Recetas favoritas */}
       <section>
         <h2 className="text-2xl font-semibold mb-4">Recetas Favoritas</h2>
