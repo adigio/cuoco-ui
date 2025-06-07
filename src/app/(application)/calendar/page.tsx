@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useEffect, useState } from 'react';
 import WeeklyCalendar from '@/components/calendar/WeeklyCalendar';
@@ -9,6 +9,7 @@ import { calendarService } from '@/services/calendar.service';
 import RecipeCard from '@/components/calendar/RecipeCard';
 import Container from '@/components/shared/containers/Container';
 import Button from '@/components/shared/form/Button';
+import ConfirmationModal from '@/components/shared/modal/ConfirmationModal';
 
 export default function CalendarPage() {
   const [schedule, setSchedule] = useState<WeeklySchedule>([]);
@@ -19,6 +20,13 @@ export default function CalendarPage() {
   const [selectedSlot, setSelectedSlot] = useState<{ day: DayOfWeek; mealType: MealType } | null>(null);
   const [hasChanges, setHasChanges] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<{
+    day: DayOfWeek;
+    recipeId: number;
+    title: string;
+  } | null>(null);
 
   useEffect(() => {
     loadInitialData();
@@ -73,13 +81,26 @@ export default function CalendarPage() {
     setSelectedSlot(null);
   };
 
+  const handleRequestDelete = (day: DayOfWeek, recipeId: number, title: string) => {
+    setDeleteTarget({ day, recipeId, title });
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteTarget) {
+      handleDeleteRecipe(deleteTarget.day, deleteTarget.recipeId);
+    }
+    setIsDeleteModalOpen(false);
+    setDeleteTarget(null);
+  };
+
   const handleDeleteRecipe = (day: DayOfWeek, recipeId: number) => {
     setSchedule(currentSchedule => {
       const newSchedule = currentSchedule.map(daySchedule => {
         const currentDay = Object.keys(daySchedule)[0] as DayOfWeek;
         if (currentDay === day) {
           return {
-            [day]: daySchedule[day].filter(recipe => recipe.id !== recipeId)
+            [day]: daySchedule[day].filter((r) => r.id !== recipeId),
           };
         }
         return daySchedule;
@@ -125,11 +146,11 @@ export default function CalendarPage() {
       <h1 className="text-3xl font-bold text-gray-800 mb-8">
         Planificación Semanal
       </h1>
-      
+
       <WeeklyCalendar
         schedule={schedule}
         onAddRecipe={handleAddRecipe}
-        onDeleteRecipe={handleDeleteRecipe}
+        onDeleteRecipe={handleRequestDelete}
       />
 
        {/* Barra de acciones flotante cuando hay cambios */}
@@ -184,6 +205,19 @@ export default function CalendarPage() {
           </div>
         </div>
       </Modal>
+
+      <ConfirmationModal
+        isOpen={isDeleteModalOpen}
+        title="Confirmar eliminación"
+        confirmText="Borrar"
+        cancelText="Cancelar"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setIsDeleteModalOpen(false)}
+      >
+        <p>
+          ¿Querés borrar <strong>{deleteTarget?.title}</strong>?
+        </p>
+      </ConfirmationModal>
     </Container >
   );
 }
