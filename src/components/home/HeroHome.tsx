@@ -44,7 +44,7 @@ export default function HeroHome() {
   const handleSend = async () => {
     if (!fastRecipeName.trim()) return;
 
-    setLoading(true); 
+    setLoading(true);
     try {
       const response = await axios.post("/api/getRecipe", {
         nombre: fastRecipeName,
@@ -55,7 +55,7 @@ export default function HeroHome() {
 
       // Cierra modal y redirige
       setModalFastRecipe("");
-       router.push(`/recipe/${recipeId}`);
+      router.push(`/recipe/${recipeId}`);
     } catch (error) {
       console.error("Error al enviar receta rápida:", error);
       // Aquí podrías mostrar una alerta al usuario
@@ -81,9 +81,9 @@ export default function HeroHome() {
         <h1 className="text-black text-3xl md:text-5xl font-semibold mb-6">
           {saludo}
         </h1>
-        <div className="flex gap-x-4">
+        <div className="flex flex-col gap-y-4 lg:flex-row lg:gap-x-4 lg:gap-y-0">
           <button
-            className="px-6 py-3 background-color-primary text-white rounded-lg hover:brightness-90 transition"
+            className="w-full lg:w-auto px-6 py-3 background-color-primary text-white rounded-lg hover:brightness-90 transition"
             onClick={() => {
               setFastRecipeName("");
               setModalFastRecipe("open");
@@ -91,22 +91,23 @@ export default function HeroHome() {
           >
             Receta Rápida
           </button>
+
           <Link href="recipe-generator">
-            <button className="px-6 py-3 background-color-primary text-white rounded-lg hover:brightness-90 transition">
+            <button className="w-full lg:w-auto px-6 py-3 background-color-primary text-white rounded-lg hover:brightness-90 transition">
               Empezá a cocinar con lo que tenés
             </button>
           </Link>
-          <div className="relative inline-block">
+
+          <div className="relative inline-block w-full lg:w-auto">
             {!isPremium && (
               <span className="absolute -top-2 -right-2 bg-yellow-500 text-white text-xs px-2 py-0.5 rounded-full shadow">
                 Premium
               </span>
             )}
-
             <button
               onClick={() => handleClick("meal-prep")}
               disabled={!isPremium}
-              className={`px-6 py-3 rounded-lg transition ${
+              className={`w-full lg:w-auto px-6 py-3 rounded-lg transition ${
                 isPremium
                   ? "background-color-primary text-white hover:brightness-90"
                   : "bg-gray-400 text-gray-200 cursor-not-allowed"
