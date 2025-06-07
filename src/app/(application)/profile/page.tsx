@@ -171,6 +171,7 @@ export default function Profile() {
           <SubscriptionModal
             isOpen={isSubscriptionModalOpen}
             onClose={() => setIsSubscriptionModalOpen(false)}
+            title=""
           />
         </main>
       </ContainerShadow>

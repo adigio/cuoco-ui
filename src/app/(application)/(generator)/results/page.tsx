@@ -163,6 +163,7 @@ export default function RecipeResultsPage() {
           <SubscriptionModal
             isOpen={showSubscriptionModal}
             onClose={() => setShowSubscriptionModal(false)}
+            title=''
           />
         </>
       )}

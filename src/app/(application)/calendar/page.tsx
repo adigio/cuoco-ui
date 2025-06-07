@@ -1,30 +1,30 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import WeeklyCalendar from '@/components/calendar/WeeklyCalendar';
-import { DayOfWeek, WeeklySchedule, MealType } from '@/types';
-import Modal from '@/components/shared/modal/Modal';
-
+import React, { useState } from "react";
+import WeeklyCalendar from "@/components/calendar/WeeklyCalendar";
+import { DayOfWeek, WeeklySchedule, MealType } from "@/types";
+import Modal from "@/components/shared/modal/Modal";
+import ConfirmationModal from "@/components/shared/modal/ConfirmationModal";
 // Datos de ejemplo
 const mockSchedule: WeeklySchedule = [
   {
     jueves: [
-         {
+      {
         id: "5",
         title: "Pancakes",
         img: "/platos/pancakes.PNG",
-        mealType: "Desayuno"
-      }
+        mealType: "Desayuno",
+      },
     ],
   },
   {
     viernes: [
-        {
+      {
         id: "6",
         title: "Budin",
         img: "/platos/budin.PNG",
-        mealType: "Merienda"
-      }
+        mealType: "Merienda",
+      },
     ],
   },
   {
@@ -36,15 +36,15 @@ const mockSchedule: WeeklySchedule = [
         id: "1",
         title: "Pollo con zapallitos",
         img: "/platos/pollo_zapallitos.PNG",
-        mealType: "Almuerzo"
+        mealType: "Almuerzo",
       },
       {
         id: "2",
         title: "Ensalada César",
         img: "/platos/ensalada_cesar.PNG",
-        mealType: "Cena"
-      }
-    ]
+        mealType: "Cena",
+      },
+    ],
   },
   {
     lunes: [
@@ -52,56 +52,81 @@ const mockSchedule: WeeklySchedule = [
         id: "3",
         title: "Pasta al pesto",
         img: "/platos/pasta_al_pesto.PNG",
-        mealType: "Almuerzo"
+        mealType: "Almuerzo",
       },
       {
         id: "4",
         title: "Salmón grillado",
         img: "/platos/salmon.PNG",
-        mealType: "Cena"
-      }
-    ]
+        mealType: "Cena",
+      },
+    ],
   },
   {
     martes: [],
   },
   {
     miercoles: [],
-  }
+  },
 ];
 
-export default function CalendarPage() {
+export default function CalendarPage() { 
   const [schedule, setSchedule] = useState<WeeklySchedule>(mockSchedule);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedSlot, setSelectedSlot] = useState<{ day: DayOfWeek; mealType: MealType } | null>(null);
+ 
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [selectedSlot, setSelectedSlot] = useState<{
+    day: DayOfWeek;
+    mealType: MealType;
+  } | null>(null);
 
   const handleAddRecipe = (day: DayOfWeek, mealType: MealType) => {
     setSelectedSlot({ day, mealType });
-    setIsModalOpen(true);
+    setIsAddModalOpen(true);
   };
-
+  const handleConfirmAdd = () => { 
+    setIsAddModalOpen(false);
+    setSelectedSlot(null);
+  };
+ 
   const handleDeleteRecipe = (day: DayOfWeek, recipeId: string) => {
-    setSchedule(currentSchedule => {
-      return currentSchedule.map(daySchedule => {
-        const currentDay = Object.keys(daySchedule)[0] as DayOfWeek;
-        if (currentDay === day) {
+    setSchedule((curr) =>
+      curr.map((daySchedule) => {
+        const d = Object.keys(daySchedule)[0] as DayOfWeek;
+        if (d === day) {
           return {
-            [day]: daySchedule[day].filter(recipe => recipe.id !== recipeId)
+            [day]: daySchedule[day].filter((r) => r.id !== recipeId),
           };
         }
         return daySchedule;
-      });
-    });
+      })
+    );
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedSlot(null);
+  // 2) Estados auxiliares para el modal de borrado
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<{
+    day: DayOfWeek;
+    recipeId: string;
+    title: string;
+  } | null>(null);
+
+  // 3) Este handler abre el modal
+  const handleRequestDelete = (
+    day: DayOfWeek,
+    recipeId: string,
+    title: string
+  ) => {
+    setDeleteTarget({ day, recipeId, title });
+    setIsDeleteModalOpen(true);
   };
 
-  const handleConfirmAdd = () => {
-    // TODO: logica para agregar 
-    handleCloseModal();
+  // 4) Este confirma y llama a la función real
+  const handleConfirmDelete = () => {
+    if (deleteTarget) {
+      handleDeleteRecipe(deleteTarget.day, deleteTarget.recipeId);
+    }
+    setIsDeleteModalOpen(false);
+    setDeleteTarget(null);
   };
 
   return (
@@ -109,22 +134,24 @@ export default function CalendarPage() {
       <h1 className="text-3xl font-bold text-gray-800 mb-8">
         Planificación Semanal
       </h1>
-      
+
       <WeeklyCalendar
         schedule={schedule}
         onAddRecipe={handleAddRecipe}
-        onDeleteRecipe={handleDeleteRecipe}
+        onDeleteRecipe={handleRequestDelete}
       />
 
-      <Modal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-      >
+      {/* Modal AGREGAR receta */}
+      <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)}>
         <div className="p-4">
-          <p>{`Agregar receta para ${selectedSlot?.day || ''} - ${selectedSlot?.mealType || ''}`}</p>
+          <p>
+            {`Agregar receta para ${
+              selectedSlot?.day || ''
+            } - ${selectedSlot?.mealType || ''}`}
+          </p>
           <div className="mt-4 flex justify-end gap-2">
             <button
-              onClick={handleCloseModal}
+              onClick={() => setIsAddModalOpen(false)}
               className="px-4 py-2 text-gray-600 hover:text-gray-800"
             >
               Cancelar
@@ -138,6 +165,20 @@ export default function CalendarPage() {
           </div>
         </div>
       </Modal>
+
+      {/* Modal CONFIRMAR BORRADO */}
+       <ConfirmationModal
+        isOpen={isDeleteModalOpen}
+        title="Confirmar eliminación"
+        confirmText="Borrar"
+        cancelText="Cancelar"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setIsDeleteModalOpen(false)}
+      >
+        <p>
+          ¿Querés borrar <strong>{deleteTarget?.title}</strong>?
+        </p>
+      </ConfirmationModal>
     </div>
   );
-} 
+}

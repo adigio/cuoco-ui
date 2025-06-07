@@ -1,37 +1,47 @@
 'use client';
 
 import React from 'react';
-import { WeeklySchedule, DayOfWeek, DAYS, MEAL_TYPES, CalendarRecipe, MealType } from '@/types';
+import {
+  WeeklySchedule,
+  DayOfWeek,
+  MEAL_TYPES,
+  CalendarRecipe,
+  MealType,
+} from '@/types';
 import RecipeCard from '@/components/calendar/RecipeCard';
-
 
 interface WeeklyCalendarProps {
   schedule: WeeklySchedule;
   onAddRecipe: (day: DayOfWeek, mealType: MealType) => void;
-  onDeleteRecipe: (day: DayOfWeek, recipeId: string) => void;
+  onDeleteRecipe: (day: DayOfWeek, recipeId: string, title: string) => void;
 }
 
 export default function WeeklyCalendar({
   schedule,
   onAddRecipe,
-  onDeleteRecipe
+  onDeleteRecipe,
 }: WeeklyCalendarProps) {
-  const getRecipeForDayAndMeal = (day: DayOfWeek, mealType: MealType): CalendarRecipe | null => {
+  const getRecipeForDayAndMeal = (
+    day: DayOfWeek,
+    mealType: MealType
+  ): CalendarRecipe | null => {
     const daySchedule = schedule.find((s) => Object.keys(s)[0] === day);
     if (!daySchedule) return null;
-    
     const recipes = daySchedule[day];
-    return recipes.find(r => r.mealType === mealType) || null;
+    return recipes.find((r) => r.mealType === mealType) || null;
   };
 
-  // Extraer los días en el orden del schedule (que viene desde la api directamente - no en orden formal)
-  const daysFromSchedule = schedule.map((s) => Object.keys(s)[0] as DayOfWeek);
+  // Extraer los días en el orden que vienen
+  const daysFromSchedule = schedule.map(
+    (s) => Object.keys(s)[0] as DayOfWeek
+  );
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
       <div className="grid grid-cols-[120px_repeat(7,1fr)] gap-4">
+        {/* encabezado vacío */}
         <div className="text-center font-semibold text-gray-700 pb-2" />
-        
+
         {/* Headers de los días */}
         {daysFromSchedule.map((day) => (
           <div
@@ -42,23 +52,28 @@ export default function WeeklyCalendar({
           </div>
         ))}
 
-        {/* Filas para cada tipo de comida */}
+        {/* Filas por tipo de comida */}
         {MEAL_TYPES.map((mealType) => (
           <React.Fragment key={mealType}>
             <div className="text-left text-rose-500 font-medium py-2">
               {mealType}
             </div>
-
             {daysFromSchedule.map((day) => {
               const recipe = getRecipeForDayAndMeal(day, mealType);
-              
               return (
                 <div key={`${day}-${mealType}`} className="min-h-[120px]">
                   <RecipeCard
-                    recipe={recipe || { id: '', title: '', img: '', mealType }}
+                    recipe={
+                      recipe || { id: '', title: '', img: '', mealType }
+                    }
                     isEmpty={!recipe}
                     onAdd={() => onAddRecipe(day, mealType)}
-                    onDelete={recipe ? () => onDeleteRecipe(day, recipe.id) : undefined}
+                    onDelete={
+                      recipe
+                        ? () =>
+                            onDeleteRecipe(day, recipe.id, recipe.title)
+                        : undefined
+                    }
                   />
                 </div>
               );
@@ -68,4 +83,4 @@ export default function WeeklyCalendar({
       </div>
     </div>
   );
-} 
+}
