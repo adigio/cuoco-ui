@@ -16,8 +16,9 @@ export default function StepSection({
 }: StepSectionProps) {
   return (
     <>
-      <section id={id} className="relative w-full bg-transparent">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 items-center">
+    <div id="benefits">
+      <section id={id} className="relative benefits w-full bg-transparent" >
+        <div className="max-w-7xl mx-auto px-4 md:px-8 items-center" id="benefits">
           {/* Vista Mobile */}
           <div className="md:hidden mt-20">
             <div className="text-center">
@@ -91,7 +92,7 @@ export default function StepSection({
           </div>
         </div>
       </section>
-
+     </div>             
       {/* SVG con flecha que baja hacia el próximo paso */}
       {showConnector && step !== 4 && (
         <div className="hidden md:flex justify-center relative z-0 h-[100px] -mt-6">

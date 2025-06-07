@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function AboutUs() {
   return (
-    <section className="relative bg-white py-20 px-4 md:px-20 overflow-hidden">
+    <section className="relative  bg-white py-20 px-4 md:px-20 overflow-hidden" id="aboutUs">
       {/* Fondo decorativo (esquina inferior derecha) */}
      <div className="hidden md:block absolute bottom-0 right-0 w-64 pointer-events-none z-0">
         <Image

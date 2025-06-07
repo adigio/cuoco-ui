@@ -53,21 +53,21 @@ export const mealPreps: MealPrep[] = [
         title: "Pollo al curry con arroz integral",
         portions: 4,
         image:
-          "https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?auto=format&fit=crop&w=800&q=80",
+          "https://img-global.cpcdn.com/recipes/5af5179b263ac39f/1280x1280sq90/photo.webp",
       },
       {
         id: 2,
         title: "Wrap de atún con vegetales",
         portions: 4,
         image:
-          "https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?auto=format&fit=crop&w=800&q=80",
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbWFIqMTN_EVCjMDtiwKiVyN_eQwjcyb9wVh6pkt6fcWBy2anm87tTZ6kuvRYbvFaLrs0&usqp=CAU",
       },
       {
         id: 3,
         title: "Galletas de avena y banana",
         portions: 4,
         image:
-          "https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?auto=format&fit=crop&w=800&q=80",
+          "https://content-cocina.lecturas.com/medio/2022/03/22/galletas_de_avena_658e721e_1200x1200.jpg",
       },
     ],
     steps: [
@@ -124,21 +124,21 @@ export const mealPreps: MealPrep[] = [
         title: "Buddha bowl de quinoa",
         portions: 4,
         image:
-          "https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?auto=format&fit=crop&w=800&q=80",
+          "https://biancazapatka.com/wp-content/uploads/2021/07/buddha-bowl-mediterran.jpg",
       },
       {
         id: 5,
         title: "Tacos de lentejas",
         portions: 4,
         image:
-          "https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?auto=format&fit=crop&w=800&q=80",
+          "https://healthysimpleyum.com/wp-content/uploads/2021/06/IMG_6761-718x1024.jpg",
       },
       {
         id: 6,
         title: "Barritas de avena y dátiles",
         portions: 4,
         image:
-          "https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?auto=format&fit=crop&w=800&q=80",
+          "https://d36fw6y2wq3bat.cloudfront.net/recipes/barritas-de-avena-y-datiles/900/barritas-de-avena-y-datiles_version_1670409940.jpg",
       },
     ],
     steps: [

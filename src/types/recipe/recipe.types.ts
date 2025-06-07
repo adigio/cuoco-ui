@@ -142,6 +142,7 @@ export interface MealPrep {
   totalPortions: number;
   ingredients: string[];
   observation?: string;
+  description?: string;
   recipes: MealPrepRecipe[];
   steps: {
     title: string;
