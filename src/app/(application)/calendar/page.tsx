@@ -1,88 +1,81 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import WeeklyCalendar from '@/components/calendar/WeeklyCalendar';
-import { DayOfWeek, WeeklySchedule, MealType } from '@/types';
+import CalendarSkeleton from '@/components/shared/skeleton/CalendarSkeleton';
 import Modal from '@/components/shared/modal/Modal';
-
-// Datos de ejemplo
-const mockSchedule: WeeklySchedule = [
-  {
-    jueves: [
-         {
-        id: "5",
-        title: "Pancakes",
-        img: "/platos/pancakes.PNG",
-        mealType: "Desayuno"
-      }
-    ],
-  },
-  {
-    viernes: [
-        {
-        id: "6",
-        title: "Budin",
-        img: "/platos/budin.PNG",
-        mealType: "Merienda"
-      }
-    ],
-  },
-  {
-    sabado: [],
-  },
-  {
-    domingo: [
-      {
-        id: "1",
-        title: "Pollo con zapallitos",
-        img: "/platos/pollo_zapallitos.PNG",
-        mealType: "Almuerzo"
-      },
-      {
-        id: "2",
-        title: "Ensalada César",
-        img: "/platos/ensalada_cesar.PNG",
-        mealType: "Cena"
-      }
-    ]
-  },
-  {
-    lunes: [
-      {
-        id: "3",
-        title: "Pasta al pesto",
-        img: "/platos/pasta_al_pesto.PNG",
-        mealType: "Almuerzo"
-      },
-      {
-        id: "4",
-        title: "Salmón grillado",
-        img: "/platos/salmon.PNG",
-        mealType: "Cena"
-      }
-    ]
-  },
-  {
-    martes: [],
-  },
-  {
-    miercoles: [],
-  }
-];
+import { DayOfWeek, WeeklySchedule, MealType, CalendarRecipe } from '@/types';
+import { calendarService } from '@/services/calendar.service';
+import RecipeCard from '@/components/calendar/RecipeCard';
+import Container from '@/components/shared/containers/Container';
+import Button from '@/components/shared/form/Button';
 
 export default function CalendarPage() {
-  const [schedule, setSchedule] = useState<WeeklySchedule>(mockSchedule);
+  const [schedule, setSchedule] = useState<WeeklySchedule>([]);
+  const [originalSchedule, setOriginalSchedule] = useState<WeeklySchedule>([]);
+  const [favorites, setFavorites] = useState<Record<string, CalendarRecipe[]>>({});
+  const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState<{ day: DayOfWeek; mealType: MealType } | null>(null);
+  const [hasChanges, setHasChanges] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    loadInitialData();
+  }, []);
+
+  const loadInitialData = async () => {
+    try {
+      setIsLoading(true);
+      const [weeklySchedule, categorizedFavorites] = await Promise.all([
+        calendarService.getWeeklySchedule(),
+        calendarService.getFavoritesByCategory()
+      ]);
+      
+      setSchedule(weeklySchedule);
+      setOriginalSchedule(weeklySchedule);
+      setFavorites(categorizedFavorites);
+    } catch (error) {
+      console.error('Error cargando datos:', error);
+    } finally {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 3000);
+    }
+  };
 
   const handleAddRecipe = (day: DayOfWeek, mealType: MealType) => {
     setSelectedSlot({ day, mealType });
     setIsModalOpen(true);
   };
 
-  const handleDeleteRecipe = (day: DayOfWeek, recipeId: string) => {
+  const handleSelectFavorite = (recipe: CalendarRecipe) => {
+    if (!selectedSlot) return;
+
     setSchedule(currentSchedule => {
-      return currentSchedule.map(daySchedule => {
+      const newSchedule = currentSchedule.map(daySchedule => {
+        const currentDay = Object.keys(daySchedule)[0] as DayOfWeek;
+        if (currentDay === selectedSlot.day) {
+          return {
+            [currentDay]: [
+              ...daySchedule[currentDay].filter(r => r.mealType !== selectedSlot.mealType),
+              { ...recipe, mealType: selectedSlot.mealType }
+            ]
+          };
+        }
+        return daySchedule;
+      });
+      setHasChanges(true);
+      return newSchedule;
+    });
+
+    setIsModalOpen(false);
+    setSelectedSlot(null);
+  };
+
+  const handleDeleteRecipe = (day: DayOfWeek, recipeId: number) => {
+    setSchedule(currentSchedule => {
+      const newSchedule = currentSchedule.map(daySchedule => {
         const currentDay = Object.keys(daySchedule)[0] as DayOfWeek;
         if (currentDay === day) {
           return {
@@ -91,21 +84,44 @@ export default function CalendarPage() {
         }
         return daySchedule;
       });
+      setHasChanges(true);
+      return newSchedule;
     });
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedSlot(null);
+  const handleSaveChanges = async () => {
+    try {
+      setIsSaving(true);
+      const updatedSchedule = await calendarService.updateWeeklySchedule(schedule);
+      setSchedule(updatedSchedule);
+      setOriginalSchedule(updatedSchedule);
+      setHasChanges(false);
+    } catch (error) {
+      console.error('Error al guardar cambios:', error);
+        // TODO  hacer toast
+    } finally {
+      setIsSaving(false);
+    }
   };
 
-  const handleConfirmAdd = () => {
-    // TODO: logica para agregar 
-    handleCloseModal();
+  const handleDiscardChanges = () => {
+    setSchedule(originalSchedule);
+    setHasChanges(false);
   };
+
+  if (isLoading) {
+    return (
+      <Container customClass="mt-30 mb-8">
+        <h1 className="text-3xl font-bold text-gray-800 mb-8">
+          Planificación Semanal
+        </h1>
+        <CalendarSkeleton />
+      </Container>
+    );
+  }
 
   return (
-    <div className="container mx-auto py-8 px-4">
+    <Container customClass="mt-30 mb-8">
       <h1 className="text-3xl font-bold text-gray-800 mb-8">
         Planificación Semanal
       </h1>
@@ -116,28 +132,58 @@ export default function CalendarPage() {
         onDeleteRecipe={handleDeleteRecipe}
       />
 
+       {/* Barra de acciones flotante cuando hay cambios */}
+      {hasChanges && (
+        <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg p-4 z-[1000] border-t border-gray-200">
+          <div className="container mx-auto flex justify-end gap-4">
+            <Button
+              onClick={handleDiscardChanges}
+              variant='secondary'
+              disabled={isSaving}
+            >
+              Descartar Cambios
+            </Button>
+            <Button
+              onClick={handleSaveChanges}
+              disabled={isSaving}
+            >
+              {isSaving ? 'Guardando...' : 'Guardar Cambios'}
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Modal para seleccionar recetas favoritas */}
       <Modal
+        showCloseButton
+        maxWidth='max-w-xl'
         isOpen={isModalOpen}
-        onClose={handleCloseModal}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedSlot(null);
+        }}
       >
-        <div className="p-4">
-          <p>{`Agregar receta para ${selectedSlot?.day || ''} - ${selectedSlot?.mealType || ''}`}</p>
-          <div className="mt-4 flex justify-end gap-2">
-            <button
-              onClick={handleCloseModal}
-              className="px-4 py-2 text-gray-600 hover:text-gray-800"
-            >
-              Cancelar
-            </button>
-            <button
-              onClick={handleConfirmAdd}
-              className="px-4 py-2 bg-color-primary-medium text-white rounded hover:bg-color-primary-dark"
-            >
-              Agregar
-            </button>
+        <div className="p-6">
+          <h2 className="text-2xl font-semibold mb-4">
+            Recetas favoritas - {selectedSlot?.mealType}
+          </h2>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto">
+            {selectedSlot && favorites[selectedSlot.mealType]?.map((recipe) => (
+              <div
+                key={recipe.id}
+                onClick={() => handleSelectFavorite(recipe)}
+                className="cursor-pointer"
+              >
+                <RecipeCard
+                  recipe={recipe}
+                  isEmpty={false}
+                />
+              </div>
+            ))}
           </div>
         </div>
       </Modal>
-    </div>
+    </Container >
   );
-} 
+}

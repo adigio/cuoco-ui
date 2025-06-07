@@ -8,8 +8,9 @@ import RecipeCard from '@/components/calendar/RecipeCard';
 interface WeeklyCalendarProps {
   schedule: WeeklySchedule;
   onAddRecipe: (day: DayOfWeek, mealType: MealType) => void;
-  onDeleteRecipe: (day: DayOfWeek, recipeId: string) => void;
+  onDeleteRecipe: (day: DayOfWeek, recipeId: number) => void;
 }
+
 
 export default function WeeklyCalendar({
   schedule,
@@ -55,7 +56,7 @@ export default function WeeklyCalendar({
               return (
                 <div key={`${day}-${mealType}`} className="min-h-[120px]">
                   <RecipeCard
-                    recipe={recipe || { id: '', title: '', img: '', mealType }}
+                    recipe={recipe || { id: 0, title: '', img: '', mealType }}
                     isEmpty={!recipe}
                     onAdd={() => onAddRecipe(day, mealType)}
                     onDelete={recipe ? () => onDeleteRecipe(day, recipe.id) : undefined}
