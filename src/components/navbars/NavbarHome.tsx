@@ -11,9 +11,10 @@ export default function NavbarHome() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSubModalOpen, setIsSubModalOpen] = useState(false);
     const logout = useAuthStore((state) => state.logout);
+      const isPremium = useAuthStore((state) => state.user?.premium);
+
     const router = useRouter();
-  // Aquí obtendrías si el usuario es premium (desde tu contexto o store)
-  const isPremium = false; // reemplaza por tu lógica real
+  // Aquí obtendrías si el usuario es premium (desde tu contexto o store) 
   
   // Handler para Calendario en desktop y mobile
   const handleCalendarClick = () => {
