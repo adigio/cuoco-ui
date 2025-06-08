@@ -5,7 +5,7 @@ import ChefLoader from "@/components/shared/loaders/ChefLoader";
 import RecipeCard from "@/components/shared/cards/RecipeCard";
 import MealPrepCard from "@/components/meal-prep/MealPrepCard";
 import Pagination from "@/components/shared/Pagination";
-import { getFavRecipes, getFavMealPreps } from "@/services/favsService";
+import { getFavRecipes, getFavMealPreps } from "@/services/favs.service";
 import { Ingredient, MealPrep, Recipe } from "@/types";
 
 export default function Favs() {
@@ -76,7 +76,7 @@ export default function Favs() {
   });
 
   return (
-    <main className="pt-16 md:pt-8 px-4 max-w-5xl mx-auto flex flex-col gap-12  mt-20 ">
+    <main className="pt-16 md:pt-8 px-4 max-w-5xl mx-auto flex flex-col gap-12">
       {/* Recetas favoritas */}
       <section>
         <h2 className="text-2xl font-semibold mb-4">Recetas Favoritas</h2>

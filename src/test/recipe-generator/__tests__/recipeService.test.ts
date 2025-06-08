@@ -1,4 +1,4 @@
-import { generateRecipes, getRecipeById } from '@/services/recipeService';
+import { generateRecipes, getRecipeById } from '@/services/recipe.service';
 import { mockRecipes } from '@/mocks/recipes';
 import axios from 'axios';
 

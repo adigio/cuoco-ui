@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, use } from 'react';
 import { useRouter } from 'next/navigation';
-import { getRecipeById } from '@/services/recipeService';
+import { getRecipeById } from '@/services/recipe.service';
 import BackgroundLayers from '@/components/shared/BackgroundLayers';
 import ContainerShadow from '@/components/shared/containers/ContainerShadow';
 import { PageProps } from '@/types';

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { analyzeImagesWithAPI } from '@/services/visionService';
+import { analyzeImagesWithAPI } from '@/services/vision.service';
 // Contexto
 import { useIngredientsStore } from '@/store/useIngredientsStore'; 
 // Componentes
@@ -77,7 +77,7 @@ export default function RecipeGeneratorPage() {
     <>
       <BackgroundLayers />
 
-      <div className="w-full border-b-4 border-purple-400 mt-20 mb-6"></div>
+      <div className="w-full border-b-4 border-purple-400   mb-6"></div>
 
       <main className="flex-1 relative">
         <ContainerShadow customClass="container">

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, use } from "react";
 import { useRouter } from "next/navigation";
-import { getMealPrepById } from "@/services/generateMealPrepRecipesService";
+import { getMealPrepById } from "@/services/generateMealPrepRecipes.service";
 import ChefLoader from "@/components/shared/loaders/ChefLoader";
 import BackgroundLayers from "@/components/shared/BackgroundLayers";
 import ContainerShadow from "@/components/shared/containers/ContainerShadow";

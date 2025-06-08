@@ -1,6 +1,6 @@
 "use client";
 
-import { generateRecipes } from "@/services/recipeService";
+import { generateRecipes } from "@/services/recipe.service";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import React from "react";

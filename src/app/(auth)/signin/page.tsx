@@ -7,7 +7,7 @@ import Button from "@/components/shared/form/Button";
 import ChefLoader from "@/components/shared/loaders/ChefLoader";
 import Input from "@/components/shared/form/Input";
 import { useAuthStore } from "@/store/useAuthStore";
-import { login } from '@/services/authService';
+import { login } from '@/services/auth.service';
 
 export default function SignIn() {
   const router = useRouter();
