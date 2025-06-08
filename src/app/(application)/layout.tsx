@@ -28,7 +28,7 @@ export default function AppLayout({ children }: Props) {
   if (!isAuthenticated) return null;
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#fefefe]">
+    <div className="flex flex-col min-h-screen bg-[#fefefe] mt-20">
       <NavbarHome />
       {children}
       <Footer />
