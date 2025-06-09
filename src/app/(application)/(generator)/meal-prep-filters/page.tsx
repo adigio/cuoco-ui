@@ -1,6 +1,6 @@
 "use client";
 
-import { generateMealPrepRecipes } from "@/services/generateMealPrepRecipesService";
+import { generateMealPrepRecipes } from "@/services/generateMealPrepRecipes.service";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import React from "react";

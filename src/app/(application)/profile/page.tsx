@@ -3,7 +3,7 @@ import BackgroundLayers from "@/components/shared/BackgroundLayers";
 import { useAuthStore } from "@/store/useAuthStore";
 import ContainerShadow from "@/components/shared/containers/ContainerShadow";
 import Button from "@/components/shared/form/Button";
-import { recoverPassword } from "@/services/recoverPassword";
+import { recoverPassword } from "@/services/recover.password";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import PreferencesModal from "@/components/shared/modal/PreferencesModal";
@@ -171,6 +171,7 @@ export default function Profile() {
           <SubscriptionModal
             isOpen={isSubscriptionModalOpen}
             onClose={() => setIsSubscriptionModalOpen(false)}
+            title=""
           />
         </main>
       </ContainerShadow>

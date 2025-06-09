@@ -20,7 +20,7 @@ export default function StepSection({
       <section id={id} className="relative benefits w-full bg-transparent" >
         <div className="max-w-7xl mx-auto px-4 md:px-8 items-center" id="benefits">
           {/* Vista Mobile */}
-          <div className="md:hidden mt-20">
+          <div className="md:hidden ">
             <div className="text-center">
               {/* Número y título */}
               <div className="flex items-center justify-center mb-2">
@@ -55,7 +55,7 @@ export default function StepSection({
           </div>
           {/* Vista Desktop */}
           <div
-            className={`hidden md:flex relative z-10 mt-20 flex-row items-center gap-16 ${
+            className={`hidden md:flex relative z-10  flex-row items-center gap-16 ${
               reverse ? "flex-row-reverse" : ""
             }`}
           >

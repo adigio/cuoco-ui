@@ -63,7 +63,7 @@ export default function RecipeResultsPage() {
     <>
     <BackgroundLayers />
     <main className="flex-1">
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4   py-12">
         <h1 className="text-3xl font-bold text-center mb-2">Recetas sugeridas</h1>
         <p className="text-gray-600 text-center mb-8">
           Basadas en {ingredients.filter(ing => ing.confirm).length} ingredientes que tienes disponibles
@@ -138,6 +138,10 @@ export default function RecipeResultsPage() {
       {selectedRecipe && (
         <>
           <FavoriteModal
+            onUpgrade={() => {
+              setShowFavoriteModal(false);
+              setShowSubscriptionModal(true);
+            }}
             recipeText={selectedRecipe.name}
             isOpen={showFavoriteModal}
             onClose={() => {
@@ -163,6 +167,7 @@ export default function RecipeResultsPage() {
           <SubscriptionModal
             isOpen={showSubscriptionModal}
             onClose={() => setShowSubscriptionModal(false)}
+            title=''
           />
         </>
       )}

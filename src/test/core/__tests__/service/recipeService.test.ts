@@ -1,4 +1,6 @@
-import { generateRecipes, getRecipeById } from '@/services/recipeService';
+// src/test/core/__tests__/service/recipeService.test.ts
+
+import { generateRecipes, getRecipeById } from '@/services/recipe.service';
 import { mockRecipes } from '@/mocks/recipes';
 import axios from 'axios';
 
@@ -9,6 +11,8 @@ const mockedAxios = axios as jest.Mocked<typeof axios>;
 describe('Recipe Service', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    // Silenciamos los console.error en los tests
+    jest.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   describe('generateRecipes', () => {
@@ -25,12 +29,12 @@ describe('Recipe Service', () => {
     };
 
     it('debería llamar a la API con los parámetros correctos', async () => {
-      mockedAxios.post.mockResolvedValueOnce({ 
+      mockedAxios.post.mockResolvedValueOnce({
         data: { recipes: mockRecipes }
       });
 
       await generateRecipes(validRequest);
-      
+
       expect(mockedAxios.post).toHaveBeenCalledWith(
         '/api/generate-recipes',
         { informationRecipe: validRequest },
@@ -43,13 +47,13 @@ describe('Recipe Service', () => {
     });
 
     it('debería retornar las recetas cuando la API responde exitosamente', async () => {
-      const expectedRecipes = mockRecipes.slice(0, 2); // Tomamos solo 2 recetas para el test
-      mockedAxios.post.mockResolvedValueOnce({ 
+      const expectedRecipes = mockRecipes.slice(0, 2);
+      mockedAxios.post.mockResolvedValueOnce({
         data: expectedRecipes
       });
 
       const result = await generateRecipes(validRequest);
-      
+
       expect(result).toEqual(expectedRecipes);
     });
 
@@ -68,12 +72,12 @@ describe('Recipe Service', () => {
     const mockRecipe = mockRecipes[0];
 
     it('debería llamar a la API con el ID correcto', async () => {
-      mockedAxios.get.mockResolvedValueOnce({ 
-        data: mockRecipe 
+      mockedAxios.get.mockResolvedValueOnce({
+        data: mockRecipe
       });
 
       await getRecipeById(recipeId);
-      
+
       expect(mockedAxios.get).toHaveBeenCalledWith(
         `/api/recipe/${recipeId}`,
         {
@@ -85,22 +89,27 @@ describe('Recipe Service', () => {
     });
 
     it('debería retornar la receta cuando la API responde exitosamente', async () => {
-      mockedAxios.get.mockResolvedValueOnce({ 
-        data: mockRecipe 
+      mockedAxios.get.mockResolvedValueOnce({
+        data: mockRecipe
       });
 
       const result = await getRecipeById(recipeId);
-      
+
       expect(result).toEqual(mockRecipe);
     });
 
-    it('debería propagar el error cuando la API falla', async () => {
-      const errorMessage = 'Receta no encontrada';
-      mockedAxios.get.mockRejectedValueOnce(new Error(errorMessage));
+    it('debería propagar el error cuando la receta no existe y llamar a console.error', async () => {
+      const error = new Error('Receta no encontrada');
+      mockedAxios.get.mockRejectedValueOnce(error);
 
       await expect(getRecipeById(recipeId))
         .rejects
-        .toThrow(errorMessage);
+        .toThrow('Receta no encontrada');
+
+      expect(console.error).toHaveBeenCalledWith(
+        'Error al obtener receta:',
+        error
+      );
     });
   });
-}); 
+});

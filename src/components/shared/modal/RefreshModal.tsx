@@ -3,6 +3,7 @@ import Button from "@/components/shared/form/Button";
 import Modal from "@/components/shared/modal/Modal";
 
 export const RefreshModal = ({
+    type = 'recipe',
     recipeText,
     isOpen,
     isPremium,
@@ -10,6 +11,7 @@ export const RefreshModal = ({
     onUpgrade,
     recipeId
 }: {
+    type?: 'recipe' | 'meal-prep';
     recipeText: string;
     isOpen: boolean;
     isPremium: boolean;
@@ -37,13 +39,13 @@ export const RefreshModal = ({
             ) : (
                 <div className="p-6">
                     <h2 className="text-xl font-bold mb-4">Refrescar Receta <span className="block">{recipeText}</span></h2>
-                    <p className="mb-6">¿Deseas agregar esta receta a tus favoritos?</p>
+                    <p className="mb-6">¿Quieres refrescar {type === 'recipe' ? 'esta receta' : 'este Meal Prep'} para obtener otra mejor opción?</p>
                     <div className="flex justify-end gap-4">
                         <Button
                             variant="primary"
                             onClick={handleAddToRefresh}
                         >
-                            Agregar
+                            Refrescar
                         </Button>
                     </div>
                 </div>

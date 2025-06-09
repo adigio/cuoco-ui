@@ -1,41 +1,167 @@
-"use client";
+'use client';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import LogoutButton from './LogoutButton';
-
+import SubscriptionModal from '../shared/modal/SubscriptionModal';
+import { useAuthStore } from "@/store/useAuthStore";
+import { useRouter } from "next/navigation";
 export default function NavbarHome() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSubModalOpen, setIsSubModalOpen] = useState(false);
+    const logout = useAuthStore((state) => state.logout);
+      const isPremium = useAuthStore((state) => state.user?.premium);
+
+    const router = useRouter();
+  // Aquí obtendrías si el usuario es premium (desde tu contexto o store) 
+  
+  // Handler para Calendario en desktop y mobile
+  const handleCalendarClick = () => {
+    if (isPremium) {
+      window.location.href = '/calendar';
+    } else {
+      setIsSubModalOpen(true);
+    }
+  };
+  const handleLogout = () => {
+    logout();                
+    router.push("/");   
+  };
   return (
-    <header className="bg-[#f37b6a] py-3">
-      <div className="container mx-auto flex items-center justify-between px-4">
-        <Link href="/home">
-          <div className="flex items-center space-x-2">
-            <Image
-              src="/logos/logo-blanco.png"
-              alt="Comida casera"
-              width={40}
-              height={40}
-              className="object-contain"
-            />
-            <Image
-              src="/logos/iso-blanco.png"
-              alt="Logo secundario"
-              width={60}
-              height={60}
-              className="object-contain transition-opacity duration-300"
-            />
+    <>
+      <nav className="fixed top-0 left-0 w-full z-50 py-4 px-8 background-color-primary shadow transition-all duration-300">
+        <div className="flex justify-between items-center">
+          <Link href="/">
+            <div className="flex items-center gap-2 text-3xl text-white">
+              <Image
+                src="/logos/logo-blanco.png"
+                alt="Logo principal"
+                width={40}
+                height={40}
+                className="object-contain"
+              />
+            </div>
+          </Link>
+
+          {/* Hamburger button */}
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="lg:hidden p-2 focus:outline-none z-50"
+          >
+            <div className="space-y-1.5 w-6">
+              <span
+                className={`block h-[2px] w-6 bg-white transition-transform duration-300 ${
+                  isMenuOpen ? 'rotate-45 translate-y-2' : ''
+                }`}
+              />
+              <span
+                className={`block h-[2px] w-6 bg-white transition-opacity duration-300 ${
+                  isMenuOpen ? 'opacity-0' : ''
+                }`}
+              />
+              <span
+                className={`block h-[2px] w-6 bg-white transition-transform duration-300 ${
+                  isMenuOpen ? '-rotate-45 -translate-y-2' : ''
+                }`}
+              />
+            </div>
+          </button>
+
+          {/* Desktop menu */}
+          <div className="hidden lg:flex items-center space-x-6 text-black font-bold">
+            <Link href="/home" className="hover:text-red-200">Generar Recetas</Link>
+            <Link href="/favs" className="hover:text-red-200">Favoritos</Link>
+
+            {/* Calendario con badge posicionado encima */}
+            {isPremium ? (
+              <Link href="/calendar" className="hover:text-red-200 relative">
+                Calendario
+              </Link>
+            ) : (
+              <button
+                onClick={handleCalendarClick}
+                className="relative hover:text-red-200"
+              >
+                <span className="absolute -top-2 left-1/2 transform -translate-x-1/2 text-[10px] bg-yellow-300 text-yellow-800 rounded px-1">
+                  Premium
+                </span>
+                Calendario
+              </button>
+            )}
+
+            <Link href="/profile" className="hover:text-red-200">Perfil</Link>
+            <LogoutButton />
           </div>
-        </Link>
-        <nav className="flex items-center space-x-6 text-white font-bold text-l">
-          <Link href="/home" className="hover:text-red-200">Generar Recetas</Link>
-          <Link href="/favs" className="hover:text-red-200">Favoritos</Link>
-          <Link href="/calendar" className="hover:text-red-200">Calendario</Link>
-          <Link href="/profile" className="hover:text-red-200">Perfil</Link>
-          <LogoutButton/>
-        </nav>
-      </div>
-    </header>
+        </div>
+
+        {/* Mobile menu */}
+        <div
+          className={`lg:hidden absolute left-0 right-0 p-6 bg-white shadow-lg transition-all duration-300 ${
+            isMenuOpen
+              ? 'top-full opacity-100 visible'
+              : 'top-[110%] opacity-0 invisible'
+          }`}
+        >
+          <Link
+            href="/home"
+            className="block text-center font-bold text-red-400 hover:text-red-600 mb-4"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Generar Recetas
+          </Link>
+          <Link
+            href="/favs"
+            className="block text-center font-bold text-red-400 hover:text-red-600 mb-4"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Favoritos
+          </Link>
+
+          {/* Calendario móvil con badge arriba */}
+          {isPremium ? (
+            <Link
+              href="/calendar"
+              className="block text-center font-bold text-red-400 hover:text-red-600 mb-4 relative"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Calendario
+            </Link>
+          ) : (
+            <button
+              onClick={() => { setIsSubModalOpen(true); setIsMenuOpen(false); }}
+              className="block mx-auto font-bold text-red-400 hover:text-red-600 mb-4 relative"
+            >
+              <span className="absolute -top-2 left-1/2 transform -translate-x-1/2 text-[10px] bg-yellow-300 text-yellow-800 rounded px-1">
+                Premium
+              </span>
+              Calendario
+            </button>
+          )}
+
+          <Link
+            href="/profile"
+           className="block text-center font-bold text-red-400 hover:text-red-600 mb-4"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Perfil
+          </Link>
+           <button
+                onClick={handleLogout}
+                  className="block mx-auto font-bold text-red-400 hover:text-red-600 mb-4 relative"
+                title="Cerrar sesión"
+              >
+              Cerra Sesión
+              </button>
+        </div>
+      </nav>
+
+      {/* Modal de suscripción */}
+      <SubscriptionModal
+        isOpen={isSubModalOpen}
+        onClose={() => setIsSubModalOpen(false)}
+        title=''
+      />
+    </>
   );
 }

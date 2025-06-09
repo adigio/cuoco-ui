@@ -1,9 +1,9 @@
-import type { Config } from 'jest';
-import nextJest from 'next/jest';
+import type { Config } from 'jest'
+import nextJest from 'next/jest'
 
 const createJestConfig = nextJest({
   dir: './',
-});
+})
 
 const config: Config = {
   testEnvironment: 'jest-environment-jsdom',
@@ -11,8 +11,9 @@ const config: Config = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
+  // <-- Reemplazamos el testMatch por uno más genérico:
   testMatch: [
-    '<rootDir>/src/test/**/*.test.{ts,tsx}'
+    '<rootDir>/src/test/**/*.{spec,test}.{ts,tsx}'
   ],
   collectCoverage: true,
   coverageDirectory: 'coverage',
@@ -31,6 +32,6 @@ const config: Config = {
     '/node_modules/',
     '^.+\\.module\\.(css|sass|scss)$',
   ],
-};
+}
 
-export default createJestConfig(config); 
+export default createJestConfig(config)

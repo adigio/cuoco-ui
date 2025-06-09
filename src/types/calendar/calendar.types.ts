@@ -3,7 +3,7 @@ export type DayOfWeek = 'lunes' | 'martes' | 'miercoles' | 'jueves' | 'viernes' 
 export type MealType = 'Desayuno' | 'Almuerzo' | 'Cena' | 'Merienda';
 
 export interface CalendarRecipe {
-  id: string;
+  id: number;
   title: string;
   img: string;
   mealType?: MealType;

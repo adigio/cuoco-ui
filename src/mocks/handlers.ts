@@ -3,7 +3,8 @@ import { mockDetailsRecipes, mockRecipes } from "@/mocks/recipes";
 import { mealPreps } from "@/mocks/mealprep";
 import { User } from "@/types/auth/auth.types";
 import { http, HttpResponse } from "msw";
-import { MealPrepGenerationRequest } from "@/types"; // Asegurate de tener estos tipos
+import { MealPrepGenerationRequest } from "@/types";
+import { mockCategorizedFavorites, mockSchedule } from "@/mocks/calendar";
 
 //Define como se responde a las APIs mockeadas
 
@@ -226,5 +227,22 @@ export const handlers = [
     const nombre = body.nombre || "sin-nombre";
 
     return HttpResponse.json(mockDetailsRecipes[1], { status: 200 });
+  }),
+
+
+  /* calendario */
+  http.get('/api/calendar/weekly', () => {
+    return HttpResponse.json(mockSchedule);
+  }),
+
+  http.get('/api/calendar/favorites/categorized', () => {
+    return HttpResponse.json(mockCategorizedFavorites);
+  }),
+
+
+  http.put('/api/calendar/update', async ({ request }) => {
+    const body = (await request.json()) as { day: string; recipeId: number; mealType: string };
+    const { day, recipeId, mealType } = body;
+    return HttpResponse.json(mockSchedule);
   }),
 ];

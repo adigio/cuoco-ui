@@ -5,7 +5,7 @@ import ChefLoader from "@/components/shared/loaders/ChefLoader";
 import RecipeCard from "@/components/shared/cards/RecipeCard";
 import MealPrepCard from "@/components/meal-prep/MealPrepCard";
 import Pagination from "@/components/shared/Pagination";
-import { getFavRecipes, getFavMealPreps } from "@/services/favsService";
+import { getFavRecipes, getFavMealPreps } from "@/services/favs.service";
 import { Ingredient, MealPrep, Recipe } from "@/types";
 
 export default function Favs() {
