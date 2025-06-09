@@ -24,13 +24,13 @@ export default function MealPrepCard({ mealPrep, onClick, children }: Props) {
   };
 
   return (
-    <Link href={`/meal-prep/${mealPrep.id}`}>
-      <div
-        className="cursor-pointer w-full bg-white shadow-md rounded-lg p-4 mb-6 hover:shadow-lg transition"
-        onClick={handleClick}
-      >
-        <h3 className="text-xl font-bold mb-2">{mealPrep.title}</h3>
+    <div
+      className="cursor-pointer w-full bg-white shadow-md rounded-lg p-4 mb-6 hover:shadow-lg transition"
+      onClick={handleClick}
+    >
+      <h3 className="text-xl font-bold mb-2">{mealPrep.title}</h3>
 
+      <Link href={`/meal-prep/${mealPrep.id}`}>
         <div className="flex flex-col sm:flex-row gap-4">
           {Array.isArray(mealPrep.recipes) && mealPrep.recipes.slice(0, 3).map((recipe) => (
             <div
@@ -51,10 +51,10 @@ export default function MealPrepCard({ mealPrep, onClick, children }: Props) {
             </div>
           ))}
         </div>
+      </Link>
 
-        {children &&
-          <div className="p-4" onClick={e => e.stopPropagation()}>{children}</div>}
-      </div>
-    </Link>
+      {children &&
+        <div className="p-4" onClick={e => e.stopPropagation()}>{children}</div>}
+    </div>
   );
 }

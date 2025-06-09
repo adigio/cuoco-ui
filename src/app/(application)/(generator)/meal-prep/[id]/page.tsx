@@ -13,11 +13,14 @@ import ObservationInfo from "@/components/meal-prep/ObservationInfo";
 import IngredientsList from "@/components/meal-prep/IngredientList";
 import PortionSummary from "@/components/meal-prep/PortionSummary";
 import TimeAndFavorite from "@/components/shared/TimeAndFavorite";
+import { FavoriteModal } from "@/components/shared/modal/FavoriteModal";
+
 export default function MealPrepPage({ params }: PageProps) {
   const router = useRouter();
   const { id: mealPrepId } = use(params);
   const [mealPrep, setmealPrep] = useState<MealPrep | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showFavoriteModal, setShowFavoriteModal] = useState(false);
 
   useEffect(() => {
     const fetchMeal = async () => {
@@ -26,7 +29,7 @@ export default function MealPrepPage({ params }: PageProps) {
         const res = await getMealPrepById(idMealPrep);
 
         if (res) {
-          setmealPrep(res); // <--- esto está bien
+          setmealPrep(res);
         }
       } catch (error) {
         console.error("Error al obtener la receta:", error);
@@ -38,10 +41,11 @@ export default function MealPrepPage({ params }: PageProps) {
 
     fetchMeal();
   }, [mealPrepId]);
+
   const handleFavMealPrep = (recipeId: number) => {
-    console.log("GUARDAR A FAVS:", recipeId);
-    // router.push(`/recipe/${recipeId}`);
+    setShowFavoriteModal(true);
   };
+
   const handleBack = () => {
     router.push("/results-meal");
   };
@@ -103,6 +107,15 @@ export default function MealPrepPage({ params }: PageProps) {
           </div>
         </ContainerShadow>
       </main>
+
+      <FavoriteModal
+        type="meal-prep"
+        recipeId={mealPrep.id}
+        recipeText={mealPrep.title}
+        isOpen={showFavoriteModal}
+        onClose={() => setShowFavoriteModal(false)}
+        onUpgrade={() => {}} // No hace falta porque al ser premium no se mostrará nunca el modal
+      />
     </>
   );
 }
