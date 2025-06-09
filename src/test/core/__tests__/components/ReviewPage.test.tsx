@@ -1,35 +1,51 @@
+// src/test/core/__tests__/components/ReviewPage.test.tsx
+
 // 1) Mockeamos next/navigation y nuestro hook ANTES de cualquier import real
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
 }));
-jest.mock("@/store/useIngredientsStore", () => ({
-  useIngredientsStore: jest.fn(),
-}));
+
+// 2) Mockeamos el módulo de Zustand para usar jest.mocked
+jest.mock("@/store/useIngredientsStore");
 
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import ReviewPage from "@/app/(application)/(generator)/review/page";
-import { useRouter } from "next/navigation";
-import { useIngredientsStore } from "@/store/useIngredientsStore";
 
-// 2) Mock de los modales
-jest.mock("@/components/shared/modal/AlertModal", () => (props: any) =>
-  props.show ? <div data-testid="alert-modal">{props.children}</div> : null
-);
-jest.mock("@/components/shared/modal/ConfirmationModal", () => (props: any) =>
-  props.isOpen ? (
-    <div data-testid="confirm-modal">
-      <button onClick={props.onConfirm}>OK</button>
-      <button onClick={props.onCancel}>Cancel</button>
-      {props.children}
-    </div>
-  ) : null
-);
+// IMPORTAMOS TODO EL MÓDULO para usar jest.mocked
+import * as ingredientsStoreModule from "@/store/useIngredientsStore";
+import { useRouter } from "next/navigation";
+
+// Creamos alias tipado para el hook mockeado
+const mockedUseIngredients = jest.mocked(ingredientsStoreModule.useIngredientsStore);
+const mockedUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
+
+// 3) Mock de los modales con displayName
+jest.mock("@/components/shared/modal/AlertModal", () => {
+  const React = require("react");
+  function AlertModal(props: any) {
+    return props.show ? <div data-testid="alert-modal">{props.children}</div> : null;
+  }
+  AlertModal.displayName = "AlertModal";
+  return AlertModal;
+});
+jest.mock("@/components/shared/modal/ConfirmationModal", () => {
+  const React = require("react");
+  function ConfirmationModal(props: any) {
+    return props.isOpen ? (
+      <div data-testid="confirm-modal">
+        <button onClick={props.onConfirm}>OK</button>
+        <button onClick={props.onCancel}>Cancel</button>
+        {props.children}
+      </div>
+    ) : null;
+  }
+  ConfirmationModal.displayName = "ConfirmationModal";
+  return ConfirmationModal;
+});
 
 describe("ReviewPage", () => {
   const pushMock = jest.fn();
-  const mockedUseRouter = useRouter as jest.Mock;
-  const mockedUseIngredients = useIngredientsStore as jest.Mock;
 
   const defaultStore = {
     ingredients: [
@@ -45,10 +61,10 @@ describe("ReviewPage", () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    // 3) Configuramos useRouter
-    mockedUseRouter.mockReturnValue({ push: pushMock });
+    // Configuramos useRouter para devolver nuestro mock de push
+    mockedUseRouter.mockReturnValue({ push: pushMock } as any);
 
-    // 4) Configuramos useIngredientsStore con el defaultStore
+    // Configuramos useIngredientsStore para devolver defaultStore
     mockedUseIngredients.mockImplementation((selector?: any) =>
       typeof selector === "function" ? selector(defaultStore) : defaultStore
     );
@@ -77,23 +93,22 @@ describe("ReviewPage", () => {
     expect(defaultStore.confirmIngredient).toHaveBeenCalledWith(0);
   });
 
- it("al editar abre el modal, cambia nombre y cierra", async () => {
-  render(<ReviewPage />);
-  // abrimos el modal para el segundo ingrediente
-  fireEvent.click(screen.getAllByRole("button", { name: "Editar" })[1]);
+  it("al editar abre el modal, cambia nombre y cierra", async () => {
+    render(<ReviewPage />);
+    // abrimos el modal para el segundo ingrediente
+    fireEvent.click(screen.getAllByRole("button", { name: "Editar" })[1]);
 
-  // en lugar de getByRole("textbox"), buscamos el input que tenía valor "cebolla"
-  const input = screen.getByDisplayValue("cebolla");
-  fireEvent.change(input, { target: { value: "papa" } });
+    // buscamos el input que tenía valor "cebolla"
+    const input = screen.getByDisplayValue("cebolla");
+    fireEvent.change(input, { target: { value: "papa" } });
 
-  // click en Guardar dentro del modal
-  fireEvent.click(screen.getByRole("button", { name: "Guardar" }));
+    // click en Guardar dentro del modal
+    fireEvent.click(screen.getByRole("button", { name: "Guardar" }));
 
-  await waitFor(() => {
-    expect(defaultStore.updateIngredient).toHaveBeenCalledWith(1, { name: "papa" });
+    await waitFor(() => {
+      expect(defaultStore.updateIngredient).toHaveBeenCalledWith(1, { name: "papa" });
+    });
   });
-});
-
 
   it("al eliminar abre confirm modal y llama a removeIngredient", async () => {
     render(<ReviewPage />);

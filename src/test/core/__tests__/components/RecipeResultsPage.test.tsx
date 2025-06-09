@@ -1,66 +1,111 @@
 // src/test/core/__tests__/components/RecipeResultsPage.test.tsx
 
 // 1) Mocks globales **antes** de los imports
-jest.mock("next/navigation", () => ({ useRouter: jest.fn() }));
-jest.mock("@/store/useRecipesStore", () => ({ useRecipesStore: jest.fn() }));
-jest.mock("@/store/useIngredientsStore", () => ({ useIngredientsStore: jest.fn() }));
+jest.mock("next/navigation", () => ({
+  useRouter: jest.fn(),
+}));
 
-jest.mock("@/components/shared/BackgroundLayers", () => () => (
-  <div data-testid="background-layers" />
-));
-jest.mock("@/components/shared/containers/Container", () => (props: any) => (
-  <div data-testid="container">{props.children}</div>
-));
-jest.mock("@/components/shared/skeleton/RecipeCardSkeleton", () => ({
-  RecipeCardSkeleton: () => <div data-testid="skeleton" />,
-}));
-jest.mock("@/components/shared/cards/RecipeCard", () => ({
-  __esModule: true,
-  default: (props: any) => (
-    <div data-testid="recipe-card">
-      <div data-testid="recipe-name">{props.recipe.name}</div>
-      <div data-testid="prep-time">{props.recipe.preparationTime}</div>
-      {/* props.children incluye los botones de favorito y refresh */}
-      <div data-testid="actions">{props.children}</div>
-    </div>
-  ),
-}));
-jest.mock("@fortawesome/react-fontawesome", () => ({
-  FontAwesomeIcon: () => <span data-testid="fa-icon" />,
-}));
-jest.mock("@/components/shared/modal/FavoriteModal", () => ({
-  FavoriteModal: (p: any) =>
-    p.isOpen ? <div data-testid="favorite-modal" /> : null,
-}));
-jest.mock("@/components/shared/modal/RefreshModal", () => ({
-  RefreshModal: (p: any) =>
-    p.isOpen ? (
+// Mockeamos los módulos de Zustand para usar jest.mocked
+jest.mock("@/store/useRecipesStore");
+jest.mock("@/store/useIngredientsStore");
+
+// 2) Mocks de componentes con displayName
+jest.mock("@/components/shared/BackgroundLayers", () => {
+  const React = require("react");
+  function BackgroundLayers() {
+    return <div data-testid="background-layers" />;
+  }
+  BackgroundLayers.displayName = "BackgroundLayers";
+  return BackgroundLayers;
+});
+
+jest.mock("@/components/shared/containers/Container", () => {
+  const React = require("react");
+  function Container(props: any) {
+    return <div data-testid="container">{props.children}</div>;
+  }
+  Container.displayName = "Container";
+  return Container;
+});
+
+jest.mock("@/components/shared/skeleton/RecipeCardSkeleton", () => {
+  const React = require("react");
+  function RecipeCardSkeleton() {
+    return <div data-testid="skeleton" />;
+  }
+  RecipeCardSkeleton.displayName = "RecipeCardSkeleton";
+  return { RecipeCardSkeleton };
+});
+
+jest.mock("@/components/shared/cards/RecipeCard", () => {
+  const React = require("react");
+  function RecipeCard(props: any) {
+    return (
+      <div data-testid="recipe-card">
+        <div data-testid="recipe-name">{props.recipe.name}</div>
+        <div data-testid="prep-time">{props.recipe.preparationTime}</div>
+        <div data-testid="actions">{props.children}</div>
+      </div>
+    );
+  }
+  RecipeCard.displayName = "RecipeCard";
+  return { __esModule: true, default: RecipeCard };
+});
+
+jest.mock("@fortawesome/react-fontawesome", () => {
+  const React = require("react");
+  function FontAwesomeIcon() {
+    return <span data-testid="fa-icon" />;
+  }
+  FontAwesomeIcon.displayName = "FontAwesomeIcon";
+  return { FontAwesomeIcon };
+});
+
+jest.mock("@/components/shared/modal/FavoriteModal", () => {
+  const React = require("react");
+  function FavoriteModal(props: any) {
+    return props.isOpen ? <div data-testid="favorite-modal" /> : null;
+  }
+  FavoriteModal.displayName = "FavoriteModal";
+  return { FavoriteModal };
+});
+
+jest.mock("@/components/shared/modal/RefreshModal", () => {
+  const React = require("react");
+  function RefreshModal(props: any) {
+    return props.isOpen ? (
       <div data-testid="refresh-modal">
-        <button data-testid="upgrade-button" onClick={p.onUpgrade}>
+        <button data-testid="upgrade-button" onClick={props.onUpgrade}>
           Upgrade
         </button>
       </div>
-    ) : null,
-}));
-jest.mock("@/components/shared/modal/SubscriptionModal", () => (p: any) =>
-  p.isOpen ? <div data-testid="subscription-modal" /> : null
-);
+    ) : null;
+  }
+  RefreshModal.displayName = "RefreshModal";
+  return { RefreshModal };
+});
 
-// 2) Ahora sí, imports reales
+jest.mock("@/components/shared/modal/SubscriptionModal", () => {
+  const React = require("react");
+  function SubscriptionModal(props: any) {
+    return props.isOpen ? <div data-testid="subscription-modal" /> : null;
+  }
+  SubscriptionModal.displayName = "SubscriptionModal";
+  return SubscriptionModal;
+});
+
+// 3) Ahora sí, imports reales
 import React from "react";
 import { render, screen, fireEvent, act, within } from "@testing-library/react";
 import RecipeResultsPage from "@/app/(application)/(generator)/results/page";
 import { useRouter } from "next/navigation";
-import { useRecipesStore } from "@/store/useRecipesStore";
-import { useIngredientsStore } from "@/store/useIngredientsStore";
+import * as recipesStoreModule from "@/store/useRecipesStore";
+import * as ingredientsStoreModule from "@/store/useIngredientsStore";
 
+// 4) Creamos alias tipados para los hooks mockeados
 const mockedUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
-const mockedUseRecipes = useRecipesStore as jest.MockedFunction<
-  typeof useRecipesStore
->;
-const mockedUseIngredients = useIngredientsStore as jest.MockedFunction<
-  typeof useIngredientsStore
->;
+const mockedUseRecipes = jest.mocked(recipesStoreModule.useRecipesStore);
+const mockedUseIngredients = jest.mocked(ingredientsStoreModule.useIngredientsStore);
 
 describe("RecipeResultsPage", () => {
   const pushMock = jest.fn();
@@ -77,6 +122,7 @@ describe("RecipeResultsPage", () => {
     jest.clearAllMocks();
     jest.useFakeTimers();
 
+    // Mockeamos useRouter
     mockedUseRouter.mockReturnValue({
       push: pushMock,
       back: jest.fn(),
@@ -86,16 +132,17 @@ describe("RecipeResultsPage", () => {
       prefetch: jest.fn(),
     } as any);
 
-    const store = {
-      filteredRecipes: [],
+    // Valor inicial del store
+    const baseStore = {
+      filteredRecipes: [] as typeof sampleRecipes,
       ingredients: sampleIngredients,
     };
 
-    mockedUseRecipes.mockImplementation((selector: any) =>
-      selector ? selector(store) : store
+    mockedUseRecipes.mockImplementation((selector?: any) =>
+      selector ? selector(baseStore) : baseStore
     );
-    mockedUseIngredients.mockImplementation((selector: any) =>
-      selector ? selector(store) : store
+    mockedUseIngredients.mockImplementation((selector?: any) =>
+      selector ? selector(baseStore) : baseStore
     );
   });
 
@@ -125,8 +172,11 @@ describe("RecipeResultsPage", () => {
   });
 
   it("muestra recetas con nombre y tiempo tras carga", async () => {
-    mockedUseRecipes.mockImplementation((selector: any) =>
-      selector ? selector({ ...{ filteredRecipes: sampleRecipes, ingredients: sampleIngredients } }) : { filteredRecipes: sampleRecipes, ingredients: sampleIngredients }
+    // Override para que haya recetas
+    mockedUseRecipes.mockImplementation((selector?: any) =>
+      selector
+        ? selector({ filteredRecipes: sampleRecipes, ingredients: sampleIngredients })
+        : { filteredRecipes: sampleRecipes, ingredients: sampleIngredients }
     );
 
     render(<RecipeResultsPage />);
@@ -134,7 +184,6 @@ describe("RecipeResultsPage", () => {
 
     const cards = await screen.findAllByTestId("recipe-card");
     expect(cards).toHaveLength(2);
-
     expect(screen.getByText("Sopa")).toBeInTheDocument();
     expect(screen.getByText("Ensalada")).toBeInTheDocument();
     expect(screen.getByText("10")).toBeInTheDocument();
@@ -142,36 +191,36 @@ describe("RecipeResultsPage", () => {
   });
 
   it("navega correctamente con los botones de abajo", async () => {
-    mockedUseRecipes.mockImplementation((selector: any) =>
-      selector ? selector({ ...{ filteredRecipes: sampleRecipes, ingredients: sampleIngredients } }) : { filteredRecipes: sampleRecipes, ingredients: sampleIngredients }
+    // Override para que haya recetas
+    mockedUseRecipes.mockImplementation((selector?: any) =>
+      selector
+        ? selector({ filteredRecipes: sampleRecipes, ingredients: sampleIngredients })
+        : { filteredRecipes: sampleRecipes, ingredients: sampleIngredients }
     );
 
     render(<RecipeResultsPage />);
     act(() => jest.advanceTimersByTime(3000));
 
-    fireEvent.click(
-      screen.getByRole("button", { name: /Volver a ingredientes/i })
-    );
+    fireEvent.click(screen.getByRole("button", { name: /Volver a ingredientes/i }));
     expect(pushMock).toHaveBeenCalledWith("/filters");
 
-    fireEvent.click(
-      screen.getByRole("button", { name: /Nuevo generador/i })
-    );
+    fireEvent.click(screen.getByRole("button", { name: /Nuevo generador/i }));
     expect(pushMock).toHaveBeenCalledWith("/recipe-generator");
   });
 
   it("al hacer refresh abre RefreshModal y luego SubscriptionModal al upgrade", async () => {
-    mockedUseRecipes.mockImplementation((selector: any) =>
-      selector ? selector({ ...{ filteredRecipes: sampleRecipes, ingredients: sampleIngredients } }) : { filteredRecipes: sampleRecipes, ingredients: sampleIngredients }
+    // Override para que haya recetas
+    mockedUseRecipes.mockImplementation((selector?: any) =>
+      selector
+        ? selector({ filteredRecipes: sampleRecipes, ingredients: sampleIngredients })
+        : { filteredRecipes: sampleRecipes, ingredients: sampleIngredients }
     );
 
     render(<RecipeResultsPage />);
     act(() => jest.advanceTimersByTime(3000));
 
-    // buscamos el primer botón de "refresh" dentro de la tarjeta
     const firstCard = (await screen.findAllByTestId("recipe-card"))[0];
-    const actionButtons = within(firstCard).getAllByRole("button");
-    const refreshBtn = actionButtons[0]; // asume que el primero es refresh
+    const [refreshBtn] = within(firstCard).getAllByRole("button");
     fireEvent.click(refreshBtn);
 
     expect(await screen.findByTestId("refresh-modal")).toBeInTheDocument();
@@ -180,16 +229,18 @@ describe("RecipeResultsPage", () => {
   });
 
   it("al hacer favorito abre FavoriteModal", async () => {
-    mockedUseRecipes.mockImplementation((selector: any) =>
-      selector ? selector({ ...{ filteredRecipes: sampleRecipes, ingredients: sampleIngredients } }) : { filteredRecipes: sampleRecipes, ingredients: sampleIngredients }
+    // Override para que haya recetas
+    mockedUseRecipes.mockImplementation((selector?: any) =>
+      selector
+        ? selector({ filteredRecipes: sampleRecipes, ingredients: sampleIngredients })
+        : { filteredRecipes: sampleRecipes, ingredients: sampleIngredients }
     );
 
     render(<RecipeResultsPage />);
     act(() => jest.advanceTimersByTime(3000));
 
     const firstCard = (await screen.findAllByTestId("recipe-card"))[0];
-    const actionButtons = within(firstCard).getAllByRole("button");
-    const favoriteBtn = actionButtons[1]; // asume que el segundo es favorite
+    const [, favoriteBtn] = within(firstCard).getAllByRole("button");
     fireEvent.click(favoriteBtn);
 
     expect(await screen.findByTestId("favorite-modal")).toBeInTheDocument();

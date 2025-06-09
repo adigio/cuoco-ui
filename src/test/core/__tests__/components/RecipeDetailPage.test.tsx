@@ -9,37 +9,73 @@ jest.mock("react", () => {
   };
 });
 
-// 1) Mocks de next/navigation, servicios y componentes hijos
+// 1) Mocks de next/navigation y servicios
 jest.mock("next/navigation", () => ({ useRouter: jest.fn() }));
-jest.mock("@/services/recipe.service", () => ({ getRecipeById: jest.fn() }));
-jest.mock("@/components/shared/BackgroundLayers", () => () => (
-  <div data-testid="background-layers" />
-));
-jest.mock("@/components/shared/containers/ContainerShadow", () => (props: any) => (
-  <div data-testid="container-shadow">{props.children}</div>
-));
-jest.mock("@/components/shared/skeleton/RecipeDetailSkeleton", () => ({
-  RecipeDetailSkeleton: () => <div data-testid="detail-skeleton" />,
-}));
-jest.mock("@/components/recipe/Header", () => (props: any) => (
-  <div data-testid="recipe-header">{props.title || "header"}</div>
-));
-jest.mock("@/components/recipe/StepBlock", () => (props: any) => (
-  <div data-testid="step-block">{props.section || "step"}</div>
-));
-jest.mock("@/components/recipe/Sidebar", () => (props: any) => (
-  <div data-testid="recipe-sidebar">{props.ingredients?.length ?? 0}</div>
-));
+jest.mock("@/services/recipe.service");
 
-// 2) Imports **reales**
+// 2) Mocks de componentes hijos con displayName
+jest.mock("@/components/shared/BackgroundLayers", () => {
+  const React = require("react");
+  function BackgroundLayers() {
+    return <div data-testid="background-layers" />;
+  }
+  BackgroundLayers.displayName = "BackgroundLayers";
+  return BackgroundLayers;
+});
+jest.mock("@/components/shared/containers/ContainerShadow", () => {
+  const React = require("react");
+  function ContainerShadow(props: any) {
+    return <div data-testid="container-shadow">{props.children}</div>;
+  }
+  ContainerShadow.displayName = "ContainerShadow";
+  return ContainerShadow;
+});
+jest.mock("@/components/shared/skeleton/RecipeDetailSkeleton", () => {
+  const React = require("react");
+  function RecipeDetailSkeleton() {
+    return <div data-testid="detail-skeleton" />;
+  }
+  RecipeDetailSkeleton.displayName = "RecipeDetailSkeleton";
+  return { RecipeDetailSkeleton };
+});
+jest.mock("@/components/recipe/Header", () => {
+  const React = require("react");
+  function Header(props: any) {
+    return <div data-testid="recipe-header">{props.title || "header"}</div>;
+  }
+  Header.displayName = "RecipeHeader";
+  return Header;
+});
+jest.mock("@/components/recipe/StepBlock", () => {
+  const React = require("react");
+  function StepBlock(props: any) {
+    return <div data-testid="step-block">{props.section || "step"}</div>;
+  }
+  StepBlock.displayName = "StepBlock";
+  return StepBlock;
+});
+jest.mock("@/components/recipe/Sidebar", () => {
+  const React = require("react");
+  function Sidebar(props: any) {
+    return (
+      <div data-testid="recipe-sidebar">
+        {props.ingredients?.length ?? 0}
+      </div>
+    );
+  }
+  Sidebar.displayName = "RecipeSidebar";
+  return Sidebar;
+});
+
+// 3) Imports reales
 import React from "react";
 import { render, screen, act } from "@testing-library/react";
 import RecipeDetailPage from "@/app/(application)/(generator)/recipe/[id]/page";
-import { getRecipeById } from "@/services/recipe.service";
+import * as recipeServiceModule from "@/services/recipe.service";
 import { useRouter } from "next/navigation";
 
-// 3) Castings para Jest + TS
-const mockedGet = getRecipeById as jest.MockedFunction<typeof getRecipeById>;
+// 4) Tipado de mocks con jest.mocked
+const mockedGet = jest.mocked(recipeServiceModule.getRecipeById);
 const mockedRouter = useRouter as jest.MockedFunction<typeof useRouter>;
 
 describe("RecipeDetailPage", () => {
@@ -66,15 +102,13 @@ describe("RecipeDetailPage", () => {
   });
 
   it("muestra mensaje de error cuando no encuentra receta", async () => {
-    // Si la función se declara Promise<RecipeDetail|undefined>,
-    // devolvemos undefined en vez de null
+    // devolvemos undefined para simular “no encontrada”
     mockedGet.mockResolvedValueOnce(undefined as any);
 
     await act(async () => {
       render(<RecipeDetailPage params={{ id: "456" } as any} />);
     });
 
-    // Ahora esperamos el mensaje de error
     expect(
       await screen.findByText("Receta no encontrada")
     ).toBeInTheDocument();
@@ -98,7 +132,7 @@ describe("RecipeDetailPage", () => {
       render(<RecipeDetailPage params={{ id: "789" } as any} />);
     });
 
-    // comprueba los mocks
+    // Verificamos que los mocks se hayan renderizado
     expect(screen.getByTestId("background-layers")).toBeInTheDocument();
     expect(screen.getByTestId("container-shadow")).toBeInTheDocument();
     expect(screen.getByTestId("recipe-header")).toHaveTextContent("Mi Receta");
