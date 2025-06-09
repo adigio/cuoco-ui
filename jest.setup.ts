@@ -1,8 +1,8 @@
 import '@testing-library/jest-dom';
 
 // Mock del servicio de recetas
-jest.mock('@/services/recipeService', () => {
-  const originalModule = jest.requireActual('@/services/recipeService');
+jest.mock('@/services/recipe.service', () => {
+  const originalModule = jest.requireActual('@/services/recipe.service');
   return {
     ...originalModule,
     generateRecipes: jest.fn().mockImplementation(async (...args: any[]) => {
