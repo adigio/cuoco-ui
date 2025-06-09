@@ -1,12 +1,7 @@
 // src/test/core/__tests__/components/RecipeGeneratorPage.test.tsx
 
 import React from "react";
-import {
-  render,
-  screen,
-  fireEvent,
-  waitFor,
-} from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import RecipeGeneratorPage from "@/app/(application)/(generator)/recipe-generator/page";
 import { useRouter } from "next/navigation";
 import * as ingredientsStoreModule from "@/store/useIngredientsStore";
@@ -14,23 +9,20 @@ import * as authStoreModule from "@/store/useAuthStore";
 import * as visionService from "@/services/vision.service";
 
 // Stub ImageUploader to avoid LocalImage effects
-jest.mock(
-  "@/components/recipe-generator/ImageUploader",
-  () => ({
-    __esModule: true,
-    default: (props: any) => (
-      <input
-        data-testid="file-input"
-        type="file"
-        multiple
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          const files = Array.from(e.target.files || []);
-          props.setImages(files);
-        }}
-      />
-    ),
-  })
-);
+jest.mock("@/components/recipe-generator/ImageUploader", () => ({
+  __esModule: true,
+  default: (props: any) => (
+    <input
+      data-testid="file-input"
+      type="file"
+      multiple
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = Array.from(e.target.files || []);
+        props.setImages(files);
+      }}
+    />
+  ),
+}));
 
 // Mocks básicos
 jest.mock("next/navigation", () => ({ useRouter: jest.fn() }));
@@ -41,9 +33,10 @@ jest.mock("@/services/vision.service");
 describe("RecipeGeneratorPage", () => {
   const pushMock = jest.fn();
   const mockedUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
-  const mockedAnalyzeImages = visionService.analyzeImagesWithAPI as jest.MockedFunction<
-    typeof visionService.analyzeImagesWithAPI
-  >;
+  const mockedAnalyzeImages =
+    visionService.analyzeImagesWithAPI as jest.MockedFunction<
+      typeof visionService.analyzeImagesWithAPI
+    >;
 
   beforeAll(() => {
     jest.spyOn(console, "error").mockImplementation(() => {});
@@ -60,15 +53,17 @@ describe("RecipeGeneratorPage", () => {
     // Ingredients store stub: no images, no ingredients, addMultiple returns 1
     jest
       .spyOn(ingredientsStoreModule, "useIngredientsStore")
-      .mockImplementation((selector) =>
-        selector({
+      .mockImplementation((selector?: any) => {
+        const storeStub = {
           ingredients: [],
           addIngredient: jest.fn(),
           addMultipleIngredients: jest.fn().mockReturnValue(1),
           removeIngredient: jest.fn(),
           mode: "basic",
-        } as any)
-      );
+        };
+        // Si recibimos una función, la ejecutamos, si no, devolvemos todo el store
+        return typeof selector === "function" ? selector(storeStub) : storeStub;
+      });
 
     // Auth store stub: user premium by default
     jest
@@ -106,15 +101,18 @@ describe("RecipeGeneratorPage", () => {
     // Ahora stubear ingredientes previos
     jest
       .spyOn(ingredientsStoreModule, "useIngredientsStore")
-      .mockImplementation((selector) =>
-        selector({
+      .mockImplementation((selector?: any) => {
+        const storeWithIng = {
           ingredients: ["lechuga"],
           addIngredient: jest.fn(),
           addMultipleIngredients: jest.fn(),
           removeIngredient: jest.fn(),
           mode: "basic",
-        } as any)
-      );
+        };
+        return typeof selector === "function"
+          ? selector(storeWithIng)
+          : storeWithIng;
+      });
 
     render(<RecipeGeneratorPage />);
     fireEvent.click(screen.getByRole("button", { name: /Continuar/i }));

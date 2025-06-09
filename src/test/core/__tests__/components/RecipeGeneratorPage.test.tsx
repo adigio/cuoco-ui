@@ -13,7 +13,7 @@ import * as ingredientsStoreModule from "@/store/useIngredientsStore";
 import * as authStoreModule from "@/store/useAuthStore";
 import * as visionService from "@/services/vision.service";
 
-// ——— Stub ImageUploader to avoid LocalImage useEffect ———
+// ——— Stub ImageUploader para evitar LocalImage useEffect ———
 jest.mock(
   "@/components/recipe-generator/ImageUploader",
   () => ({
@@ -32,20 +32,19 @@ jest.mock(
   })
 );
 
-// ——— Core module mocks ———
+// ——— Mocks de módulos centrales ———
 jest.mock("next/navigation", () => ({ useRouter: jest.fn() }));
 jest.mock("@/store/useIngredientsStore");
 jest.mock("@/store/useAuthStore");
 jest.mock("@/services/vision.service");
 
 import { useIngredientsStore } from "@/store/useIngredientsStore";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore }        from "@/store/useAuthStore";
 
-// Cast the Zustand hooks to Jest mocks to silence TS errors
-const mockedUseIngredientsStore = (useIngredientsStore as unknown) as jest.Mock;
-const mockedUseAuthStore        = (useAuthStore as unknown)        as jest.Mock;
-const mockedUseRouter           = useRouter                         as jest.MockedFunction<typeof useRouter>;
-const mockedAnalyzeImages       = visionService.analyzeImagesWithAPI                                  as jest.MockedFunction<
+const mockedUseIngredientsStore = useIngredientsStore as jest.Mock;
+const mockedUseAuthStore        = useAuthStore        as jest.Mock;
+const mockedUseRouter           = useRouter           as jest.MockedFunction<typeof useRouter>;
+const mockedAnalyzeImages       = visionService.analyzeImagesWithAPI as jest.MockedFunction<
   typeof visionService.analyzeImagesWithAPI
 >;
 
@@ -53,19 +52,20 @@ describe("RecipeGeneratorPage", () => {
   const pushMock = jest.fn();
 
   beforeAll(() => {
-    // silence console.error
+    // silenciar errores en consola
     jest.spyOn(console, "error").mockImplementation(() => {});
-    // stub URL.createObjectURL in case LocalImage sneaks through
+    // stub URL.createObjectURL por si se cuela LocalImage
     global.URL.createObjectURL = jest.fn().mockReturnValue("blob:fake");
     global.URL.revokeObjectURL  = jest.fn();
   });
 
   beforeEach(() => {
     jest.clearAllMocks();
-    // router.push stub
+
+    // mock del router
     mockedUseRouter.mockReturnValue({ push: pushMock } as any);
 
-    // useIngredientsStore stub: handle both calls with and without selector
+    // mock base de useIngredientsStore
     mockedUseIngredientsStore.mockImplementation((selector?: any) => {
       const storeStub = {
         ingredients: [],
@@ -74,17 +74,14 @@ describe("RecipeGeneratorPage", () => {
         removeIngredient: jest.fn(),
         mode: "basic",
       };
-      return typeof selector === "function"
-        ? selector(storeStub)
-        : storeStub;
+      // si me pasan selector, lo ejecuto; si no, devuelvo todo el store
+      return typeof selector === "function" ? selector(storeStub) : storeStub;
     });
 
-    // useAuthStore stub: likewise
+    // mock base de useAuthStore
     mockedUseAuthStore.mockImplementation((selector?: any) => {
       const authStub = { user: { premium: true }, isAuthenticated: true };
-      return typeof selector === "function"
-        ? selector(authStub)
-        : authStub;
+      return typeof selector === "function" ? selector(authStub) : authStub;
     });
   });
 
@@ -113,7 +110,7 @@ describe("RecipeGeneratorPage", () => {
   });
 
   it("redirige directamente si ya hay ingredientes", async () => {
-    // override store to include existing ingredients
+    // Stub con ingredientes ya cargados
     const storeWithIng = {
       ingredients: ["lechuga"],
       addIngredient: jest.fn(),
@@ -121,10 +118,10 @@ describe("RecipeGeneratorPage", () => {
       removeIngredient: jest.fn(),
       mode: "basic",
     };
+
+    // Reemplazo la implementación PARA ESTE CASO concreto:
     mockedUseIngredientsStore.mockImplementation((selector?: any) =>
-      typeof selector === "function"
-        ? selector(storeWithIng)
-        : storeWithIng
+      typeof selector === "function" ? selector(storeWithIng) : storeWithIng
     );
 
     render(<RecipeGeneratorPage />);
@@ -137,7 +134,7 @@ describe("RecipeGeneratorPage", () => {
   });
 
   it("activa suscripción si es free y sube >2 imágenes", async () => {
-    // override auth to non-premium
+    // Stub de auth no-premium
     const authFree = { user: { premium: false }, isAuthenticated: true };
     mockedUseAuthStore.mockImplementation((selector?: any) =>
       typeof selector === "function" ? selector(authFree) : authFree
