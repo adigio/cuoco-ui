@@ -138,6 +138,10 @@ export default function RecipeResultsPage() {
       {selectedRecipe && (
         <>
           <FavoriteModal
+            onUpgrade={() => {
+              setShowFavoriteModal(false);
+              setShowSubscriptionModal(true);
+            }}
             recipeText={selectedRecipe.name}
             isOpen={showFavoriteModal}
             onClose={() => {
