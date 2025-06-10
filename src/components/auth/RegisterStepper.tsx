@@ -1,29 +1,33 @@
-'use client'
+"use client";
 
-import { useState, SetStateAction } from 'react'
-import Input from '@/components/shared/form/Input'
-import Checkbox from '@/components/shared/form/Checkbox'
-import { useAuthStore } from '@/store/useAuthStore';
-import axios from 'axios';
-import PreferencesContainer from '../shared/preferences/PreferencesContainer';
+import { useState, SetStateAction } from "react";
+import Input from "@/components/shared/form/Input";
+import Checkbox from "@/components/shared/form/Checkbox";
+import { useAuthStore } from "@/store/useAuthStore";
+import axios from "axios";
+import PreferencesContainer from "../shared/preferences/PreferencesContainer";
+import { RegisterStepperProps } from "@/types/components/register-steppers.types";  
 
-interface RegisterStepperProps {
-  step: number;
-  onComplete: () => void;
-  onBack?: () => void;
-}
+export default function RegisterStepper({
+  step,
+  onComplete,
+  onBack,
+}: RegisterStepperProps) {
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPass, setConfirmPass] = useState("");
+  const [cookingLevel, setCookingLevel] = useState<"Bajo" | "Medio" | "Alto">(
+    "Medio"
+  );
+  const [diet, setDiet] = useState<
+    "Omnívoro" | "Vegetariano" | "Vegano" | "Otro"
+  >("Omnívoro");
+  const [foodNeeds, setFoodNeeds] = useState<string[]>([]);
+  const [allergies, setAllergies] = useState<string[]>([]);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
-export default function RegisterStepper({ step, onComplete, onBack }: RegisterStepperProps) {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPass, setConfirmPass] = useState('')
-  const [cookingLevel, setCookingLevel] = useState<'Bajo' | 'Medio' | 'Alto'>('Medio')
-  const [diet, setDiet] = useState<'Omnívoro' | 'Vegetariano' | 'Vegano' | 'Otro'>('Omnívoro')
-  const [foodNeeds, setFoodNeeds] = useState<string[]>([])
-  const [allergies, setAllergies] = useState<string[]>([])
-  const [termsAccepted, setTermsAccepted] = useState(false)
-
-  const login = useAuthStore(state => state.login);
+  const login = useAuthStore((state) => state.login);
 
   const handlePasswordStepComplete = async () => {
     try {
@@ -35,12 +39,12 @@ export default function RegisterStepper({ step, onComplete, onBack }: RegisterSt
           diet,
           dietaryRestrictions: foodNeeds,
           allergies,
-          favoriteCuisines: []
-        }
+          favoriteCuisines: [],
+        },
       };
-  
-      const { data } = await axios.post('/api/register', userData);
-      
+
+      const { data } = await axios.post("/api/register", userData);
+
       login({
         name: data.user.name,
         email: data.user.email,
@@ -51,24 +55,37 @@ export default function RegisterStepper({ step, onComplete, onBack }: RegisterSt
           diet: data.user.preferences.diet,
           dietaryRestrictions: data.user.preferences.dietaryRestrictions,
           allergies: data.user.preferences.allergies,
-          favoriteCuisines: []
-        }
+          favoriteCuisines: [],
+        },
       });
-      
+
       onComplete();
     } catch (error) {
-      console.error('Error en el registro:', error);
+      console.error("Error en el registro:", error);
     }
   };
 
-  const centeredWrapperClass = "flex flex-col justify-center items-center min-h-[40vh] px-4"
+  const centeredWrapperClass =
+    "flex flex-col justify-center items-center min-h-[40vh] px-4";
 
   // STEP 1: E-mail
   if (step === 1) {
     return (
       <div className={centeredWrapperClass}>
         <div className="space-y-4 text-left w-full max-w-md">
-          <h3 className="text-2xl font-bold text-gray-800">Ingresá tu e-mail</h3>
+        <h4 className="text-2xl font-bold text-gray-800">Nombre</h4>
+          <Input
+            type="text"
+            name="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="nombre"
+            required
+            inputClassName="rounded-xl p-3 text-gray-800"
+          />
+          <h4 className="text-2xl font-bold text-gray-800">
+            Ingresá tu e-mail
+          </h4>
           <p className="text-gray-500">Asegurate de tener acceso a él.</p>
           <Input
             type="email"
@@ -91,7 +108,7 @@ export default function RegisterStepper({ step, onComplete, onBack }: RegisterSt
           />
           <button
             onClick={() => {
-              if (email.includes('@') && termsAccepted) onComplete()
+              if (email.includes("@") && termsAccepted) onComplete();
             }}
             className="w-full bg-[#F5807B] hover:bg-[#F5807B] text-white font-semibold py-2 rounded transition"
           >
@@ -99,7 +116,7 @@ export default function RegisterStepper({ step, onComplete, onBack }: RegisterSt
           </button>
         </div>
       </div>
-    )
+    );
   }
 
   // STEP 2: Preferencias
@@ -113,14 +130,22 @@ export default function RegisterStepper({ step, onComplete, onBack }: RegisterSt
               diet,
               dietaryRestrictions: foodNeeds,
               allergies,
-              favoriteCuisines: []
+              favoriteCuisines: [],
             }}
             onComplete={(preferences) => {
               if (preferences.cookingLevel) {
-                setCookingLevel(preferences.cookingLevel as SetStateAction<'Bajo' | 'Medio' | 'Alto'>);
+                setCookingLevel(
+                  preferences.cookingLevel as SetStateAction<
+                    "Bajo" | "Medio" | "Alto"
+                  >
+                );
               }
               if (preferences.diet) {
-                setDiet(preferences.diet as SetStateAction<'Omnívoro' | 'Vegetariano' | 'Vegano' | 'Otro'>);
+                setDiet(
+                  preferences.diet as SetStateAction<
+                    "Omnívoro" | "Vegetariano" | "Vegano" | "Otro"
+                  >
+                );
               }
               if (preferences.dietaryRestrictions) {
                 setFoodNeeds(preferences.dietaryRestrictions);
@@ -136,17 +161,22 @@ export default function RegisterStepper({ step, onComplete, onBack }: RegisterSt
           />
         </div>
       </div>
-    )
+    );
   }
 
   // STEP 3: Contraseña
   if (step === 3) {
-    const valid = password.length >= 8 && /[0-9]/.test(password) && !/1234|abcd/i.test(password)
+    const valid =
+      password.length >= 8 &&
+      /[0-9]/.test(password) &&
+      !/1234|abcd/i.test(password);
 
     return (
       <div className={centeredWrapperClass}>
         <div className="space-y-4 text-left w-full max-w-md">
-          <h3 className="text-2xl font-bold text-gray-800">Creá tu contraseña</h3>
+          <h3 className="text-2xl font-bold text-gray-800">
+            Creá tu contraseña
+          </h3>
           <p className="text-sm text-gray-500">Mantené tu cuenta protegida.</p>
           <Input
             type="password"
@@ -195,7 +225,8 @@ export default function RegisterStepper({ step, onComplete, onBack }: RegisterSt
             )}
             <button
               onClick={() => {
-                if (password === confirmPass && valid) handlePasswordStepComplete()
+                if (password === confirmPass && valid)
+                  handlePasswordStepComplete();
               }}
               className="flex-1 bg-[#B362D8] hover:opacity-80 text-white font-semibold py-2 rounded transition"
             >
@@ -204,8 +235,8 @@ export default function RegisterStepper({ step, onComplete, onBack }: RegisterSt
           </div>
         </div>
       </div>
-    )
+    );
   }
 
-  return null
+  return null;
 }

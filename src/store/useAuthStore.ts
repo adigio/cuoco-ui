@@ -4,7 +4,7 @@ import { User as AuthUser } from '@/types/auth/auth.types';
 
 export type User = AuthUser;
 
-interface AuthState {
+export interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
   login: (user: User) => void;
@@ -22,7 +22,7 @@ export const useAuthStore = create<AuthState>()(
       updateUser: (user) => set({ user }),
     }),
     {
-      name: 'auth-storage', // ← guarda en localStorage con esta clave
+      name: 'auth-storage', //  guarda en localStorage con esta clave
     }
   )
 );

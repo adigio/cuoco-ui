@@ -30,57 +30,57 @@ export const handlers = [
     console.log(id);
     return HttpResponse.json(mockDetailsRecipes[id], { status: 200 });
   }),
-  http.post("/api/login", async ({ request }) => {
-    const body = await request.json();
+  // http.post("/api/login", async ({ request }) => {
+  //   const body = await request.json();
 
-    if (!body || typeof body !== "object") {
-      return HttpResponse.json({ message: "Bad request" }, { status: 400 });
-    }
+  //   if (!body || typeof body !== "object") {
+  //     return HttpResponse.json({ message: "Bad request" }, { status: 400 });
+  //   }
 
-    const { email, password } = body;
+  //   const { email, password } = body;
 
-    console.log("[MSW] Login:", { email, password });
+  //   console.log("[MSW] Login:", { email, password });
 
-    if (email === "test@cuoco.com" && password === "123456") {
-      return HttpResponse.json({
-        user: {
-          name: "Usuario Free",
-          email,
-          token: "fake-jwt-123",
-          premium: false,
-          preferences: {
-            cookingLevel: "Medio",
-            diet: "Omnívoro",
-            dietaryRestrictions: ["Sin lactosa"],
-            allergies: [],
-            favoriteCuisines: []
-          }
-        },
-      });
-    }
-    if (email === "premium@cuoco.com" && password === "123456") {
-      return HttpResponse.json({
-        user: {
-          name: "Usuario Premium",
-          email,
-          token: "fake-jwt-123",
-          premium: true,
-          preferences: {
-            cookingLevel: "Alto",
-            diet: "Vegetariano",
-            dietaryRestrictions: ["Sin gluten"],
-            allergies: ["Maní"],
-            favoriteCuisines: [],
-          },
-        },
-      });
-    }
+  //   if (email === "test@cuoco.com" && password === "123456") {
+  //     return HttpResponse.json({
+  //       user: {
+  //         name: "Usuario Free",
+  //         email,
+  //         token: "fake-jwt-123",
+  //         premium: false,
+  //         preferences: {
+  //           cookingLevel: "Medio",
+  //           diet: "Omnívoro",
+  //           dietaryRestrictions: ["Sin lactosa"],
+  //           allergies: [],
+  //           favoriteCuisines: []
+  //         }
+  //       },
+  //     });
+  //   }
+  //   if (email === "premium@cuoco.com" && password === "123456") {
+  //     return HttpResponse.json({
+  //       user: {
+  //         name: "Usuario Premium",
+  //         email,
+  //         token: "fake-jwt-123",
+  //         premium: true,
+  //         preferences: {
+  //           cookingLevel: "Alto",
+  //           diet: "Vegetariano",
+  //           dietaryRestrictions: ["Sin gluten"],
+  //           allergies: ["Maní"],
+  //           favoriteCuisines: [],
+  //         },
+  //       },
+  //     });
+  //   }
 
-    return HttpResponse.json(
-      { message: "Credenciales inválidas" },
-      { status: 401 }
-    );
-  }),
+  //   return HttpResponse.json(
+  //     { message: "Credenciales inválidas" },
+  //     { status: 401 }
+  //   );
+  // }),
   http.post("/api/reset-password", async ({ request }) => {
     const body = await request.json();
 

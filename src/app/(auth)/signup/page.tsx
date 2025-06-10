@@ -73,7 +73,7 @@ export default function SignupPage() {
 
           <RegisterStepBox
             icon={EnvelopeIcon}
-            title="Agregá tu e-mail"
+            title="Agregá tu e-mail y nombre"
             description="Recibirás información de tu cuenta."
             buttonText="Agregar"
             onClick={() => setCurrentStep('email')}

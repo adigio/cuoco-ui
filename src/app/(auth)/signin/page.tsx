@@ -33,10 +33,9 @@ export default function SignIn() {
       console.log("Form submitted:", formData);
 
       const response = await login(formData.email, formData.password);
-      console.log("Login exitoso:", response);
-      useAuthStore.getState().login(response.user);
-      
-      // redirige después del login exitoso
+
+      console.log("Login exitoso:", response.data.user); 
+      useAuthStore.getState().login(response.data.user); 
       router.push("/home");
     } catch (error: any) {
       console.error("Error durante login:", error.message);

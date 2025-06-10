@@ -1,5 +1,6 @@
 'use client';
 
+import { LayoutProps } from "@/types/layout";
 import Footer from "@/components/landing/Footer";
 import NavbarHome from "@/components/navbars/NavbarHome";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -7,11 +8,8 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useHydrated } from "@/utils/useHydrated";
 
-interface Props {
-  children: React.ReactNode;
-}
-
-export default function AppLayout({ children }: Props) {
+ 
+export default function AppLayout({ children }: LayoutProps) {
   const { isAuthenticated } = useAuthStore();
   const hydrated = useHydrated(); //
   const router = useRouter();
