@@ -17,14 +17,10 @@ export default function RegisterStepper({
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
-  const [cookingLevel, setCookingLevel] = useState<"Bajo" | "Medio" | "Alto">(
-    "Medio"
-  );
-  const [diet, setDiet] = useState<
-    "Omnívoro" | "Vegetariano" | "Vegano" | "Otro"
-  >("Omnívoro");
-  const [foodNeeds, setFoodNeeds] = useState<string[]>([]);
-  const [allergies, setAllergies] = useState<string[]>([]);
+  const [cookingLevel, setCookingLevel] = useState<number>(2);
+  const [diet, setDiet] = useState<number>(1);
+  const [foodNeeds, setFoodNeeds] = useState<number[]>([]);
+  const [allergies, setAllergies] = useState<number[]>([]);
   const [termsAccepted, setTermsAccepted] = useState(false);
 
   const login = useAuthStore((state) => state.login);
