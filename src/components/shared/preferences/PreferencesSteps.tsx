@@ -26,28 +26,27 @@ export default function PreferencesSteps({
   const [allergyOptions, setAllergyOptions] = useState<PreferenceItem[]>([]);
   const [dietOptions, setDietOptions] = useState<PreferenceItem[]>([]);
   const [dietaryNeedOptions, setDietaryNeedOptions] = useState<PreferenceItem[]>([]);
-   useEffect(() => {
-    async function fetchLevels() {
-      const levels = await getCookingLevels();
-      setCookingLevelOptions(levels);
+
+  useEffect(() => {
+    async function fetchPreferences() {
+      try {
+        const [levels, allergies, diets, needs] = await Promise.all([
+          getCookingLevels(),
+          getAllergy(),
+          getDiet(),
+          getDietaryNeed()
+        ]);
+
+        setCookingLevelOptions(levels);
+        setAllergyOptions(allergies);
+        setDietOptions(diets);
+        setDietaryNeedOptions(needs);
+      } catch (error) {
+        console.error("Error fetching preferences:", error);
+      }
     }
-    async function fetchtAllergy() {
-      const levels = await getAllergy();
-      setAllergyOptions(levels);
-    } 
-    async function fetchDiet() {
-      const levels = await getDiet();
-      setDietOptions(levels);
-    }
-    async function fetchDietaryNeed() {
-      const levels = await getDietaryNeed();
-      setDietaryNeedOptions(levels);
-    }
-    console.log(cookingLevelOptions,allergyOptions,dietOptions,dietaryNeedOptions);
-    fetchLevels();
-    fetchDiet();
-    fetchDietaryNeed();
-    fetchtAllergy(); 
+
+    fetchPreferences();
   }, []);
 
   const toggleItem = (list: number[], item: number) => {
