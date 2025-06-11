@@ -10,6 +10,8 @@ import RecipeCard from '@/components/calendar/RecipeCard';
 import Container from '@/components/shared/containers/Container';
 import Button from '@/components/shared/form/Button';
 import ConfirmationModal from '@/components/shared/modal/ConfirmationModal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDownload } from '@fortawesome/free-solid-svg-icons';
 
 export default function CalendarPage() {
   const [schedule, setSchedule] = useState<WeeklySchedule>([]);
@@ -143,9 +145,19 @@ export default function CalendarPage() {
 
   return (
     <Container customClass="mt-30 mb-8">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8">
-        Planificación Semanal
-      </h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold text-gray-800 mb-8">
+          Planificación Semanal
+          </h1>
+                  
+        <Button
+          onClick={() => console.log("exportar receta")}
+          variant='primary'
+          title='Descargar'
+        >
+          <FontAwesomeIcon className='w-4 h-4' icon={faDownload} />
+        </Button>
+      </div>
 
       <WeeklyCalendar
         schedule={schedule}
@@ -189,20 +201,38 @@ export default function CalendarPage() {
             Recetas favoritas - {selectedSlot?.mealType}
           </h2>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto">
-            {selectedSlot && favorites[selectedSlot.mealType]?.map((recipe) => (
-              <div
-                key={recipe.id}
-                onClick={() => handleSelectFavorite(recipe)}
-                className="cursor-pointer"
+          {selectedSlot && favorites[selectedSlot.mealType]?.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto">
+              {selectedSlot && favorites[selectedSlot.mealType]?.map((recipe) => (
+                <div
+                  key={recipe.id}
+                  onClick={() => handleSelectFavorite(recipe)}
+                  className="cursor-pointer"
+                > 
+                  <RecipeCard
+                    recipe={recipe}
+                    isEmpty={false}
+                  />
+                </div>
+              ))}   
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2">
+              <p className="text-gray-500">No hay recetas favoritas.</p>
+              <p className="text-gray-500">Agregá una receta a favoritos para poder seleccionarla.</p>
+
+              <Button
+                onClick={() => {
+                  setIsModalOpen(false);
+                  setSelectedSlot(null);
+                  window.location.href = '/home';
+                }}
+                variant='primary'
               >
-                <RecipeCard
-                  recipe={recipe}
-                  isEmpty={false}
-                />
-              </div>
-            ))}
-          </div>
+                Generar Recetas
+              </Button>
+            </div>
+          )}
         </div>
       </Modal>
 

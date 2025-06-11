@@ -69,7 +69,7 @@ export default function NavbarHome() {
           </button>
 
           {/* Desktop menu */}
-          <div className="hidden lg:flex items-center space-x-6 text-black font-bold">
+          <div className="hidden lg:flex items-center space-x-6 text-white font-bold">
             <Link href="/home" className="hover:text-red-200">Generar Recetas</Link>
             <Link href="/favs" className="hover:text-red-200">Favoritos</Link>
 
@@ -141,12 +141,12 @@ export default function NavbarHome() {
 
           <Link
             href="/profile"
-           className="block text-center font-bold text-red-400 hover:text-red-600 mb-4"
+            className="block text-center font-bold text-red-400 hover:text-red-600 mb-4"
             onClick={() => setIsMenuOpen(false)}
           >
             Perfil
           </Link>
-           <button
+          <button
                 onClick={handleLogout}
                   className="block mx-auto font-bold text-red-400 hover:text-red-600 mb-4 relative"
                 title="Cerrar sesión"
