@@ -9,6 +9,9 @@ import {
   MealType,
 } from '@/types';
 import RecipeCard from '@/components/calendar/RecipeCard';
+import Button from '@/components/shared/form/Button';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDownload } from '@fortawesome/free-solid-svg-icons';
 
 interface WeeklyCalendarProps {
   schedule: WeeklySchedule;

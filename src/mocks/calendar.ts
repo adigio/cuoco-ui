@@ -4,9 +4,9 @@ export const mockSchedule: WeeklySchedule = [
     {
         miércoles: [
             {
-                id: 5,
-                title: "Pancakes",
-                img: "/platos/pancakes.PNG",
+                id: 4,
+                title: "Avena caliente con miel y semillas",
+                img: "/recipes/recipe-4.png",
                 mealType: "Desayuno"
             }
         ],
@@ -14,10 +14,10 @@ export const mockSchedule: WeeklySchedule = [
     {
         jueves: [
             {
-                id: 6,
-                title: "Budin",
-                img: "/platos/budin.PNG",
-                mealType: "Merienda"
+                id: 1,
+                title: "Guiso de lentejas con papa y cebolla",
+                img: "/recipes/recipe-1.jpg",
+                mealType: "Almuerzo"
             }
         ],
     },
@@ -27,15 +27,15 @@ export const mockSchedule: WeeklySchedule = [
     {
         sábado: [
             {
-                id: 1,
-                title: "Pollo con zapallitos",
-                img: "/platos/pollo_zapallitos.PNG",
+                id: 3,
+                title: "Papas al horno con mostaza y miel",
+                img: "/recipes/recipe-3.jpg",
                 mealType: "Almuerzo"
             },
             {
                 id: 2,
-                title: "Ensalada César",
-                img: "/platos/ensalada_cesar.PNG",
+                title: "Arroz salteado con salsa de soja",
+                img: "/recipes/recipe-2.jpg",
                 mealType: "Cena"
             }
         ]
@@ -43,15 +43,15 @@ export const mockSchedule: WeeklySchedule = [
     {
         domingo: [
             {
-                id: 3,
-                title: "Pasta al pesto",
-                img: "/platos/pasta_al_pesto.PNG",
+                id: 1,
+                title: "Guiso de lentejas con papa y cebolla",
+                img: "/recipes/recipe-1.jpg",
                 mealType: "Almuerzo"
             },
             {
-                id: 4,
-                title: "Salmón grillado",
-                img: "/platos/salmon.PNG",
+                id: 2,
+                title: "Arroz salteado con salsa de soja",
+                img: "/recipes/recipe-2.jpg",
                 mealType: "Cena"
             }
         ]
@@ -64,22 +64,16 @@ export const mockSchedule: WeeklySchedule = [
     }
 ];
 
-
 export const mockCategorizedFavorites: Record<string, CalendarRecipe[]> = {
     'Desayuno': [
-        { id: 1, title: 'Tostadas con Palta', img: '/recipes/calendar-1.avif', mealType: 'Desayuno' }, 
-        { id: 2, title: 'Yogur con Granola', img: '/recipes/calendar-2.jpeg', mealType: 'Desayuno' },
+        { id: 4, title: 'Avena caliente con miel y semillas', img: '/recipes/recipe-4.png', mealType: 'Desayuno' },
     ],
     'Almuerzo': [
-        { id: 3, title: 'Ensalada César', img: '/recipes/calendar-3.jpeg', mealType: 'Almuerzo' },
-        { id: 4, title: 'Pasta al Pesto', img: '/recipes/calendar-4.jpeg', mealType: 'Almuerzo' },
+        { id: 1, title: 'Guiso de lentejas con papa y cebolla', img: '/recipes/recipe-1.jpg', mealType: 'Almuerzo' },
+        { id: 3, title: 'Papas al horno con mostaza y miel', img: '/recipes/recipe-3.jpg', mealType: 'Almuerzo' },
     ],
-    'Merienda': [
-        { id: 5, title: 'Batido de Pepino', img: '/recipes/calendar-5.avif', mealType: 'Merienda' },
-        { id: 6, title: 'Frutas con Nueces', img: '/recipes/calendar-6.jpeg', mealType: 'Merienda' },
-    ],
+    'Merienda': [],
     'Cena': [
-        { id: 7, title: 'Hamburguesa con papas', img: '/recipes/calendar-7.jpeg', mealType: 'Cena' },
-        { id: 8, title: 'Tarta de espinaca y queso', img: '/recipes/calendar-8.jpg', mealType: 'Cena' },
+        { id: 2, title: 'Arroz salteado con salsa de soja', img: '/recipes/recipe-2.jpg', mealType: 'Cena' },
     ],
 };

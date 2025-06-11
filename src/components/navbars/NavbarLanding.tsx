@@ -117,7 +117,7 @@ export default function NavbarLanding() {
             scrolled ? "bg-white shadow-lg" : "background-color-primary"
           }`}
         >
-          <Link
+          {/* <Link
             href="/beneficios"
             className={`text-center font-bold ${
               scrolled
@@ -127,9 +127,9 @@ export default function NavbarLanding() {
             onClick={() => setIsMenuOpen(false)}
           >
             Beneficios
-          </Link>
+          </Link> */}
           <Link
-            href="/sobre-nosotros"
+            href="#aboutUs"
             className={`text-center font-bold ${
               scrolled
                 ? "text-red-400 hover:text-red-600"

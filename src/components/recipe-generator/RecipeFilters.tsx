@@ -163,7 +163,7 @@ export default function RecipeFilters() {
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <Select
-              name="tiempo"
+              name="time"
               value={filters.time}
               onChange={handleChange}
               options={timeOptions as any}

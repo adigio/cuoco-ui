@@ -56,6 +56,24 @@ export default function SignupPage() {
             className="object-contain"
           />
         </div>
+        {registerFinished ? (
+          <div className="text-center space-y-4">
+            <h2 className="text-2xl font-bold text-gray-800">
+              ¡Registro completo!
+            </h2>
+            <p className="text-gray-600">Ya podés empezar a usar la app.</p>
+            <Link
+              href="/home"
+              className="inline-block bg-[#f37b6a] text-white px-6 py-2 rounded hover:bg-[#e36455] transition"
+            >
+              Ir al Home
+            </Link>
+          </div>
+        ) : (
+          <h2 className="text-center text-xl font-bold text-gray-800">
+            Registrate y encontrá recetas fáciles, ricas y para todos los días.
+          </h2>
+        )}
         <div className="bg-white/90 rounded-3xl p-6 w-full md:max-w-md space-y-4 shadow-xl mx-4 md:mx-0">
           <RegisterStepBox
             icon={EnvelopeIcon}
@@ -131,24 +149,6 @@ export default function SignupPage() {
             onBack={() => handleBack("password")}
           />
         </Modal>
-        {registerFinished ? (
-          <div className="text-center space-y-4">
-            <h2 className="text-2xl font-bold text-gray-800">
-              ¡Registro completo!
-            </h2>
-            <p className="text-gray-600">Ya podés empezar a usar la app.</p>
-            <Link
-              href="/home"
-              className="inline-block bg-[#f37b6a] text-white px-6 py-2 rounded hover:bg-[#e36455] transition"
-            >
-              Ir al Home
-            </Link>
-          </div>
-        ) : (
-          <h2 className="text-center text-xl font-bold text-gray-800">
-            Registrate y encontrá recetas fáciles, ricas y para todos los días.
-          </h2>
-        )}
       </div>
     </div>
   );
