@@ -20,6 +20,10 @@ export default function HeroHome() {
   const setMode = useIngredientsStore((state) => state.setMode);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setMode(null);
+  }, []);
   const handleClick = (mode: "meal-prep" | "cook-now") => {
     setMode(mode);
     router.push("/recipe-generator");

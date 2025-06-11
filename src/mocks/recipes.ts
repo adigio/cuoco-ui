@@ -1,115 +1,47 @@
 export const mockRecipes = [
     {
         id: 1,
-        name: 'Fideos con salsa',
-        ingredients: ['fideos', 'tomate', 'cebolla', 'ajo'],
-        instructions: 'Hervir los fideos. Mientras, saltear cebolla y ajo. Añadir tomate y cocinar 10 minutos.',
-        preparationTime: 25,
-        difficulty: 'Fácil',
-        image: 'https://alicante.com.ar/wp-content/uploads/2022/06/iStock-1185433826.jpg',
-        subtitle: 'Una receta de cocina rápida y fácil para preparar los fideos con salsa y tomate.',
+        name: 'Guiso de lentejas con papa y cebolla',
+        ingredients: ['lentejas', 'papa', 'cebolla', 'ajo', 'sal', 'aceite'],
+        instructions:
+            'Saltear cebolla y ajo en aceite. Agregar lentejas y papas en cubos. Cubrir con agua, salpimentar y cocinar a fuego lento por 40 minutos.',
+        preparationTime: 45,
+        difficulty: 'Media',
+        image: '/recipes/recipe-1.jpg',
+        subtitle: 'Una receta tradicional, fácil y reconfortante ideal para días frescos.',
     },
     {
         id: 2,
-        name: 'Ensalada de avena y yogur',
-        ingredients: ['avena', 'yogur', 'miel', 'limón'],
-        instructions: 'Mezclar la avena con el yogur. Añadir miel al gusto y unas gotas de limón.',
-        preparationTime: 10,
-        difficulty: 'Muy fácil',
-        image: 'https://avenacanada.com/wp-content/uploads/2022/09/La-ensalada-Aniston-1.jpg',
-        subtitle: 'Una receta de cocina rápida y fácil para preparar la ensalada de avena y yogur.',
-    },
-    {
-        id: 3,
-        name: 'Queso gratinado con verduras',
-        ingredients: ['queso', 'zanahoria', 'tomate', 'cebolla'],
-        instructions: 'Cortar las verduras y colocar en una fuente. Cubrir con queso rallado y gratinar.',
-        preparationTime: 30,
-        difficulty: 'Media',
-        image: 'https://okdiario.com/img/recetas/2016/07/21/gratinado-de-verduras-al-queso.jpg',
-        subtitle: 'Una receta de cocina rápida y fácil para preparar el queso gratinado con verduras.',
-    },
-    {
-        id: 4,
-        name: 'Batido de frutas con leche',
-        ingredients: ['leche', 'banana', 'frutilla', 'miel'],
-        instructions: 'Licuar todos los ingredientes hasta obtener una mezcla homogénea.',
-        preparationTime: 5,
-        difficulty: 'Muy fácil',
-        image: 'https://www.elmejornido.com/sites/g/files/jgfbjl316/files/srh_recipes/20f62bd6b03a0bd31b98ab915ab91be2.jpg',
-        subtitle: 'Una receta de cocina rápida y fácil para preparar un batido de frutas con leche.',
-    }
-];
-
-
-export const mockDetailsRecipes2 = [
-    {
-        id: 1,
-        name: 'Fideos con salsa',
-        ingredients: ['fideos', 'tomate', 'cebolla', 'ajo'],
-        missingIngredients: ['cebolla', 'ajo'],
-        instructions: [
-            'Hervir los fideos en agua con sal hasta que estén al dente.',
-            'Mientras tanto, picar la cebolla y el ajo.',
-            'Saltear la cebolla y el ajo en una sartén con aceite.',
-            'Añadir el tomate y cocinar durante 10 minutos.',
-            'Mezclar con los fideos y servir caliente.'
-        ],
-        preparationTime: 25,
+        name: 'Arroz salteado con salsa de soja',
+        ingredients: ['arroz', 'cebolla', 'salsa de soja', 'ajo', 'aceite'],
+        instructions:
+            'Saltear cebolla y ajo en aceite. Agregar arroz cocido y salsa de soja. Mezclar bien hasta que el arroz tome color y sabor.',
+        preparationTime: 20,
         difficulty: 'Fácil',
-        image: 'https://alicante.com.ar/wp-content/uploads/2022/06/iStock-1185433826.jpg',
-        subtitle: 'Una receta de cocina rápida y fácil para preparar los fideos con salsa y tomate.',
-    },
-    {
-        id: 2,
-        name: 'Ensalada de avena y yogur',
-        ingredients: ['avena', 'yogur', 'miel', 'limón'],
-        missingIngredients: ['avena', 'yogur', 'miel', 'limón'],
-        instructions: [
-            'Colocar la avena en un bol.',
-            'Añadir el yogur natural y mezclar bien.',
-            'Agregar miel al gusto.',
-            'Exprimir unas gotas de limón y mezclar nuevamente.',
-            'Servir frío.'
-        ],
-        preparationTime: 10,
-        difficulty: 'Muy fácil',
-        image: 'https://avenacanada.com/wp-content/uploads/2022/09/La-ensalada-Aniston-1.jpg',
-        subtitle: 'Una receta de cocina rápida y fácil para preparar la ensalada de avena y yogur.',
+        image: '/recipes/recipe-2.jpg',
+        subtitle: 'Un clásico rápido y sabroso con pocos ingredientes.',
     },
     {
         id: 3,
-        name: 'Queso gratinado con verduras',
-        ingredients: ['queso', 'zanahoria', 'tomate', 'cebolla'],
-        missingIngredients: ['queso', 'zanahoria', 'cebolla'],
-        instructions: [
-            'Pelar y cortar la zanahoria, el tomate y la cebolla.',
-            'Disponer las verduras en una fuente para horno.',
-            'Cubrir con queso rallado a gusto.',
-            'Llevar al horno y gratinar hasta que el queso esté dorado.',
-            'Servir caliente.'
-        ],
-        preparationTime: 30,
-        difficulty: 'Media',
-        image: 'https://okdiario.com/img/recetas/2016/07/21/gratinado-de-verduras-al-queso.jpg',
-        subtitle: 'Una receta de cocina rápida y fácil para preparar el queso gratinado con verduras.',
+        name: 'Papas al horno con mostaza y miel',
+        ingredients: ['papa', 'mostaza', 'miel', 'ajo', 'sal', 'aceite'],
+        instructions:
+            'Cortar papas en gajos. Mezclar con aceite, mostaza, miel, ajo y sal. Hornear 40 minutos hasta que estén doradas y crocantes.',
+        preparationTime: 45,
+        difficulty: 'Fácil',
+        image: '/recipes/recipe-3.jpg',
+        subtitle: 'Papas doradas al horno con un toque dulce y sabroso.',
     },
     {
         id: 4,
-        name: 'Batido de frutas con leche',
-        ingredients: ['leche', 'banana', 'frutilla', 'miel'],
-        missingIngredients: ['frutilla', 'miel'],
-        instructions: [
-            'Pelar la banana y lavar las frutillas.',
-            'Colocar las frutas en una licuadora.',
-            'Añadir leche y miel al gusto.',
-            'Licuar hasta obtener una mezcla homogénea.',
-            'Servir frío.'
-        ],
-        preparationTime: 5,
+        name: 'Avena caliente con miel y semillas',
+        ingredients: ['avena', 'miel', 'semillas de girasol', 'agua'],
+        instructions:
+            'Hervir avena con agua por 5-7 minutos. Endulzar con miel y decorar con semillas de girasol.',
+        preparationTime: 10,
         difficulty: 'Muy fácil',
-        image: 'https://www.elmejornido.com/sites/g/files/jgfbjl316/files/srh_recipes/20f62bd6b03a0bd31b98ab915ab91be2.jpg',
-        subtitle: 'Una receta de cocina rápida y fácil para preparar un batido de frutas con leche.',
+        image: '/recipes/recipe-4.png',
+        subtitle: 'Un desayuno nutritivo y natural listo en minutos.',
     }
 ];
 
@@ -117,10 +49,10 @@ export const mockDetailsRecipes2 = [
 export const mockDetailsRecipes = [
     {
         id: 1,
-        name: "Ñoquis con salsa blanca",
-        subtitle: "Receta casera de ñoquis con salsa blanca cremosa.",
-        time: 60,
-        servings: 3,
+        name: "Guiso de lentejas con papa y cebolla",
+        subtitle: "Una receta tradicional, fácil y reconfortante ideal para días frescos.",
+        time: 45,
+        servings: 4,
         difficulty: "Media",
         isFavorite: false,
         stepBlocks: [
@@ -129,76 +61,209 @@ export const mockDetailsRecipes = [
                 steps: [
                     {
                         number: 1,
-                        title: "Hervir las papas",
-                        description: "Lavar bien las papas y hervirlas con cáscara durante 25–30 minutos o hasta que estén tiernas al pinchar con un tenedor.",
-                        image: "https://www.cucinare.tv/wp-content/uploads/2020/07/Papas-hervidas.jpg"
+                        title: "Preparar los ingredientes",
+                        description: "Pelar y cortar las papas en cubos, picar la cebolla y el ajo.",
+                        image: "https://cdn0.recetasgratis.net/es/posts/8/2/6/guiso_de_lentejas_con_papas_72628_600.webp"
                     },
                     {
                         number: 2,
-                        title: "Preparar el puré",
-                        description: "Escurrir, pelar en caliente y hacer puré sin grumos. Dejar entibiar.",
-                        image: "https://cdn7.kiwilimon.com/recetaimagen/3706/640x426/3706.jpg.webp"
+                        title: "Saltear base",
+                        description: "En una olla, calentar el aceite y saltear la cebolla y el ajo hasta que estén dorados.",
+                        image: "https://assets.unileversolutions.com/recipes-v2/216017.jpg"
                     },
                     {
                         number: 3,
-                        title: "Formar la masa",
-                        description: "Colocar el puré en un bowl, agregar el huevo y sal a gusto. Incorporar de a poco la harina hasta lograr una masa blanda, homogénea y apenas pegajosa (no sobretrabajar para evitar ñoquis duros).",
-                        image: "https://www.paulinacocina.net/wp-content/uploads/2022/08/como-hacer-noquis-caseros.jpg"
+                        title: "Cocinar el guiso",
+                        description: "Agregar las lentejas y papas. Cubrir con agua, salpimentar y cocinar a fuego lento durante 40 minutos.",
+                        image: "https://www.clarin.com/img/2020/05/19/guiso-de-lentejas-foto-shutterstock___vB9GuU9-M_720x0__1.jpg"
                     }
                 ]
             },
             {
-                section: "Para la salsa blanca",
+                section: "Para la salsa de tomate",
                 steps: [
                     {
                         number: 1,
-                        title: "Base de la salsa",
-                        description: "En una cacerola, derretir la manteca a fuego medio. Agregar las 2 cucharadas de harina y mezclar bien durante 1-2 minutos."
+                        title: "Cocinar la salsa",
+                        description: "En una sartén, calentar un poco de aceite y agregar tomate triturado. Cocinar a fuego medio durante 10 minutos con sal y especias a gusto."
                     },
                     {
                         number: 2,
-                        title: "Agregar la leche",
-                        description: "Agregar la leche caliente poco a poco, batiendo constantemente con batidor de mano o cuchara de madera para evitar grumos."
-                    },
-                    {
-                        number: 3,
-                        title: "Cocinar",
-                        description: "Cocinar removiendo sin parar hasta que espese (unos 5 minutos). Debería quedar una textura cremosa."
-                    },
-                    {
-                        number: 4,
-                        title: "Condimentar",
-                        description: "Agregar sal, pimienta y una pizca de nuez moscada. Incorporar el queso rallado y mezclar hasta fundir."
+                        title: "Integrar al guiso",
+                        description: "Una vez lista la salsa, agregarla al guiso y mezclar bien. Cocinar 5 minutos más para integrar sabores."
                     }
                 ]
             }
         ],
         ingredients: [
             {
-                section: "Para los ñoquis",
+                section: "Para el guiso",
                 items: [
-                    { quantity: "600g", description: "Papa", have: false },
-                    { quantity: "150g", description: "Harina de sémola", have: false },
-                    { quantity: "1", description: "Huevo", have: true },
-                    { quantity: "A gusto", description: "Sal", have: true }
+                    { quantity: "200g", description: "Lentejas", have: false },
+                    { quantity: "2", description: "Papas", have: false },
+                    { quantity: "1", description: "Cebolla", have: true },
+                    { quantity: "2 dientes", description: "Ajo", have: true },
+                    { quantity: "A gusto", description: "Sal", have: true },
+                    { quantity: "2 cucharadas", description: "Aceite", have: true }
                 ]
             },
             {
-                section: "Para la salsa blanca",
+                section: "Para la salsa de tomate",
                 items: [
-                    { quantity: "30g", description: "Manteca", have: true },
-                    { quantity: "2 cucharadas", description: "Harina", have: true },
-                    { quantity: "1/2 litro", description: "Leche", have: true },
-                    { quantity: "A gusto", description: "Sal, pimienta y nuez moscada", have: true },
-                    { quantity: "A gusto", description: "Queso rallado", have: false }
+                    { quantity: "200ml", description: "Tomate triturado", have: false },
+                    { quantity: "A gusto", description: "Sal y especias", have: true },
+                    { quantity: "1 cucharada", description: "Aceite", have: true }
                 ]
             }
         ],
         missingIngredients: [
-            { quantity: "600g", description: "Papa" },
-            { quantity: "150g", description: "Harina de sémola" },
-            { quantity: "A gusto", description: "Queso rallado" }
+            { quantity: "200g", description: "Lentejas" },
+            { quantity: "2", description: "Papas" },
+            { quantity: "200ml", description: "Tomate triturado" }
         ],
-        observation: "Si la masa queda muy húmeda, agregar un poco más de harina.",
+        observation: "Podés reemplazar el tomate triturado por puré de tomates o tomates frescos licuados."
+    },
+    {
+        id: 2,
+        name: 'Arroz salteado con salsa de soja',
+        subtitle: 'Un clásico rápido y sabroso con pocos ingredientes.',
+        time: 20,
+        servings: 2,
+        difficulty: 'Fácil',
+        isFavorite: false,
+        stepBlocks: [
+            {
+                section: 'Paso a paso',
+                steps: [
+                    {
+                        number: 1,
+                        title: 'Preparar los ingredientes',
+                        description: 'Picar la cebolla y el ajo. Cocinar el arroz previamente si no está cocido.',
+                        image: '/recipes/steps/arroz1.jpg'
+                    },
+                    {
+                        number: 2,
+                        title: 'Saltear',
+                        description: 'En una sartén con aceite caliente, saltear el ajo y la cebolla hasta que estén transparentes.',
+                        image: '/recipes/steps/arroz2.jpg'
+                    },
+                    {
+                        number: 3,
+                        title: 'Agregar arroz y soja',
+                        description: 'Agregar el arroz cocido, incorporar la salsa de soja y mezclar bien hasta que tome sabor y color.',
+                        image: '/recipes/steps/arroz3.jpg'
+                    }
+                ]
+            }
+        ],
+        ingredients: [
+            {
+                section: 'Ingredientes',
+                items: [
+                    { quantity: '2 tazas', description: 'Arroz cocido', have: false },
+                    { quantity: '1', description: 'Cebolla', have: true },
+                    { quantity: '2 cucharadas', description: 'Salsa de soja', have: true },
+                    { quantity: '1 diente', description: 'Ajo', have: true },
+                    { quantity: '2 cucharadas', description: 'Aceite', have: true }
+                ]
+            }
+        ],
+        missingIngredients: [
+            { quantity: '2 tazas', description: 'Arroz cocido' }
+        ],
+        observation: 'Se puede agregar huevo revuelto o verduras salteadas para una versión más completa.'
+    },
+    {
+        id: 3,
+        name: 'Papas al horno con mostaza y miel',
+        subtitle: 'Papas doradas al horno con un toque dulce y sabroso.',
+        time: 45,
+        servings: 3,
+        difficulty: 'Fácil',
+        isFavorite: false,
+        stepBlocks: [
+            {
+                section: 'Paso a paso',
+                steps: [
+                    {
+                        number: 1,
+                        title: 'Preparar las papas',
+                        description: 'Lavar y cortar las papas en gajos. Precalentar el horno a 200°C.',
+                        image: '/recipes/steps/papas1.jpg'
+                    },
+                    {
+                        number: 2,
+                        title: 'Mezclar los ingredientes',
+                        description: 'En un bowl, mezclar las papas con aceite, mostaza, miel, ajo picado y sal.',
+                        image: '/recipes/steps/papas2.jpg'
+                    },
+                    {
+                        number: 3,
+                        title: 'Hornear',
+                        description: 'Colocar en una bandeja y hornear por 40 minutos o hasta que estén doradas y crocantes.',
+                        image: '/recipes/steps/papas3.jpg'
+                    }
+                ]
+            }
+        ],
+        ingredients: [
+            {
+                section: 'Ingredientes',
+                items: [
+                    { quantity: '3', description: 'Papas', have: true },
+                    { quantity: '2 cucharadas', description: 'Mostaza', have: true },
+                    { quantity: '1 cucharada', description: 'Miel', have: true },
+                    { quantity: '1 diente', description: 'Ajo', have: true },
+                    { quantity: 'A gusto', description: 'Sal', have: true },
+                    { quantity: '2 cucharadas', description: 'Aceite', have: true }
+                ]
+            }
+        ],
+        missingIngredients: [],
+        observation: 'Ideal acompañar con alguna salsa fresca como alioli o yogur con limón.'
+    },
+    {
+        id: 4,
+        name: 'Avena caliente con miel y semillas',
+        subtitle: 'Un desayuno nutritivo y natural listo en minutos.',
+        time: 10,
+        servings: 1,
+        difficulty: 'Muy fácil',
+        isFavorite: false,
+        stepBlocks: [
+            {
+                section: 'Paso a paso',
+                steps: [
+                    {
+                        number: 1,
+                        title: 'Cocinar la avena',
+                        description: 'Hervir la avena en agua durante 5–7 minutos hasta lograr una textura cremosa.',
+                        image: '/recipes/steps/avena1.jpg'
+                    },
+                    {
+                        number: 2,
+                        title: 'Servir',
+                        description: 'Servir en un bowl, endulzar con miel y decorar con semillas de girasol.',
+                        image: '/recipes/steps/avena2.jpg'
+                    }
+                ]
+            }
+        ],
+        ingredients: [
+            {
+                section: 'Ingredientes',
+                items: [
+                    { quantity: '1/2 taza', description: 'Avena', have: false },
+                    { quantity: '1 cucharada', description: 'Miel', have: true },
+                    { quantity: '1 cucharada', description: 'Semillas de girasol', have: false },
+                    { quantity: '1 taza', description: 'Agua', have: true }
+                ]
+            }
+        ],
+        missingIngredients: [
+            { quantity: '1/2 taza', description: 'Avena' },
+            { quantity: '1 cucharada', description: 'Semillas de girasol' }
+        ],
+        observation: 'Podés usar leche en lugar de agua para una versión más cremosa.'
     }
 ];

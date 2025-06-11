@@ -78,7 +78,7 @@ export default function MealPrepPage({ params }: PageProps) {
             <section className="w-full lg:w-3/4">
               <div className="flex justify-between items-center mb-6">
                 {/* Título */}
-                <h2 className="text-2xl font-bold text-[#333]">Paso a paso</h2>
+                <h2 className="text-2xl font-bold text-[#333]">{mealPrep.title}</h2>
 
                 {/* Tiempo + favorito */}
                 <TimeAndFavorite
@@ -86,6 +86,7 @@ export default function MealPrepPage({ params }: PageProps) {
                   onToggleFavorite={() => handleFavMealPrep(mealPrep.id)}
                 />
               </div>
+              <h3 className="mx-4 mb-2 text-xl font-bold text-[#333]">Paso a paso</h3>
 
               <MealPrepSteps steps={mealPrep.steps} />
             </section>

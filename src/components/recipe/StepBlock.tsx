@@ -8,7 +8,7 @@ export default function RecipeStepBlock({ section, steps }: RecipeDetailSection)
     <ContainerCardDetail title={section}>
       {steps.map((step, idx) => (
         <div key={idx} className="flex gap-4 mb-4">
-          {step.image && (
+          {/*step.image && (
             <div className="relative w-24 h-24">
               <Image 
                 src={step.image} 
@@ -17,7 +17,7 @@ export default function RecipeStepBlock({ section, steps }: RecipeDetailSection)
                 className="object-cover rounded" 
               />
             </div>
-          )}
+          )*/}
           <div className="flex flex-wrap gap-1">
             <div className="text-color-primary-medium font-bold text-lg">{step.number}</div>
             <div className="w-[90%]">

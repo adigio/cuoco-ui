@@ -20,7 +20,7 @@ const MealPrepSteps: React.FC<MealPrepStepsProps> = ({ steps }) => {
           <h3 className="text-lg font-semibold text-[#f27f6c] mb-1">
             ⏱ {step.estimatedTime}&apos; – {step.title}
           </h3>
-          <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
+          <ul className="list-none list-inside text-sm text-gray-700 space-y-1">
             {step.instructions.map((inst, idx) => (
               <li key={idx}>{inst}</li>
             ))}

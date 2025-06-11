@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { analyzeImagesWithAPI } from '@/services/vision.service';
+import { analyzeImagesWithAPI } from "@/services/vision.service";
 // Contexto
-import { useIngredientsStore } from '@/store/useIngredientsStore'; 
+import { useIngredientsStore } from "@/store/useIngredientsStore";
 // Componentes
 import RecipeImageUploader from "@/components/recipe-generator/ImageUploader";
-import AlertModal from '@/components/shared/modal/AlertModal';
+import AlertModal from "@/components/shared/modal/AlertModal";
 import SubscriptionModal from "@/components/shared/modal/SubscriptionModal";
-import BackgroundLayers from '@/components/shared/BackgroundLayers';
-import ContainerShadow from '@/components/shared/containers/ContainerShadow';
+import BackgroundLayers from "@/components/shared/BackgroundLayers";
+import ContainerShadow from "@/components/shared/containers/ContainerShadow";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export default function RecipeGeneratorPage() {
@@ -26,10 +26,14 @@ export default function RecipeGeneratorPage() {
     addIngredient,
     addMultipleIngredients,
     mode,
+    clearIngredients,
   } = useIngredientsStore();
-   const isPremium = useAuthStore((state) => state.user?.premium);
-  const router = useRouter();
 
+  const isPremium = useAuthStore((state) => state.user?.premium);
+  const router = useRouter();
+  useEffect(() => {
+    clearIngredients();
+  }, []);
   const handleContinue = async () => {
     // Si un user no premium intenta con más de 2 imágenes:
     if (!isPremium && images.length > 2) {
@@ -67,7 +71,9 @@ export default function RecipeGeneratorPage() {
       router.push("/review");
     } catch (err) {
       console.error("Error al procesar imágenes:", err);
-      setError("Hubo un problema al procesar las imágenes. Por favor, intentá de nuevo.");
+      setError(
+        "Hubo un problema al procesar las imágenes. Por favor, intentá de nuevo."
+      );
     } finally {
       setLoading(false);
     }
@@ -103,11 +109,11 @@ export default function RecipeGeneratorPage() {
               onClick={handleContinue}
               disabled={loading}
               className={`
-                ${loading ? 'bg-gray-400' : 'bg-[#f37b6a] hover:bg-[#e36455]'} 
+                ${loading ? "bg-gray-400" : "bg-[#f37b6a] hover:bg-[#e36455]"} 
                 text-white px-6 py-2 rounded transition
               `}
             >
-              {loading ? 'Analizando...' : 'Continuar'}
+              {loading ? "Analizando..." : "Continuar"}
             </button>
           </div>
         </ContainerShadow>
