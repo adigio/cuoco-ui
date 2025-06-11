@@ -14,6 +14,9 @@ import IngredientsList from "@/components/meal-prep/IngredientList";
 import PortionSummary from "@/components/meal-prep/PortionSummary";
 import TimeAndFavorite from "@/components/shared/TimeAndFavorite";
 import { FavoriteModal } from "@/components/shared/modal/FavoriteModal";
+import Button from "@/components/shared/form/Button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 export default function MealPrepPage({ params }: PageProps) {
   const router = useRouter();
@@ -96,15 +99,15 @@ export default function MealPrepPage({ params }: PageProps) {
               <PortionSummary recipes={mealPrep.recipes} />
               <IngredientsList ingredients={mealPrep.ingredients} />
               {mealPrep.observation && <ObservationInfo observation={mealPrep.observation} />}
+
+              <div className="">
+                <Button>
+                  <FontAwesomeIcon className="w-4 h-4 mr-2" icon={faPlus} />
+                  Agregar a Planificación semanal
+                </Button>
+              </div>
+
             </aside>
-          </div>
-          <div className="flex justify-center mt-8">
-            <button
-              onClick={handleBack}
-              className="bg-gray-200 text-gray-800 px-6 py-2 rounded hover:bg-gray-300 transition mr-4"
-            >
-              Atrás
-            </button>
           </div>
         </ContainerShadow>
       </main>
@@ -115,7 +118,7 @@ export default function MealPrepPage({ params }: PageProps) {
         recipeText={mealPrep.title}
         isOpen={showFavoriteModal}
         onClose={() => setShowFavoriteModal(false)}
-        onUpgrade={() => {}} // No hace falta porque al ser premium no se mostrará nunca el modal
+        onUpgrade={() => { }} // No hace falta porque al ser premium no se mostrará nunca el modal
       />
     </>
   );

@@ -61,7 +61,7 @@ export default function SignupPage() {
             <h2 className="text-2xl font-bold text-gray-800">
               ¡Registro completo!
             </h2>
-            <p className="text-gray-600">Ya podés empezar a usar la app.</p>
+            <p className="text-gray-600">Ya podés empezar a usar la app</p>
             <Link
               href="/home"
               className="inline-block bg-[#f37b6a] text-white px-6 py-2 rounded hover:bg-[#e36455] transition"
@@ -78,7 +78,7 @@ export default function SignupPage() {
           <RegisterStepBox
             icon={EnvelopeIcon}
             title="Agregá tu e-mail"
-            description="Recibirás información de tu cuenta."
+            description="Recibirás información de tu cuenta"
             buttonText="Agregar"
             onClick={() => setCurrentStep("email")}
             completed={completedSteps.includes("email")}
@@ -89,7 +89,7 @@ export default function SignupPage() {
             <RegisterStepBox
               icon={HandThumbUpIcon}
               title="Elegí tus preferencias"
-              description="Personalizá tus recetas según tus gustos y necesidades."
+              description="Personalizá tus recetas según tus gustos y necesidades"
               buttonText="Elegí"
               onClick={() => setCurrentStep("prefs")}
               disabled={!completedSteps.includes("email")}
@@ -102,7 +102,7 @@ export default function SignupPage() {
             <RegisterStepBox
               icon={LockClosedIcon}
               title="Creá tu contraseña"
-              description="Mantendrás tu cuenta protegida."
+              description="Mantendrás tu cuenta protegida"
               buttonText="Crear"
               onClick={() => setCurrentStep("password")}
               disabled={!completedSteps.includes("prefs")}
