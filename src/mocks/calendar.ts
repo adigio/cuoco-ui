@@ -2,7 +2,7 @@ import { CalendarRecipe, WeeklySchedule } from "@/types";
 
 export const mockSchedule: WeeklySchedule = [
     {
-        jueves: [
+        miércoles: [
             {
                 id: 5,
                 title: "Pancakes",
@@ -12,7 +12,7 @@ export const mockSchedule: WeeklySchedule = [
         ],
     },
     {
-        viernes: [
+        jueves: [
             {
                 id: 6,
                 title: "Budin",
@@ -22,7 +22,7 @@ export const mockSchedule: WeeklySchedule = [
         ],
     },
     {
-        sabado: [],
+        viernes: [],
     },
     {
         domingo: [
@@ -41,7 +41,7 @@ export const mockSchedule: WeeklySchedule = [
         ]
     },
     {
-        lunes: [
+        sábado: [
             {
                 id: 3,
                 title: "Pasta al pesto",
@@ -57,29 +57,29 @@ export const mockSchedule: WeeklySchedule = [
         ]
     },
     {
-        martes: [],
+        domingo: [],
     },
     {
-        miercoles: [],
+        lunes: [],
     }
 ];
 
 
 export const mockCategorizedFavorites: Record<string, CalendarRecipe[]> = {
     'Desayuno': [
-        { id: 1, title: 'Tostadas con Palta', img: 'https://www.giallozafferano.com/images/273-27388/Avocado-toast_1200x800.jpg', mealType: 'Desayuno' }, 
-        { id: 2, title: 'Yogur con Granola', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtzGfgAPTkdXZYEVISAs2xwW0Zjo8PLH0mew&s', mealType: 'Desayuno' },
+        { id: 1, title: 'Tostadas con Palta', img: '/recipes/calendar-1.avif', mealType: 'Desayuno' }, 
+        { id: 2, title: 'Yogur con Granola', img: '/recipes/calendar-2.jpeg', mealType: 'Desayuno' },
     ],
     'Almuerzo': [
-        { id: 3, title: 'Ensalada César', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY2iWX1VuRMAphYc5ESwqbJbGiZ5QWbySOBw&s', mealType: 'Almuerzo' },
-        { id: 4, title: 'Pasta al Pesto', img: 'https://www.hazteveg.com/img/recipes/full/201511/R24-25719.jpg', mealType: 'Almuerzo' },
+        { id: 3, title: 'Ensalada César', img: '/recipes/calendar-3.jpeg', mealType: 'Almuerzo' },
+        { id: 4, title: 'Pasta al Pesto', img: '/recipes/calendar-4.jpeg', mealType: 'Almuerzo' },
     ],
     'Merienda': [
-        { id: 5, title: 'Batido de Pepino', img: 'https://img.freepik.com/free-photo/healthy-drink-vegetable-smoothie_1150-26220.jpg?semt=ais_hybrid&w=740', mealType: 'Merienda' },
-        { id: 6, title: 'Frutas con Nueces', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjgLNTnOW8WI6tc039npfjX5Zh7ggBy1CkVQ&s', mealType: 'Merienda' },
+        { id: 5, title: 'Batido de Pepino', img: '/recipes/calendar-5.avif', mealType: 'Merienda' },
+        { id: 6, title: 'Frutas con Nueces', img: '/recipes/calendar-6.jpeg', mealType: 'Merienda' },
     ],
     'Cena': [
-        { id: 7, title: 'Hamburguesa con papas', img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2ccoU3TZIxLkNv_gS9rz_7scn3jBFRKHPZA&s', mealType: 'Cena' },
-        { id: 8, title: 'Tarta de espinaca y queso', img: 'https://www.zafran.com.ar/wp-content/uploads/2019/12/tarta-de-espinaca.jpg', mealType: 'Cena' },
+        { id: 7, title: 'Hamburguesa con papas', img: '/recipes/calendar-7.jpeg', mealType: 'Cena' },
+        { id: 8, title: 'Tarta de espinaca y queso', img: '/recipes/calendar-8.jpg', mealType: 'Cena' },
     ],
 };
