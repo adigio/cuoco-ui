@@ -25,7 +25,7 @@ export const mockSchedule: WeeklySchedule = [
         viernes: [],
     },
     {
-        domingo: [
+        sábado: [
             {
                 id: 1,
                 title: "Pollo con zapallitos",
@@ -41,7 +41,7 @@ export const mockSchedule: WeeklySchedule = [
         ]
     },
     {
-        sábado: [
+        domingo: [
             {
                 id: 3,
                 title: "Pasta al pesto",
@@ -57,10 +57,10 @@ export const mockSchedule: WeeklySchedule = [
         ]
     },
     {
-        domingo: [],
+        lunes: [],
     },
     {
-        lunes: [],
+        martes: [],
     }
 ];
 
