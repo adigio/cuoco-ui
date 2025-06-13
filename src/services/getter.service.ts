@@ -4,7 +4,7 @@ import { PreferenceItem } from '@/types/auth/auth.types';
 export async function getCookingLevels(): Promise<PreferenceItem[]> {
   try {
     const response = await axios.get('https://dev.cuoco.com.ar/api/cook-level');
-    return response.data.data; // o response.data, si no hay .data interno
+    return response.data; // o response.data, si no hay .data interno
   } catch (error: any) {
     const message = error.response?.data?.message || 'Error al obtener niveles de cocina';
     throw new Error(message);
@@ -13,7 +13,7 @@ export async function getCookingLevels(): Promise<PreferenceItem[]> {
 export async function getAllergy(): Promise<PreferenceItem[]> {
   try {
     const response = await axios.get('https://dev.cuoco.com.ar/api/allergy');
-    return response.data.data; // o response.data, si no hay .data interno
+    return response.data;
   } catch (error: any) {
     const message = error.response?.data?.message || 'Error al obtener alergias';
     throw new Error(message);
@@ -22,7 +22,7 @@ export async function getAllergy(): Promise<PreferenceItem[]> {
 export async function getPlan(): Promise<PreferenceItem[]> {
   try {
     const response = await axios.get('https://dev.cuoco.com.ar/api/plan');
-    return response.data.data; // o response.data, si no hay .data interno
+    return response.data;
   } catch (error: any) {
     const message = error.response?.data?.message || 'Error al obtener planes';
     throw new Error(message);
@@ -31,7 +31,7 @@ export async function getPlan(): Promise<PreferenceItem[]> {
 export async function getDiet(): Promise<PreferenceItem[]> {
   try {
     const response = await axios.get('https://dev.cuoco.com.ar/api/diet');
-    return response.data.data; // o response.data, si no hay .data interno
+    return response.data;
   } catch (error: any) {
     const message = error.response?.data?.message || 'Error al obtener dieta';
     throw new Error(message);
@@ -40,7 +40,7 @@ export async function getDiet(): Promise<PreferenceItem[]> {
 export async function getDietaryNeed(): Promise<PreferenceItem[]> {
   try {
     const response = await axios.get('https://dev.cuoco.com.ar/api/dietary-need');
-    return response.data.data; // o response.data, si no hay .data interno
+    return response.data;
   } catch (error: any) {
     const message = error.response?.data?.message || 'Error al obtener necesidades de deita';
     throw new Error(message);
