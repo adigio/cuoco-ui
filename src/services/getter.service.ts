@@ -42,7 +42,7 @@ export async function getDietaryNeed(): Promise<PreferenceItem[]> {
     const response = await axios.get('https://dev.cuoco.com.ar/api/dietary-need');
     return response.data;
   } catch (error: any) {
-    const message = error.response?.data?.message || 'Error al obtener necesidades de deita';
+    const message = error.response?.data?.message || 'Error al obtener necesidades de dieta';
     throw new Error(message);
   }
 }

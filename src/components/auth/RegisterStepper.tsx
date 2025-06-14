@@ -27,6 +27,12 @@ export default function RegisterStepper({
 
   const handlePasswordStepComplete = async () => {
     try {
+      console.log('email',  email,'nombre', name, 'pasword',
+        password, 
+         'nivel cocina', cookingLevel,
+        'dieta',  diet,
+        'needs',  foodNeeds,
+        'alergias',  allergies,);
       const userData = {
         email,
         password,
@@ -190,15 +196,15 @@ export default function RegisterStepper({
               checked={valid}
               onChange={() => {}}
               label="Mínimo 8 caracteres con letras y números"
-              disabled={true}
+              disabled={!valid}
             />
             <Checkbox
               id="sequence-check"
               name="sequence-check"
-              checked={!/1234|abcd/i.test(password)}
+              checked={valid}
               onChange={() => {}}
               label="Sin secuencias como 1234 o ABCD"
-              disabled={true}
+              disabled={!valid}
             />
           </div>
           <Input
