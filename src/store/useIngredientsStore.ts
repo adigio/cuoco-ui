@@ -3,12 +3,20 @@
 import { Ingredient, IngredientsStore } from '@/types';
 import { create } from 'zustand';
 
-
 export const useIngredientsStore = create<IngredientsStore>((set, get) => ({
   ingredients: [],
-   mode: null,
+  mode: null,
+
   setMode: (mode) => set({ mode }),
-  addIngredient: (name, origin = 'manual', confirm = true) => {
+
+  addIngredient: (
+    name,
+    quantity,
+    unit,
+    optional = false,
+    source = 'manual',
+    confirmed = true
+  ) => {
     if (!name || name.trim() === '') {
       console.error('El nombre del ingrediente no puede estar vacío');
       return false;
@@ -23,11 +31,17 @@ export const useIngredientsStore = create<IngredientsStore>((set, get) => ({
       return false;
     }
 
+    const newIngredient: Ingredient = {
+      name: name.trim(),
+      quantity,
+      unit: unit.trim(),
+      optional,
+      source,
+      confirmed,
+    };
+
     set((state) => ({
-      ingredients: [
-        ...state.ingredients,
-        { name: name.trim(), origin, confirm },
-      ],
+      ingredients: [...state.ingredients, newIngredient],
     }));
 
     return true;
@@ -49,7 +63,7 @@ export const useIngredientsStore = create<IngredientsStore>((set, get) => ({
 
   confirmIngredient: (idx) => {
     const { updateIngredient } = get();
-    updateIngredient(idx, { confirm: true });
+    updateIngredient(idx, { confirmed: true });
   },
 
   addMultipleIngredients: (newIngredients) => {

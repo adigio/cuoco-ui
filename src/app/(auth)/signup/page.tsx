@@ -45,12 +45,14 @@ export default function SignupPage() {
     <div className="min-h-screen bg-[url('/auth/signup.png')] bg-cover bg-no-repeat bg-center flex items-center justify-center px-4 md:px-16">
       <div className="flex flex-col items-center justify-start">
         <div className="relative w-48 h-48 mb-8">
+             <Link href="/">
           <Image
             src="/logos/logo_coral.png"
             alt="Cuoco Logo"
             fill
             className="object-contain"
           />
+          </Link>
         </div>
         <div className="bg-white/90 rounded-3xl p-6 w-full md:max-w-md space-y-4 shadow-xl mx-4 md:mx-0">
           {registerFinished ? (

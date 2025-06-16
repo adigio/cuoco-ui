@@ -66,7 +66,7 @@ export default function RecipeResultsPage() {
       <div className="container mx-auto px-4   py-12">
         <h1 className="text-3xl font-bold text-center mb-2">Recetas sugeridas</h1>
         <p className="text-gray-600 text-center mb-8">
-          Basadas en {ingredients.filter(ing => ing.confirm).length} ingredientes que tienes disponibles
+          Basadas en {ingredients.filter(ing => ing.confirmed).length} ingredientes que tienes disponibles
         </p>
         <Container>
           {isLoading ? (

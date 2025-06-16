@@ -28,7 +28,7 @@ export default function IngredientReviewTable({ ingredients, onConfirm, onEdit, 
             <tr key={idx} className="border-t">
               <td className="px-4 py-2 text-red-500">{item.name}</td>
               <td className="px-4 py-2">
-                {item.origin === 'manual' ? 'Manual (texto)' : item.origin === 'voz' ? 'Por voz' : 'Por imagen'}
+                {item.source === 'manual' ? 'Manual (texto)' : item.source === 'voz' ? 'Por voz' : 'Por imagen'}
               </td>
               <td className="px-4 py-2 flex gap-2 flex-wrap">
  <button onClick={() => onConfirm(idx)} className="bg-green-200 text-green-800 px-3 py-1 rounded text-xs">Confirmar</button>
@@ -36,7 +36,7 @@ export default function IngredientReviewTable({ ingredients, onConfirm, onEdit, 
                 <button onClick={() => onDelete(idx)} className="bg-red-200 text-red-800 px-3 py-1 rounded text-xs">Eliminar</button>
               </td>
               <td className="px-4 py-2 text-center">
-                {item.confirm ? '✔️' : '⚠️'}
+                {item.source ? '✔️' : '⚠️'}
               </td>
             </tr>
           ))}

@@ -22,47 +22,50 @@ export default function ReviewPage() {
 
   const router = useRouter();
 
-  // para redirigir si no hay ingredientes
   useEffect(() => {
     if (ingredients.length === 0) {
       router.push('/recipe-generator');
     }
   }, [ingredients, router]);
 
-  // --- Editar ingrediente ---
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editIndex, setEditIndex] = useState(0);
   const [newName, setNewName] = useState('');
+  const [newQuantity, setNewQuantity] = useState('');
+  const [newUnit, setNewUnit] = useState('');
 
   const openEditModal = (idx: number) => {
+    const ing = ingredients[idx];
     setEditIndex(idx);
-    setNewName(ingredients[idx].name);
+    setNewName(ing.name);
+   setNewQuantity(ing.quantity?.toString() || '');
+    setNewUnit(ing.unit || '');
     setIsEditModalOpen(true);
   };
 
   const handleConfirmEdit = () => {
     if (newName.trim()) {
-      updateIngredient(editIndex, { name: newName.trim() });
+      updateIngredient(editIndex, {
+        name: newName.trim(),
+       quantity: Number(newQuantity), 
+        unit: newUnit.trim(),
+      });
       setIsEditModalOpen(false);
     }
   };
 
-  // --- Confirmar ingrediente ---
   const handleConfirm = (idx: number) => {
     confirmIngredient(idx);
   };
 
-  // --- Eliminar ingrediente con confirmación ---
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<{ idx: number; name: string } | null>(null);
 
-  // Abre el modal de confirmación
   const handleRequestDelete = (idx: number, name: string) => {
     setDeleteTarget({ idx, name });
     setIsDeleteModalOpen(true);
   };
 
-  // Tras confirmar, elimina realmente
   const handleConfirmDelete = () => {
     if (deleteTarget) {
       removeIngredient(deleteTarget.idx);
@@ -71,11 +74,10 @@ export default function ReviewPage() {
     setDeleteTarget(null);
   };
 
-  // --- Finalizar revisión ---
   const [showAlertModal, setShowAlertModal] = useState(false);
 
   const handleFinish = () => {
-    const hasConfirmed = ingredients.some((ing) => ing.confirm);
+    const hasConfirmed = ingredients.some((ing) => ing.confirmed);
     if (!hasConfirmed) {
       setShowAlertModal(true);
       return;
@@ -86,7 +88,6 @@ export default function ReviewPage() {
   return (
     <>
       <BackgroundLayers />
-
       <div className="w-full border-b-4 border-purple-400 mb-6" />
 
       <main className="flex-1 relative">
@@ -105,6 +106,8 @@ export default function ReviewPage() {
                 <thead className="text-gray-600 font-semibold text-base border-b border-[#f37b6a]">
                   <tr>
                     <th className="px-4 pb-2">Ingrediente</th>
+                    <th className="px-4 pb-2">Cantidad</th>
+                    <th className="px-4 pb-2">Unidad</th>
                     <th className="px-4 pb-2">Origen</th>
                     <th className="px-4 pb-2">Acciones</th>
                     <th className="px-4 pb-2">Confirmado</th>
@@ -113,25 +116,25 @@ export default function ReviewPage() {
                 <tbody>
                   {ingredients.map((item, idx) => (
                     <tr key={idx} className="bg-white">
-                      <td className="px-4 py-2 text-[#f37b6a] font-medium">
-                        {item.name}
-                      </td>
+                      <td className="px-4 py-2 text-[#f37b6a] font-medium">{item.name}</td>
+                      <td className="px-4 py-2">{item.quantity || '-'}</td>
+                      <td className="px-4 py-2">{item.unit || '-'}</td>
                       <td className="px-4 py-2 text-gray-600 capitalize">
-                        {item.origin === 'manual' && 'Manual (texto)'}
-                        {item.origin === 'voz' && 'Por voz'}
-                        {item.origin === 'imagen' && 'Por imagen'}
+                        {item.source === 'manual' && 'Manual (texto)'}
+                        {item.source === 'voz' && 'Por voz'}
+                        {item.source === 'imagen' && 'Por imagen'}
                       </td>
                       <td className="px-4 py-2 flex gap-2 flex-wrap">
                         <button
                           onClick={() => handleConfirm(idx)}
-                          disabled={item.confirm}
+                          disabled={item.confirmed}
                           className={`px-3 py-1 rounded-full text-xs transition ${
-                            item.confirm
+                            item.confirmed
                               ? 'bg-gray-100 text-gray-400 cursor-default'
                               : 'bg-green-100 text-green-800 hover:bg-green-200'
                           }`}
                         >
-                          {item.confirm ? 'Confirmado' : 'Confirmar'}
+                          {item.confirmed ? 'Confirmado' : 'Confirmar'}
                         </button>
 
                         <button
@@ -149,7 +152,7 @@ export default function ReviewPage() {
                         </button>
                       </td>
                       <td className="px-4 py-2 text-xl text-center">
-                        {item.confirm ? (
+                        {item.confirmed ? (
                           <span className="text-green-500">✔️</span>
                         ) : (
                           <span className="text-orange-400">⚠️</span>
@@ -179,7 +182,6 @@ export default function ReviewPage() {
         </ContainerShadow>
       </main>
 
-      {/* Modal de edición */}
       {isEditModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
@@ -188,8 +190,23 @@ export default function ReviewPage() {
               type="text"
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
-              className="w-full px-4 py-2 border rounded mb-4"
+              className="w-full px-4 py-2 border text-color-primary rounded mb-4"
+              placeholder="Nombre"
               autoFocus
+            />
+            <input
+              type="text"
+              value={newQuantity}
+              onChange={(e) => setNewQuantity(e.target.value)}
+              className="w-full px-4 py-2 border text-color-primary rounded mb-4"
+              placeholder="Cantidad"
+            />
+            <input
+              type="text"
+              value={newUnit}
+              onChange={(e) => setNewUnit(e.target.value)}
+              className="w-full px-4 py-2 border text-color-primary rounded mb-4"
+              placeholder="Unidad"
             />
             <div className="flex justify-end gap-3">
               <button
@@ -209,7 +226,6 @@ export default function ReviewPage() {
         </div>
       )}
 
-      {/* Modal alerta si no hay confirmados */}
       <AlertModal
         show={showAlertModal}
         onClose={() => setShowAlertModal(false)}
@@ -218,7 +234,6 @@ export default function ReviewPage() {
         Debes confirmar al menos un ingrediente para continuar.
       </AlertModal>
 
-      {/* ConfirmationModal para ELIMINAR */}
       <ConfirmationModal
         isOpen={isDeleteModalOpen}
         title="¿Eliminar ingrediente?"

@@ -4,16 +4,20 @@ import Input from "@/components/shared/form/Input";
 import Checkbox from "@/components/shared/form/Checkbox";
 import { useAuthStore } from "@/store/useAuthStore";
 import axios from "axios";
+import { AxiosError } from 'axios';
+import { useRouter } from "next/navigation";
 import PreferencesContainer from "../shared/preferences/PreferencesContainer";
 import { RegisterStepperProps } from "@/types/components/register-steppers.types";
 import { useRegisterStore } from "@/store/useRegisterStore";
-
+import AlertModal from "@/components/shared/modal/AlertModal"; // o la ruta correspondiente
+import { useState } from "react";
+import { apiClient } from "@/lib/axios.config"; // no lo usa por que confirma el token, nose si agregar otro interceptor o dejarlo asi.
 export default function RegisterStepper({
   step,
   onComplete,
   onBack,
 }: RegisterStepperProps) {
-
+  const router = useRouter();
   const {
     name,
     setName,
@@ -24,58 +28,47 @@ export default function RegisterStepper({
     confirmPass,
     setConfirmPass,
     cookingLevel,
-    setCookingLevel,
     diet,
-    setDiet,
     foodNeeds,
     termsAccepted,
     setTermsAccepted,
-    setFoodNeeds,
     allergies,
-    setAllergies,
     reset, // TODO: para limpiar luego del registro completo
-  } = useRegisterStore()
-
+  } = useRegisterStore();
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showErrorModal, setShowErrorModal] = useState(false);
   const login = useAuthStore((state) => state.login);
-
   const handlePasswordStepComplete = async () => {
     try {
       const userData = {
+        name,
         email,
         password,
-        preferences: {
-          cookingLevel,
-          diet,
-          dietaryRestrictions: foodNeeds,
-          allergies,
-          //favoriteCuisines: [],
-        },
+        plan_id: 2,
+        cook_level_id: cookingLevel,
+        diet_id: diet,
+        dietary_needs: foodNeeds,
+        allergies,
+        //favoriteCuisines: [],
       };
+      const { data } = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
+        userData
+      );
+      console.log(userData, data);
+      router.push("/signin");
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      const message =
+        axiosError.response?.data?.message || "Ocurrió un error al registrar";
 
-      const { data } = await axios.post("/api/register", userData);
-
-    
-      login({
-        name: data.user.name,
-        email: data.user.email,
-        premium: data.user.premium,
-        token: data.user.token,
-        preferences: {
-          cook_level: data.user.preferences.cookingLevel,
-          diet: data.user.preferences.diet,
-          dietaryRestrictions: data.user.preferences.dietaryRestrictions,
-          allergies: data.user.preferences.allergies,
-          favourite_cuisines: [],
-        },
-      });
-
-      onComplete();
-    } catch (error) {
-      console.error("Error en el registro:", error);
+      setErrorMessage(message);
+      setShowErrorModal(true);
     }
   };
 
-  const centeredWrapperClass = "flex flex-col justify-center items-center min-h-[40vh] px-4";
+  const centeredWrapperClass =
+    "flex flex-col justify-center items-center min-h-[40vh] px-4";
 
   // STEP 1: E-mail
   if (step === 1) {
@@ -89,7 +82,7 @@ export default function RegisterStepper({
             value={name}
             onChange={(e) => {
               console.log("e ", e.target.value);
-              setName(e.target.value)
+              setName(e.target.value);
             }}
             placeholder="nombre"
             required
@@ -184,7 +177,7 @@ export default function RegisterStepper({
               id="valid-check"
               name="valid-check"
               checked={valid}
-              onChange={() => { }}
+              onChange={() => {}}
               label="Mínimo 8 caracteres con letras y números"
               disabled={!valid}
             />
@@ -192,7 +185,7 @@ export default function RegisterStepper({
               id="sequence-check"
               name="sequence-check"
               checked={valid}
-              onChange={() => { }}
+              onChange={() => {}}
               label="Sin secuencias como 1234 o ABCD"
               disabled={!valid}
             />
@@ -226,6 +219,13 @@ export default function RegisterStepper({
             </button>
           </div>
         </div>
+        <AlertModal
+          show={showErrorModal}
+          onClose={() => setShowErrorModal(false)}
+          title="Error en el registro"
+        >
+          <p>{errorMessage}</p>
+        </AlertModal>
       </div>
     );
   }

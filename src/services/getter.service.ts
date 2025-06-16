@@ -3,7 +3,8 @@ import { apiClient } from '@/lib/axios.config';
 
 export async function getCookingLevels(): Promise<PreferenceItem[]> {
   try {
-    const response = await apiClient.get('cook-level');
+    const response = await apiClient.get('cook-levels');
+    console.log(response);
     return response.data;
   } catch (error: any) {
     const message = error.response?.data?.message || 'Error al obtener niveles de cocina';
@@ -12,7 +13,7 @@ export async function getCookingLevels(): Promise<PreferenceItem[]> {
 }
 export async function getAllergy(): Promise<PreferenceItem[]> {
   try {
-    const response = await apiClient.get('allergy');
+    const response = await apiClient.get('allergies');
     return response.data;
   } catch (error: any) {
     const message = error.response?.data?.message || 'Error al obtener alergias';
@@ -21,7 +22,7 @@ export async function getAllergy(): Promise<PreferenceItem[]> {
 }
 export async function getPlan(): Promise<PreferenceItem[]> {
   try {
-    const response = await apiClient.get('plan');
+    const response = await apiClient.get('plans');
     return response.data;
   } catch (error: any) {
     const message = error.response?.data?.message || 'Error al obtener planes';
@@ -30,7 +31,7 @@ export async function getPlan(): Promise<PreferenceItem[]> {
 }
 export async function getDiet(): Promise<PreferenceItem[]> {
   try {
-    const response = await apiClient.get('diet');
+    const response = await apiClient.get('diets');
     return response.data;
   } catch (error: any) {
     const message = error.response?.data?.message || 'Error al obtener dieta';
@@ -39,7 +40,7 @@ export async function getDiet(): Promise<PreferenceItem[]> {
 }
 export async function getDietaryNeed(): Promise<PreferenceItem[]> {
   try {
-    const response = await apiClient.get('dietary-need');
+    const response = await apiClient.get('dietary-needs');
     return response.data;
   } catch (error: any) {
     const message = error.response?.data?.message || 'Error al obtener necesidades de dieta';

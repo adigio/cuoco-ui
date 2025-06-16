@@ -2,8 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { User as AuthUser } from '@/types/auth/auth.types';
 import { tokenService } from '@/lib/cookies';
-import { jwtService } from '@/lib/jwt';
-
+import { jwtService } from '@/lib/jwt'; 
 export type User = AuthUser;
 
 export interface AuthState {

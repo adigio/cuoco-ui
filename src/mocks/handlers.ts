@@ -17,13 +17,13 @@ export const handlers = [
     return HttpResponse.json(mocksIngredients, { status: 200 });
   }),
 
-  http.post("/api/generate-recipes", async ({ request }) => {
-    // const body = await request.json();
+  // http.post("/api/ingredients/image", async ({ request }) => {
+  //   // const body = await request.json();
 
-    console.log("[MSW] Interceptando solicitud a /api/generate-recipes");
+  //   console.log("[MSW] Interceptando solicitud a /api/generate-recipes");
 
-    return HttpResponse.json(mockRecipes, { status: 200 });
-  }),
+  //   return HttpResponse.json(mockRecipes, { status: 200 });
+  // }),
   http.get("/api/recipe/:id", async ({ params }) => {
     console.log("[MSW] Interceptando solicitud a /api/recipe/:id");
     const id = parseInt((params.id as string) || "0", 10) - 1;
@@ -103,33 +103,33 @@ export const handlers = [
       { status: 200 }
     );
   }),
-  http.post("/api/register", async ({ request }) => {
-    const body = (await request.json()) as {
-      name: string;
-      email: string;
-      password: string;
-      level: number;
-      diet: number;
-      foodNeeds: number[];
-      allergies: number[];
-    };
+  // http.post("/api/register", async ({ request }) => {
+  //   const body = (await request.json()) as {
+  //     name: string;
+  //     email: string;
+  //     password: string;
+  //     level: number;
+  //     diet: number;
+  //     foodNeeds: number[];
+  //     allergies: number[];
+  //   };
 
-    const mockUser: User = {
-      name: "Nuevo Usuario",
-      email: body.email,
-      token: "fake-jwt-register-123",
-      premium: false,
-      preferences: {
-        cook_level: body.level,
-        diet: body.diet,
-        dietaryRestrictions: body.foodNeeds,
-        allergies: body.allergies,
-        favourite_cuisines: [],
-      },
-    };
+  //   const mockUser: User = {
+  //     name: "Nuevo Usuario",
+  //     email: body.email,
+  //     token: "fake-jwt-register-123",
+  //     premium: false,
+  //     preferences: {
+  //       cook_level: body.level,
+  //       diet: body.diet,
+  //       dietaryRestrictions: body.foodNeeds,
+  //       allergies: body.allergies,
+  //       favourite_cuisines: [],
+  //     },
+  //   };
 
-    return HttpResponse.json({ user: mockUser });
-  }),
+  //   return HttpResponse.json({ user: mockUser });
+  // }),
 
   http.get("/api/profile", async ({ request }) => {
     const authHeader = request.headers.get("Authorization");

@@ -7,8 +7,7 @@ import RecipeIngredientList from '@/components/recipe-generator/IngredientList';
 import ContainerShadow from '@/components/shared/containers/ContainerShadow';
 import { RecipeImageUploaderProps } from '@/types/components/recipe-generator.types';
 import { useAuthStore } from '@/store/useAuthStore';
-import { useIngredientsStore } from '@/store/useIngredientsStore';
-import { Ingredient } from '@/types/ingredient/ingredient.types';
+import { useIngredientsStore } from '@/store/useIngredientsStore'; 
 import SubscriptionModal from '../shared/modal/SubscriptionModal';
 
 // Componente para manejar imágenes locales

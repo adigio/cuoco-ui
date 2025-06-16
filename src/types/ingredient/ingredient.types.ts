@@ -1,7 +1,10 @@
 export interface Ingredient {
-    name: string;
-    origin: string;
-    confirm: boolean;
+  name: string;
+  quantity: number;
+  unit: string;
+  optional: boolean;
+  source: string;
+  confirmed: boolean;
 }
 
 export interface IngredientFormData {
@@ -10,14 +13,21 @@ export interface IngredientFormData {
 }
 
 type Mode = 'meal-prep' | 'cook-now' | null;
-export type IngredientsStore = {
-    ingredients: Ingredient[];
-     mode: Mode;
-    setMode: (mode: Mode) => void;
-    addIngredient: (name: string, origin?: string, confirm?: boolean) => boolean;
-    removeIngredient: (idx: number) => void;
-    updateIngredient: (idx: number, updated: Partial<Ingredient>) => void;
-    confirmIngredient: (idx: number) => void;
-    addMultipleIngredients: (newIngredients: Ingredient[]) => number;
-    clearIngredients: () => void;
-};
+export interface IngredientsStore {
+  ingredients: Ingredient[];
+  mode: string | null;
+  setMode: (mode: string | null) => void;
+  addIngredient: (
+    name: string,
+    quantity: number,
+    unit: string,
+    optional?: boolean,
+    source?: string,
+    confirmed?: boolean
+  ) => boolean;
+  removeIngredient: (idx: number) => void;
+  updateIngredient: (idx: number, updated: Partial<Ingredient>) => void;
+  confirmIngredient: (idx: number) => void;
+  addMultipleIngredients: (ingredients: Ingredient[]) => number;
+  clearIngredients: () => void;
+}

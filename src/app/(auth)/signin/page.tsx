@@ -7,10 +7,13 @@ import Button from "@/components/shared/form/Button";
 import ChefLoader from "@/components/shared/loaders/ChefLoader";
 import Input from "@/components/shared/form/Input";
 import { useAuthStore } from "@/store/useAuthStore";
-import { login } from '@/services/auth.service';
-
+import { login } from "@/services/auth.service";
+import AlertModal from "@/components/shared/modal/AlertModal";
 export default function SignIn() {
   const router = useRouter();
+  const [errorMsg, setErrorMsg] = useState("");
+  const [showError, setShowError] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -33,20 +36,20 @@ export default function SignIn() {
       console.log("Form submitted:", formData);
 
       const response = await login(formData.email, formData.password);
-
-      console.log("Login exitoso:", response.data.user); 
-      useAuthStore.getState().login(response.data.user); 
+ 
+      useAuthStore.getState().login(response.data.user);
       router.push("/home");
     } catch (error: any) {
-      console.error("Error durante login:", JSON.stringify(error));
-      alert(error.message); // mostrar error al usuario
+      console.log('ete el error',error);
+      const backendMsg = error?.message;
+      setErrorMsg(backendMsg || "Error desconocido");
+      setShowError(true);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-
     <div className="relative min-h-screen w-full overflow-hidden">
       {loading && (
         <div className="signin-loader-wrapper">
@@ -130,6 +133,15 @@ export default function SignIn() {
           </div>
         </div>
       </div>
+      {showError && (
+        <AlertModal
+          show={showError}
+          onClose={() => setShowError(false)}
+          title="Error en el login"
+        >
+          <p>{errorMsg}</p>
+        </AlertModal>
+      )}
     </div>
   );
 }
