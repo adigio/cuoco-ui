@@ -1,38 +1,45 @@
 "use client";
 
-import { useState, SetStateAction } from "react";
 import Input from "@/components/shared/form/Input";
 import Checkbox from "@/components/shared/form/Checkbox";
 import { useAuthStore } from "@/store/useAuthStore";
 import axios from "axios";
 import PreferencesContainer from "../shared/preferences/PreferencesContainer";
-import { RegisterStepperProps } from "@/types/components/register-steppers.types";  
+import { RegisterStepperProps } from "@/types/components/register-steppers.types";
+import { useRegisterStore } from "@/store/useRegisterStore";
 
 export default function RegisterStepper({
   step,
   onComplete,
   onBack,
 }: RegisterStepperProps) {
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPass, setConfirmPass] = useState("");
-  const [cookingLevel, setCookingLevel] = useState<number>(2);
-  const [diet, setDiet] = useState<number>(1);
-  const [foodNeeds, setFoodNeeds] = useState<number[]>([]);
-  const [allergies, setAllergies] = useState<number[]>([]);
-  const [termsAccepted, setTermsAccepted] = useState(false);
+
+  const {
+    name,
+    setName,
+    email,
+    setEmail,
+    password,
+    setPassword,
+    confirmPass,
+    setConfirmPass,
+    cookingLevel,
+    setCookingLevel,
+    diet,
+    setDiet,
+    foodNeeds,
+    termsAccepted,
+    setTermsAccepted,
+    setFoodNeeds,
+    allergies,
+    setAllergies,
+    reset, // TODO: para limpiar luego del registro completo
+  } = useRegisterStore()
 
   const login = useAuthStore((state) => state.login);
 
   const handlePasswordStepComplete = async () => {
     try {
-      console.log('email',  email,'nombre', name, 'pasword',
-        password, 
-         'nivel cocina', cookingLevel,
-        'dieta',  diet,
-        'needs',  foodNeeds,
-        'alergias',  allergies,);
       const userData = {
         email,
         password,
@@ -41,23 +48,24 @@ export default function RegisterStepper({
           diet,
           dietaryRestrictions: foodNeeds,
           allergies,
-          favoriteCuisines: [],
+          //favoriteCuisines: [],
         },
       };
 
       const { data } = await axios.post("/api/register", userData);
 
+    
       login({
         name: data.user.name,
         email: data.user.email,
         premium: data.user.premium,
         token: data.user.token,
         preferences: {
-          cookingLevel: data.user.preferences.cookingLevel,
+          cook_level: data.user.preferences.cookingLevel,
           diet: data.user.preferences.diet,
           dietaryRestrictions: data.user.preferences.dietaryRestrictions,
           allergies: data.user.preferences.allergies,
-          favoriteCuisines: [],
+          favourite_cuisines: [],
         },
       });
 
@@ -67,20 +75,22 @@ export default function RegisterStepper({
     }
   };
 
-  const centeredWrapperClass =
-    "flex flex-col justify-center items-center min-h-[40vh] px-4";
+  const centeredWrapperClass = "flex flex-col justify-center items-center min-h-[40vh] px-4";
 
   // STEP 1: E-mail
   if (step === 1) {
     return (
       <div className={centeredWrapperClass}>
         <div className="space-y-4 text-left w-full max-w-md">
-        <h4 className="text-2xl font-bold text-gray-800">Nombre</h4>
+          <h4 className="text-2xl font-bold text-gray-800">Nombre</h4>
           <Input
             type="text"
             name="name"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              console.log("e ", e.target.value);
+              setName(e.target.value)
+            }}
             placeholder="nombre"
             required
             inputClassName="rounded-xl p-3 text-gray-800"
@@ -128,33 +138,13 @@ export default function RegisterStepper({
         <div className="w-full max-w-md">
           <PreferencesContainer
             initialPreferences={{
-              cookingLevel,
+              cook_level: cookingLevel,
               diet,
               dietaryRestrictions: foodNeeds,
               allergies,
-              favoriteCuisines: [],
+              favourite_cuisines: [],
             }}
-            onComplete={(preferences) => {
-              if (preferences.cookingLevel) {
-                setCookingLevel(
-                  preferences.cookingLevel as SetStateAction<
-                    "Bajo" | "Medio" | "Alto"
-                  >
-                );
-              }
-              if (preferences.diet) {
-                setDiet(
-                  preferences.diet as SetStateAction<
-                    "Omnívoro" | "Vegetariano" | "Vegano" | "Otro"
-                  >
-                );
-              }
-              if (preferences.dietaryRestrictions) {
-                setFoodNeeds(preferences.dietaryRestrictions);
-              }
-              if (preferences.allergies) {
-                setAllergies(preferences.allergies);
-              }
+            onComplete={() => {
               onComplete();
             }}
             showBackButton={true}
@@ -194,7 +184,7 @@ export default function RegisterStepper({
               id="valid-check"
               name="valid-check"
               checked={valid}
-              onChange={() => {}}
+              onChange={() => { }}
               label="Mínimo 8 caracteres con letras y números"
               disabled={!valid}
             />
@@ -202,7 +192,7 @@ export default function RegisterStepper({
               id="sequence-check"
               name="sequence-check"
               checked={valid}
-              onChange={() => {}}
+              onChange={() => { }}
               label="Sin secuencias como 1234 o ABCD"
               disabled={!valid}
             />

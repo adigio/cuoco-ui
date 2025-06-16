@@ -41,8 +41,10 @@ export interface PreferenceItem {
 }
 
 export interface UserPreferences {
-  cook_level?: number; // Ej: { id: 1, description: "Medio" }
-  dietaryRestrictions?: number[]; //  
-  allergies?: number[]; //  
-  diet?: number; //  
+  cook_level?: number;
+  diet?: number;
+  cookingLevel?: string;
+  dietaryRestrictions?: number[];
+  allergies?: number[];
+  favourite_cuisines?: number[];
 }

@@ -1,53 +1,31 @@
 import React from "react";
-import { useState, useEffect } from "react";
 import {
-  PreferencesStepsProps, 
+  PreferencesStepsProps,
 } from "@/types/components/preferences.types";
-import CustomCheckbox from "../form/CustomCheckbox";
 import { BRAND_COLORS } from "@/constants/colors";
-import { PreferenceItem } from "@/types/auth/auth.types";
-import { getCookingLevels,getAllergy,getDiet,getDietaryNeed} from "@/services/getter.service";
+import { useRegisterStore } from "@/store/useRegisterStore";
 
 
 export default function PreferencesSteps({
   currentStep,
-  level,
-  setLevel,
-  diet,
-  setDiet,
-  foodNeeds,
-  setFoodNeeds,
-  allergies,
-  setAllergies,
+  cookingLevelOptions,
+  allergyOptions,
+  dietOptions,
+  dietaryNeedOptions,
   title = "¿Cómo es tu alimentación?",
 }: PreferencesStepsProps) {
+  const {
+    cookingLevel,
+    setCookingLevel,
+    diet,
+    setDiet,
+    foodNeeds,
+    setFoodNeeds,
+    allergies,
+    setAllergies,
+    reset,
+  } = useRegisterStore();
 
-  const [cookingLevelOptions, setCookingLevelOptions] = useState<PreferenceItem[]>([]);
-  const [allergyOptions, setAllergyOptions] = useState<PreferenceItem[]>([]);
-  const [dietOptions, setDietOptions] = useState<PreferenceItem[]>([]);
-  const [dietaryNeedOptions, setDietaryNeedOptions] = useState<PreferenceItem[]>([]);
-
-  useEffect(() => {
-    async function fetchPreferences() {
-      try {
-        const [levels, allergies, diets, needs] = await Promise.all([
-          getCookingLevels(),
-          getAllergy(),
-          getDiet(),
-          getDietaryNeed()
-        ]);
-
-        setCookingLevelOptions(levels);
-        setAllergyOptions(allergies);
-        setDietOptions(diets);
-        setDietaryNeedOptions(needs);
-      } catch (error) {
-        console.error("Error fetching preferences:", error);
-      }
-    }
-
-    fetchPreferences();
-  }, []);
 
   const toggleItem = (list: number[], item: number) => {
     return list.includes(item)
@@ -68,14 +46,13 @@ export default function PreferencesSteps({
                 type="button"
                 className={`
                   px-4 py-2 rounded-full border transition-colors
-                  ${
-                    level.id === level.id
-                      ? `bg-[${BRAND_COLORS.primary}] text-white border-[${BRAND_COLORS.primary}]`
-                      : "bg-white text-gray-700 border-gray-300"
+                  ${level.id === cookingLevel
+                    ? `bg-[${BRAND_COLORS.primary}] text-white border-[${BRAND_COLORS.primary}]`
+                    : "bg-white text-gray-700 border-gray-300"
                   }
                   hover:opacity-90
                 `}
-                onClick={() => setLevel(level.id)}
+                onClick={() => setCookingLevel(level.id)}
               >
                 {level.description}
               </button>

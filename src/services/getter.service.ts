@@ -1,10 +1,10 @@
-import axios from 'axios';
 import { PreferenceItem } from '@/types/auth/auth.types';
+import { apiClient } from '@/lib/axios.config';
 
 export async function getCookingLevels(): Promise<PreferenceItem[]> {
   try {
-    const response = await axios.get('https://dev.cuoco.com.ar/api/cook-level');
-    return response.data; // o response.data, si no hay .data interno
+    const response = await apiClient.get('cook-level');
+    return response.data;
   } catch (error: any) {
     const message = error.response?.data?.message || 'Error al obtener niveles de cocina';
     throw new Error(message);
@@ -12,7 +12,7 @@ export async function getCookingLevels(): Promise<PreferenceItem[]> {
 }
 export async function getAllergy(): Promise<PreferenceItem[]> {
   try {
-    const response = await axios.get('https://dev.cuoco.com.ar/api/allergy');
+    const response = await apiClient.get('allergy');
     return response.data;
   } catch (error: any) {
     const message = error.response?.data?.message || 'Error al obtener alergias';
@@ -21,7 +21,7 @@ export async function getAllergy(): Promise<PreferenceItem[]> {
 }
 export async function getPlan(): Promise<PreferenceItem[]> {
   try {
-    const response = await axios.get('https://dev.cuoco.com.ar/api/plan');
+    const response = await apiClient.get('plan');
     return response.data;
   } catch (error: any) {
     const message = error.response?.data?.message || 'Error al obtener planes';
@@ -30,7 +30,7 @@ export async function getPlan(): Promise<PreferenceItem[]> {
 }
 export async function getDiet(): Promise<PreferenceItem[]> {
   try {
-    const response = await axios.get('https://dev.cuoco.com.ar/api/diet');
+    const response = await apiClient.get('diet');
     return response.data;
   } catch (error: any) {
     const message = error.response?.data?.message || 'Error al obtener dieta';
@@ -39,7 +39,7 @@ export async function getDiet(): Promise<PreferenceItem[]> {
 }
 export async function getDietaryNeed(): Promise<PreferenceItem[]> {
   try {
-    const response = await axios.get('https://dev.cuoco.com.ar/api/dietary-need');
+    const response = await apiClient.get('dietary-need');
     return response.data;
   } catch (error: any) {
     const message = error.response?.data?.message || 'Error al obtener necesidades de dieta';

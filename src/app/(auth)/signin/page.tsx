@@ -38,7 +38,7 @@ export default function SignIn() {
       useAuthStore.getState().login(response.data.user); 
       router.push("/home");
     } catch (error: any) {
-      console.error("Error durante login:", error.message);
+      console.error("Error durante login:", JSON.stringify(error));
       alert(error.message); // mostrar error al usuario
     } finally {
       setLoading(false);
