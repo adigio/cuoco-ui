@@ -108,10 +108,10 @@ export const handlers = [
       name: string;
       email: string;
       password: string;
-      level: string;
-      diet: string;
-      foodNeeds: string[];
-      allergies: string[];
+      level: number;
+      diet: number;
+      foodNeeds: number[];
+      allergies: number[];
     };
 
     const mockUser: User = {
@@ -120,11 +120,11 @@ export const handlers = [
       token: "fake-jwt-register-123",
       premium: false,
       preferences: {
-        cookingLevel: body.level as "Bajo" | "Medio" | "Alto",
-        diet: body.diet as "Omnívoro" | "Vegetariano" | "Vegano" | "Otro",
+        cook_level: body.level,
+        diet: body.diet,
         dietaryRestrictions: body.foodNeeds,
         allergies: body.allergies,
-        favoriteCuisines: [],
+        favourite_cuisines: [],
       },
     };
 
@@ -144,11 +144,11 @@ export const handlers = [
       token: "fake-jwt-123",
       premium: false,
       preferences: {
-        cookingLevel: "Medio",
-        diet: "Omnívoro",
-        dietaryRestrictions: ["Sin lactosa"],
-        allergies: ["Ninguna en particular"],
-        favoriteCuisines: [],
+        cook_level: 2,
+        diet: 1,
+        dietaryRestrictions: [2],
+        allergies: [0],
+        favourite_cuisines: [],
       },
     };
 
