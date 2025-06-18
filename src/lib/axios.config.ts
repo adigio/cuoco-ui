@@ -49,6 +49,34 @@ apiClient.interceptors.response.use(
             if (typeof window !== 'undefined') {
                 window.dispatchEvent(new CustomEvent('auth:logout'));
             }
+        } else if (error.response?.status >= 400 && error.response?.status < 500) {
+            // Errores 4xx (excepto 401) - Errores del cliente
+            
+            // Lista de rutas que deben manejar sus errores localmente (no interceptar)
+            const localErrorRoutes = ['/auth/register', '/auth/login'];
+            const requestUrl = error.config?.url || '';
+            const shouldHandleLocally = localErrorRoutes.some(route => requestUrl.includes(route));
+            
+            if (!shouldHandleLocally) {
+                const message = error.response?.data?.message || 'Error en la solicitud';
+                
+                if (typeof window !== 'undefined') {
+                    // Importar para evitar problemas SSR
+                    import('@/store/useErrorStore').then(({ useErrorStore }) => {
+                        useErrorStore.getState().setError(message);
+                    });
+                }
+            }
+            // Si es una ruta de manejo local, simplemente pasar el error sin interceptar
+        } else if (error.response?.status >= 500) {
+            // Errores 5xx - Errores del servidor
+            const message = 'Error del servidor. Intenta nuevamente en unos momentos.';
+            
+            if (typeof window !== 'undefined') {
+                import('@/store/useErrorStore').then(({ useErrorStore }) => {
+                    useErrorStore.getState().setError(message);
+                });
+            }
         }
 
         return Promise.reject(error);

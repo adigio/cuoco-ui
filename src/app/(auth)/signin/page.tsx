@@ -8,11 +8,21 @@ import ChefLoader from "@/components/shared/loaders/ChefLoader";
 import Input from "@/components/shared/form/Input";
 import { useAuthStore } from "@/store/useAuthStore";
 import { login } from "@/services/auth.service";
-import AlertModal from "@/components/shared/modal/AlertModal";
+import NotificationModal from "@/components/shared/modal/NotificationModal";
+import { useNotification } from "@/hooks/useNotification";
+
 export default function SignIn() {
   const router = useRouter();
-  const [errorMsg, setErrorMsg] = useState("");
-  const [showError, setShowError] = useState(false);
+  
+  const { 
+    message, 
+    additionalMessage, 
+    type, 
+    show, 
+    showSuccess, 
+    showError, 
+    clearNotification 
+  } = useNotification();
 
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -38,12 +48,22 @@ export default function SignIn() {
       const response = await login(formData.email, formData.password);
  
       useAuthStore.getState().login(response.data.user);
-      router.push("/home");
+      
+      showSuccess(
+        "¡Bienvenido de vuelta!", 
+        "Redirigiendo a tu dashboard..."
+      );
+      
+      setTimeout(() => {
+        router.push("/home");
+      }, 2000);
+      
     } catch (error: any) {
-      console.log('ete el error',error);
-      const backendMsg = error?.message;
-      setErrorMsg(backendMsg || "Error desconocido");
-      setShowError(true);
+      const mainMessage = "Error al iniciar sesión";
+      const backendMsg = error?.message || "Verifica tus credenciales e intenta nuevamente";
+      
+      // Mostrar error con mensaje del backend
+      showError(mainMessage, backendMsg);
     } finally {
       setLoading(false);
     }
@@ -133,15 +153,13 @@ export default function SignIn() {
           </div>
         </div>
       </div>
-      {showError && (
-        <AlertModal
-          show={showError}
-          onClose={() => setShowError(false)}
-          title="Error en el login"
-        >
-          <p>{errorMsg}</p>
-        </AlertModal>
-      )}
+      <NotificationModal
+        show={show}
+        onClose={clearNotification}
+        message={message}
+        additionalMessage={additionalMessage}
+        type={type}
+      />
     </div>
   );
 }

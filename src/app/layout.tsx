@@ -6,7 +6,8 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false;
 
 import "@/lib/fontawesome";
-import ClientProvider from "@/context/ClientProvider"; 
+import ClientProvider from "@/context/ClientProvider";
+import GlobalErrorHandler from "@/components/shared/GlobalErrorHandler"; 
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -26,7 +27,10 @@ export default function RootLayout({ children }: LayoutProps) {
         <link rel="icon" href="favicon/favicon.ico" />
       </head>
       <body className={`${montserrat.variable}`}>
-        <ClientProvider>{children}</ClientProvider>
+        <ClientProvider>
+          {children}
+          <GlobalErrorHandler />
+        </ClientProvider>
       </body>
     </html>
   );

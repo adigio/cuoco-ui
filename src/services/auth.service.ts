@@ -5,7 +5,7 @@ import { LoginResponse, LoginRequest, ApiError, RegisterRequest, RegisterRespons
 export const authService = {
   async register(user: RegisterRequest): Promise<RegisterResponse> {
     try {
-      const response = await apiClient.post<RegisterResponse>('/auth/register', { user });   
+      const response = await apiClient.post<RegisterResponse>('/auth/register', user);   
       return response.data;
     } catch (error: any) {
       const message = error.response?.data?.message || 'Error desconocido';

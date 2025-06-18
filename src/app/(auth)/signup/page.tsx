@@ -11,6 +11,9 @@ import Image from 'next/image'
 import RegisterStepper from '@/components/auth/RegisterStepper'
 import RegisterStepBox from '@/components/auth/RegisterStepBox'
 import Modal from '@/components/shared/modal/Modal'
+import NotificationModal from '@/components/shared/modal/NotificationModal'
+import { useNotification } from '@/hooks/useNotification'
+import { RegistrationProvider } from '@/context/RegistrationProvider'
 
 type StepKey = 'email' | 'prefs' | 'password';
 
@@ -20,6 +23,16 @@ export default function SignupPage() {
   const [currentStep, setCurrentStep] = useState<StepKey | null>(null)
   const [completedSteps, setCompletedSteps] = useState<StepKey[]>([])
   const [registerFinished, setRegisterFinished] = useState<boolean>(false)
+  
+  // Hook para notificaciones globales de la página
+  const notificationHook = useNotification()
+  const { 
+    message, 
+    additionalMessage, 
+    type, 
+    show, 
+    clearNotification 
+  } = notificationHook
 
   const handleComplete = (step: StepKey) => {
     setCompletedSteps(prev => {
@@ -42,8 +55,9 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[url('/auth/signup.png')] bg-cover bg-no-repeat bg-center flex items-center justify-center px-4 md:px-16">
-      <div className="flex flex-col items-center justify-start">
+    <RegistrationProvider notificationHook={notificationHook}>
+      <div className="min-h-screen bg-[url('/auth/signup.png')] bg-cover bg-no-repeat bg-center flex items-center justify-center px-4 md:px-16">
+        <div className="flex flex-col items-center justify-start">
         <div className="relative w-48 h-48 mb-8">
              <Link href="/">
           <Image
@@ -145,10 +159,21 @@ export default function SignupPage() {
             step={3} 
             onComplete={() => handleComplete('password')} 
             onBack={() => handleBack('password')}
+            onError={() => setCurrentStep(null)} // Cerrar modal en caso de error
           />
         </Modal>
 
+        {/* Modal de notificaciones global para errores del registro */}
+        <NotificationModal
+          show={show}
+          onClose={clearNotification}
+          message={message}
+          additionalMessage={additionalMessage}
+          type={type}
+        />
+
+              </div>
       </div>
-    </div>
+    </RegistrationProvider>
   )
 }

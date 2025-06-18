@@ -3,19 +3,18 @@
 import Input from "@/components/shared/form/Input";
 import Checkbox from "@/components/shared/form/Checkbox";
 import { useAuthStore } from "@/store/useAuthStore";
-import axios from "axios";
-import { AxiosError } from 'axios';
 import { useRouter } from "next/navigation";
 import PreferencesContainer from "../shared/preferences/PreferencesContainer";
 import { RegisterStepperProps } from "@/types/components/register-steppers.types";
 import { useRegisterStore } from "@/store/useRegisterStore";
-import AlertModal from "@/components/shared/modal/AlertModal"; // o la ruta correspondiente
 import { useState } from "react";
-import { apiClient } from "@/lib/axios.config"; // no lo usa por que confirma el token, nose si agregar otro interceptor o dejarlo asi.
+import { register } from "@/services/auth.service";
+import { useRegistrationNotification } from "@/context/RegistrationProvider";
 export default function RegisterStepper({
   step,
   onComplete,
   onBack,
+  onError,
 }: RegisterStepperProps) {
   const router = useRouter();
   const {
@@ -35,9 +34,12 @@ export default function RegisterStepper({
     allergies,
     reset, // TODO: para limpiar luego del registro completo
   } = useRegisterStore();
-  const [errorMessage, setErrorMessage] = useState("");
-  const [showErrorModal, setShowErrorModal] = useState(false);
   const login = useAuthStore((state) => state.login);
+  
+  const { 
+    showSuccess, 
+    showError, 
+  } = useRegistrationNotification();
   const handlePasswordStepComplete = async () => {
     try {
       const userData = {
@@ -49,21 +51,42 @@ export default function RegisterStepper({
         diet_id: diet,
         dietary_needs: foodNeeds,
         allergies,
-        //favoriteCuisines: [],
       };
-      const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
-        userData
-      );
-      console.log(userData, data);
-      router.push("/signin");
-    } catch (error: unknown) {
-      const axiosError = error as AxiosError<{ message: string }>;
-      const message =
-        axiosError.response?.data?.message || "Ocurrió un error al registrar";
 
-      setErrorMessage(message);
-      setShowErrorModal(true);
+      const response = await register(userData);
+
+      showSuccess(
+        "¡Tu cuenta ha sido creada exitosamente!", 
+        "Serás redirigido al login automáticamente..."
+      );
+      
+      // Limpiar el estado del registro
+      reset();
+      
+      setTimeout(() => {
+        router.push("/signin");
+      }, 5000); 
+      
+    } catch (error: any) {
+      
+      const mainMessage = "Error al crear la cuenta";
+      let backendMessage = "Verifica los datos e intenta nuevamente";
+      
+      if (error.response?.data?.errors) {
+        const errorMessages = error.response.data.errors.map((err: any) => err.message).join(', ');
+        backendMessage = errorMessages;
+      } else if (error.message) {
+        backendMessage = error.message;
+      }
+      
+      // Cerrar el modal del stepper primero para que se vea el error
+      if (onError) {
+        onError();
+      }
+
+      setTimeout(() => {
+        showError(mainMessage, backendMessage);
+      }, 200);
     }
   };
 
@@ -219,13 +242,6 @@ export default function RegisterStepper({
             </button>
           </div>
         </div>
-        <AlertModal
-          show={showErrorModal}
-          onClose={() => setShowErrorModal(false)}
-          title="Error en el registro"
-        >
-          <p>{errorMessage}</p>
-        </AlertModal>
       </div>
     );
   }

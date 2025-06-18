@@ -19,4 +19,5 @@ export interface RegisterStepperProps {
   step: number;
   onComplete: () => void;
   onBack?: () => void;
+  onError?: () => void; //para onError Modal
 }
