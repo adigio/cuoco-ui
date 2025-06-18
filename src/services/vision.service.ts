@@ -8,21 +8,20 @@ import { useAuthStore } from "@/store/useAuthStore";
 export const analyzeImagesWithAPI = async (
   images: File[] | string[]
 ): Promise<Ingredient[]> => {
-  console.log("analizando imagenes con API", images);
   try {
     const token = useAuthStore.getState().token;
     const formData = new FormData();
 
     images.forEach((image, index) => {
       if (image instanceof File) {
-        formData.append(`images`, image);
+        formData.append('image', image); // 'image' en singular
       }
     });
-    console.log("esta aca culiau");
+  
+    // Configurar headers para FormData como solicita el backend
     const response = await apiClient.post("/ingredients/image", formData, {
       headers: {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
       },
     });
 
@@ -32,19 +31,26 @@ export const analyzeImagesWithAPI = async (
       return [];
     }
 
-    // Validar y transformar cada elemento
-    return response.data
-      .map((item) => ({
-        name: String(item.name || "").trim(),
-        quantity: 0, // valor por defecto
-        unit: "", // valor por defecto
-        optional: false, // valor por defecto
-        source: "imagen",
-        confirmed: false,
-      }))
-      .filter((item) => item.name !== "");
+    // La API devuelve: [{ filename: "...", ingredients: [...] }]
+    // Extraer ingredientes de cada imagen
+    const allIngredients: Ingredient[] = [];
+    
+    response.data.forEach((imageResult: any) => {
+      if (imageResult.ingredients && Array.isArray(imageResult.ingredients)) {
+        imageResult.ingredients.forEach((ingredient: any) => {
+          allIngredients.push({
+            name: String(ingredient.name || "").trim(),
+            quantity: Number(ingredient.quantity) || 0,
+            unit: String(ingredient.unit || "").trim(),
+            optional: false,
+            source: "imagen",
+            confirmed: Boolean(ingredient.confirmed),
+          });
+        });
+      }
+    });
+    return allIngredients.filter(item => item.name !== "");
   } catch (error) {
-    console.error("Error al analizar las imágenes:", error);
     return [];
   }
 };

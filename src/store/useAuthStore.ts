@@ -105,21 +105,29 @@ export const useAuthStore = create<AuthState>()(
       
       initializeAuth: () => {
         const token = tokenService.getToken();
-        
+        const currentState = get();
         if (token) {
           if (!jwtService.isExpired(token)) {
-            // Token válido, mantener sesión
-            const decodedToken = jwtService.decode(token);
-            console.log('Sesión restaurada desde cookie:', decodedToken);
+            const decodedToken = jwtService.decode(token);            
+            // Si tenemos token válido pero no hay user data, hay inconsistencia
+            if (!currentState.user) {
+              set({ 
+                user: null, 
+                token: null, 
+                isAuthenticated: false 
+              });
+              return;
+            }
             
+            // Todo consistente - restaurar sesión completa
             set({ 
               token, 
               isAuthenticated: true 
-              // user se restaurará desde persist si existe
+              // user ya está cargado desde persist
             });
           } else {
-            // Token expirado, limpiar
-            console.log('Token expirado al inicializar');
+            // Token expirado, limpiar todo
+            console.log('❌ Token expirado al inicializar - Limpiando sesión');
             tokenService.removeToken();
             set({ 
               user: null, 
@@ -127,6 +135,12 @@ export const useAuthStore = create<AuthState>()(
               isAuthenticated: false 
             });
           }
+        } else {
+          set({ 
+            user: null, 
+            token: null, 
+            isAuthenticated: false 
+          });
         }
       },
       

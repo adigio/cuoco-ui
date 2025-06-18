@@ -1,4 +1,11 @@
 export const config = {
 
 };
-export const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api/v2'
+
+// Configuración híbrida: Proxy en desarrollo, URL directa en producción
+const isDevelopment = process.env.NODE_ENV === 'development';
+
+export const apiUrl = isDevelopment 
+  ? '/api' // En desarrollo: proxy localhost/api → dev.cuoco.com.ar/api
+  : (process.env.NEXT_PUBLIC_API_URL || 'https://dev.cuoco.com.ar/api'); // En producción: URL directa
+
