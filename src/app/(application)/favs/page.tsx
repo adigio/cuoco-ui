@@ -7,18 +7,22 @@ import MealPrepCard from "@/components/meal-prep/MealPrepCard";
 import Pagination from "@/components/shared/Pagination";
 import { getFavRecipes, getFavMealPreps } from "@/services/favs.service";
 import { Ingredient, MealPrep, Recipe } from "@/types";
-
+import BackgroundLayers from "@/components/shared/BackgroundLayers";
 export default function Favs() {
   const [loading, setLoading] = useState(true);
 
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [recipesPage, setRecipesPage] = useState(1);
   const [recipesTotalPages, setRecipesTotalPages] = useState(1);
-  const [mealPreps, setMealPreps] = useState([]);
+  const [mealPreps, setMealPreps] = useState<MealPrep[]>([]);
   const [mealPrepsPage, setMealPrepsPage] = useState(1);
   const [mealPrepsTotalPages, setMealPrepsTotalPages] = useState(1);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [searchTermMealPrep, setSearchTermMealPrep] = useState("");
+
+  const [showRecipes, setShowRecipes] = useState(false);
+  const [showMealPreps, setShowMealPreps] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,7 +33,6 @@ export default function Favs() {
           getFavMealPreps(mealPrepsPage),
         ]);
 
-        // Asegurarse de que sea plano si viene anidado
         const recipesList = Array.isArray(recipesRes.data[0])
           ? recipesRes.data.flat()
           : recipesRes.data;
@@ -38,10 +41,8 @@ export default function Favs() {
           ? mealPrepsRes.data.flat()
           : mealPrepsRes.data;
 
-        // Setear estados para mapear
         setRecipes(recipesList);
         setMealPreps(mealPrepsList);
-
         setRecipesTotalPages(recipesRes.totalPages);
         setMealPrepsTotalPages(mealPrepsRes.totalPages);
       } catch (err) {
@@ -55,11 +56,12 @@ export default function Favs() {
   }, [recipesPage, mealPrepsPage]);
 
   if (loading) return <ChefLoader text="Cargando tus favoritos..." />;
+
   const filteredRecipes = recipes.filter((recipe: Recipe) => {
     const term = searchTerm.toLowerCase();
     return (
       recipe.name.toLowerCase().includes(term) ||
-      recipe.instructions.some(instruction =>
+      recipe.instructions.some((instruction) =>
         instruction.toLowerCase().includes(term)
       ) ||
       recipe.ingredients.some((ing: Ingredient) =>
@@ -67,6 +69,7 @@ export default function Favs() {
       )
     );
   });
+
   const filteredMealPreps = mealPreps.filter((mp: MealPrep) => {
     const term = searchTermMealPrep.toLowerCase();
     return (
@@ -77,61 +80,88 @@ export default function Favs() {
 
   return (
     <main className="pt-16 md:pt-8 px-4 max-w-5xl mx-auto flex flex-col gap-12">
+      <BackgroundLayers />
       {/* Recetas favoritas */}
       <section>
-        <h2 className="text-2xl font-semibold mb-4">Recetas Favoritas</h2>
-        <input
-          type="text"
-          placeholder="Buscar por nombre, ingrediente o instrucción..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="mb-4 px-4 py-2 border rounded w-full"
-        />
-        {recipes.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredRecipes.map((recipe) => (
-              <RecipeCard key={recipe.id} recipe={recipe} />
-            ))}
-          </div>
-        ) : (
-          <p className="text-gray-500">No tenés recetas favoritas aún.</p>
-        )}
-        {recipesTotalPages > 1 && (
-          <Pagination
-            currentPage={recipesPage}
-            totalPages={recipesTotalPages}
-            onPageChange={setRecipesPage}
-          />
+        <button
+          onClick={() => setShowRecipes(!showRecipes)}
+          className="text-2xl font-semibold mb-2 flex justify-between w-full items-center"
+        >
+          Recetas Favoritas ({recipes.length})
+          <span className="text-sm text-gray-600">
+            {showRecipes ? "▲" : "▼"}
+          </span>
+        </button>
+
+        {showRecipes && (
+          <>
+            <input
+              type="text"
+              placeholder="Buscar por nombre, ingrediente o instrucción..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="mb-4 px-4 py-2 border rounded w-full"
+            />
+            {filteredRecipes.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredRecipes.map((recipe) => (
+                  <RecipeCard key={recipe.id} recipe={recipe} />
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-500">No tenés recetas favoritas aún.</p>
+            )}
+            {recipesTotalPages > 1 && (
+              <Pagination
+                currentPage={recipesPage}
+                totalPages={recipesTotalPages}
+                onPageChange={setRecipesPage}
+              />
+            )}
+          </>
         )}
       </section>
 
-      {/* MealPrep favoritos */}
+      {/* Meal Prep favoritos */}
       <section>
-        <h2 className="text-2xl font-semibold mb-4">Meal Preps Favoritos</h2>
-        <input
-          type="text"
-          placeholder="Buscar meal prep..."
-          value={searchTermMealPrep}
-          onChange={(e) => setSearchTermMealPrep(e.target.value)}
-          className="mb-4 px-4 py-2 border rounded w-full"
-        />
-        {filteredMealPreps.length === 0 ? (
-          <p className="text-gray-500">
-            No se encontraron meal preps que coincidan.
-          </p>
-        ) : (
-          <div className="grid grid-cols-1 gap-4">
-            {filteredMealPreps.map((mp: MealPrep) => (
-              <MealPrepCard key={mp.id} mealPrep={mp} onClick={() => { }} />
-            ))}
-          </div>
-        )}
-        {mealPrepsTotalPages > 1 && (
-          <Pagination
-            currentPage={mealPrepsPage}
-            totalPages={mealPrepsTotalPages}
-            onPageChange={setMealPrepsPage}
-          />
+        <button
+          onClick={() => setShowMealPreps(!showMealPreps)}
+          className="text-2xl font-semibold mb-2 flex justify-between w-full items-center"
+        >
+          Meal Preps Favoritos ({mealPreps.length})
+          <span className="text-sm text-gray-600">
+            {showMealPreps ? "▲" : "▼"}
+          </span>
+        </button>
+
+        {showMealPreps && (
+          <>
+            <input
+              type="text"
+              placeholder="Buscar meal prep..."
+              value={searchTermMealPrep}
+              onChange={(e) => setSearchTermMealPrep(e.target.value)}
+              className="mb-4 px-4 py-2 border rounded w-full"
+            />
+            {filteredMealPreps.length === 0 ? (
+              <p className="text-gray-500">
+                No se encontraron meal preps que coincidan.
+              </p>
+            ) : (
+              <div className="grid grid-cols-1 gap-4">
+                {filteredMealPreps.map((mp: MealPrep) => (
+                  <MealPrepCard key={mp.id} mealPrep={mp} onClick={() => {}} />
+                ))}
+              </div>
+            )}
+            {mealPrepsTotalPages > 1 && (
+              <Pagination
+                currentPage={mealPrepsPage}
+                totalPages={mealPrepsTotalPages}
+                onPageChange={setMealPrepsPage}
+              />
+            )}
+          </>
         )}
       </section>
     </main>

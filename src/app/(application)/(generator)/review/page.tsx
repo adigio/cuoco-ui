@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 // contexto
-import { useIngredientsStore } from '@/store/useIngredientsStore';
+import { useIngredientsStore } from "@/store/useIngredientsStore";
 // components
-import AlertModal from '@/components/shared/modal/AlertModal';
-import ConfirmationModal from '@/components/shared/modal/ConfirmationModal';
-import RecipeIngredientInput from '@/components/recipe-generator/IngredientInput';
-import BackgroundLayers from '@/components/shared/BackgroundLayers';
-import ContainerShadow from '@/components/shared/containers/ContainerShadow';
+import AlertModal from "@/components/shared/modal/AlertModal";
+import ConfirmationModal from "@/components/shared/modal/ConfirmationModal";
+import RecipeIngredientInput from "@/components/recipe-generator/IngredientInput";
+import BackgroundLayers from "@/components/shared/BackgroundLayers";
+import ContainerShadow from "@/components/shared/containers/ContainerShadow";
 
 export default function ReviewPage() {
   const {
@@ -24,22 +24,22 @@ export default function ReviewPage() {
 
   useEffect(() => {
     if (ingredients.length === 0) {
-      router.push('/recipe-generator');
+      router.push("/recipe-generator");
     }
   }, [ingredients, router]);
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editIndex, setEditIndex] = useState(0);
-  const [newName, setNewName] = useState('');
-  const [newQuantity, setNewQuantity] = useState('');
-  const [newUnit, setNewUnit] = useState('');
+  const [newName, setNewName] = useState("");
+  const [newQuantity, setNewQuantity] = useState("");
+  const [newUnit, setNewUnit] = useState("");
 
   const openEditModal = (idx: number) => {
     const ing = ingredients[idx];
     setEditIndex(idx);
     setNewName(ing.name);
-   setNewQuantity(ing.quantity?.toString() || '');
-    setNewUnit(ing.unit || '');
+    setNewQuantity(ing.quantity?.toString() || "");
+    setNewUnit(ing.unit || "");
     setIsEditModalOpen(true);
   };
 
@@ -47,7 +47,7 @@ export default function ReviewPage() {
     if (newName.trim()) {
       updateIngredient(editIndex, {
         name: newName.trim(),
-       quantity: Number(newQuantity), 
+        quantity: Number(newQuantity),
         unit: newUnit.trim(),
       });
       setIsEditModalOpen(false);
@@ -58,8 +58,19 @@ export default function ReviewPage() {
     confirmIngredient(idx);
   };
 
+  const confirmAllIngredients = () => {
+    ingredients.forEach((ing, idx) => {
+      if (!ing.confirmed) {
+        confirmIngredient(idx);
+      }
+    });
+  };
+
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState<{ idx: number; name: string } | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<{
+    idx: number;
+    name: string;
+  } | null>(null);
 
   const handleRequestDelete = (idx: number, name: string) => {
     setDeleteTarget({ idx, name });
@@ -82,7 +93,7 @@ export default function ReviewPage() {
       setShowAlertModal(true);
       return;
     }
-    router.push(mode === 'meal-prep' ? '/meal-prep-filters' : '/filters');
+    router.push(mode === "meal-prep" ? "/meal-prep-filters" : "/filters");
   };
 
   return (
@@ -101,73 +112,93 @@ export default function ReviewPage() {
           {ingredients.length === 0 ? (
             <p className="text-gray-500 text-center">No hay ingredientes.</p>
           ) : (
-            <div className="overflow-x-auto max-h-[450px] overflow-y-auto">
-              <table className="min-w-full text-sm text-left border-separate border-spacing-y-2">
-                <thead className="text-gray-600 font-semibold text-base border-b border-[#f37b6a]">
-                  <tr>
-                    <th className="px-4 pb-2">Ingrediente</th>
-                    <th className="px-4 pb-2">Cantidad</th>
-                    <th className="px-4 pb-2">Unidad</th>
-                    <th className="px-4 pb-2">Origen</th>
-                    <th className="px-4 pb-2">Acciones</th>
-                    <th className="px-4 pb-2">Confirmado</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {ingredients.map((item, idx) => (
-                    <tr key={idx} className="bg-white">
-                      <td className="px-4 py-2 text-[#f37b6a] font-medium">{item.name}</td>
-                      <td className="px-4 py-2">{item.quantity || '-'}</td>
-                      <td className="px-4 py-2">{item.unit || '-'}</td>
-                      <td className="px-4 py-2 text-gray-600 capitalize">
-                        {item.source === 'manual' && 'Manual (texto)'}
-                        {item.source === 'voz' && 'Por voz'}
-                        {item.source === 'imagen' && 'Por imagen'}
-                      </td>
-                      <td className="px-4 py-2 flex gap-2 flex-wrap">
-                        <button
-                          onClick={() => handleConfirm(idx)}
-                          disabled={item.confirmed}
-                          className={`px-3 py-1 rounded-full text-xs transition ${
-                            item.confirmed
-                              ? 'bg-gray-100 text-gray-400 cursor-default'
-                              : 'bg-green-100 text-green-800 hover:bg-green-200'
-                          }`}
-                        >
-                          {item.confirmed ? 'Confirmado' : 'Confirmar'}
-                        </button>
+            <>
+              {/* Fila fija arriba del scroll */}
+              <div className="flex justify-between items-center mb-2">
+                <h2 className="text-lg font-semibold text-gray-700">
+                  Lista de ingredientes
+                </h2>
+                <button
+                  onClick={confirmAllIngredients}
+                  className="px-4 py-2 bg-green-100 text-green-800 rounded hover:bg-green-200 transition text-sm"
+                >
+                  Confirmar todos
+                </button>
+              </div>
 
-                        <button
-                          onClick={() => openEditModal(idx)}
-                          className="px-3 py-1 rounded-full text-xs bg-yellow-100 text-yellow-800 hover:bg-yellow-200 transition"
-                        >
-                          Editar
-                        </button>
-
-                        <button
-                          onClick={() => handleRequestDelete(idx, item.name)}
-                          className="px-3 py-1 rounded-full text-xs bg-red-200 text-red-800 hover:bg-red-300 transition"
-                        >
-                          Eliminar
-                        </button>
-                      </td>
-                      <td className="px-4 py-2 text-xl text-center">
-                        {item.confirmed ? (
-                          <span className="text-green-500">✔️</span>
-                        ) : (
-                          <span className="text-orange-400">⚠️</span>
-                        )}
-                      </td>
+              {/* Scroll solo en tabla */}
+              <div className="overflow-x-auto max-h-[450px] overflow-y-auto">
+                <table className="min-w-full text-sm text-left border-separate border-spacing-y-2">
+                  <thead className="sticky top-0 bg-white z-10 text-gray-600 font-semibold text-base border-b border-[#f37b6a]">
+                    <tr>
+                      <th className="px-4 pb-2">Ingrediente</th>
+                      <th className="px-4 pb-2">Cantidad</th>
+                      <th className="px-4 pb-2">Unidad</th>
+                      <th className="px-4 pb-2">Origen</th>
+                      <th className="px-4 pb-2">Acciones</th>
+                      <th className="px-4 pb-2">Confirmado</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {ingredients.map((item, idx) => (
+                      <tr key={idx} className="bg-white">
+                        <td className="px-4 py-2 text-[#f37b6a] font-medium">
+                          {item.name}
+                        </td>
+                        <td className="px-4 py-2">{item.quantity || "-"}</td>
+                        <td className="px-4 py-2">{item.unit || "-"}</td>
+                        <td className="px-4 py-2 text-gray-600 capitalize">
+                          {item.source === "manual" && "Manual (texto)"}
+                          {item.source === "voz" && "Por voz"}
+                          {item.source === "imagen" && "Por imagen"}
+                        </td>
+                        <td className="px-4 py-2 flex gap-2 flex-wrap">
+                          <button
+                            onClick={() => handleConfirm(idx)}
+                            disabled={item.confirmed}
+                            className={`px-3 py-1 rounded-full text-xs transition ${
+                              item.confirmed
+                                ? "bg-gray-100 text-gray-400 cursor-default"
+                                : "bg-green-100 text-green-800 hover:bg-green-200"
+                            }`}
+                          >
+                            {item.confirmed ? "Confirmado" : "Confirmar"}
+                          </button>
+
+                          <button
+                            onClick={() => openEditModal(idx)}
+                            className="px-3 py-1 rounded-full text-xs bg-yellow-100 text-yellow-800 hover:bg-yellow-200 transition"
+                          >
+                            Editar
+                          </button>
+
+                          <button
+                            onClick={() =>
+                              handleRequestDelete(idx, item.name)
+                            }
+                            className="px-3 py-1 rounded-full text-xs bg-red-200 text-red-800 hover:bg-red-300 transition"
+                          >
+                            Eliminar
+                          </button>
+                        </td>
+                        <td className="px-4 py-2 text-xl text-center">
+                          {item.confirmed ? (
+                            <span className="text-green-500">✔️</span>
+                          ) : (
+                            <span className="text-orange-400">⚠️</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
 
           <div className="flex justify-between mt-6">
             <button
-              onClick={() => router.push('/recipe-generator')}
+              onClick={() => router.push("/recipe-generator")}
               className="px-6 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition"
             >
               Volver

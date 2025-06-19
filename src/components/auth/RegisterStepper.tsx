@@ -34,8 +34,8 @@ export default function RegisterStepper({
     allergies,
     reset, // TODO: para limpiar luego del registro completo
   } = useRegisterStore();
-  const login = useAuthStore((state) => state.login);
-  
+
+  const login = useAuthStore((state) => state.login); 
   const { 
     showSuccess, 
     showError, 

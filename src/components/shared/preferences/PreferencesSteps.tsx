@@ -26,7 +26,7 @@ export default function PreferencesSteps({
     reset,
   } = useRegisterStore();
 
-
+ 
   const toggleItem = (list: number[], item: number) => {
     return list.includes(item)
       ? list.filter((i) => i !== item)

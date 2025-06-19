@@ -2,60 +2,49 @@
 
 import { generateRecipes } from "@/services/recipe.service";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
 
 // Contexto Zustand
 import { useIngredientsStore } from "@/store/useIngredientsStore";
 import { useRecipesStore } from "@/store/useRecipesStore";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useRegisterStore } from "@/store/useRegisterStore";
 
 // Componentes
-import CheckboxGroup from '@/components/shared/form/CheckboxGroup';
-import ChefLoader from '@/components/shared/loaders/ChefLoader';
+import CheckboxGroup from "@/components/shared/form/CheckboxGroup";
+import ChefLoader from "@/components/shared/loaders/ChefLoader";
 import RecipeIngredientList from "@/components/recipe-generator/IngredientList";
 import Select from "@/components/shared/form/Select";
 import Input from "@/components/shared/form/Input";
-import Checkbox from "@/components/shared/form/Checkbox";
-import { useAuthStore } from "@/store/useAuthStore";
+
+// Servicios
+import {
+  getDiet,
+  getAllergy,
+  getDietaryNeed,
+  getCookingLevels,
+} from "@/services/getter.service";
 
 // Tipos
 import { RecipeGenerationRequest, Filters } from "@/types";
-
-const typesOfFood = [
-  { value: "Desayuno", label: "Desayuno" },
-  { value: "Almuerzo", label: "Almuerzo" },
-  { value: "Cena", label: "Cena" },
-  { value: "Postre", label: "Postre" },
-  { value: "Snack", label: "Snack" },
-];
-
-// Opciones para los selectores
-const timeOptions = [
-  { value: "menos de 15 minutos", label: "-15 min" },
-  { value: "15 a 30 minutos", label: "15-30 min" },
-  { value: "más de 30 minutos", label: "+30 min" },
-];
-
-const difficultyOptions = [
-  { value: "fácil", label: "Fácil" },
-  { value: "media", label: "Media" },
-  { value: "difícil", label: "Difícil" },
-];
-
-const dietOptions = [
-  { value: "vegetariana", label: "Vegetariana" },
-  { value: "vegana", label: "Vegana" },
-  { value: "sin gluten", label: "Sin gluten" },
-  { value: "keto", label: "Keto" },
-];
 
 export default function RecipeFilters() {
   const isPremium = useAuthStore((state) => state.user?.premium);
   const { ingredients } = useIngredientsStore();
   const router = useRouter();
+  const { setFilteredRecipes } = useRecipesStore();
+
+  // 🔽 Traer preferencias almacenadas
+  const {
+    allergies: storedAllergies,
+    foodNeeds: storedNeeds,
+    diet: storeDiet,
+    cookingLevel: storeDifficult,
+  } = useRegisterStore();
+
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const { setFilteredRecipes } = useRecipesStore();
 
   const [filters, setFilters] = useState<Filters>({
     time: "",
@@ -66,6 +55,86 @@ export default function RecipeFilters() {
     useProfilePreferences: false,
   });
 
+  const [dietOptions, setDietOptions] = useState<
+    { key: number; value: string; label: string }[]
+  >([]);
+  const [allergyOptions, setAllergyOptions] = useState<
+    { key: number; value: string; label: string }[]
+  >([]);
+  const [difficultyOptions, setDifficultyOptions] = useState<
+    { key: number; value: string; label: string }[]
+  >([]);
+  const [selectedAllergies, setSelectedAllergies] = useState<string[]>([]);
+  const [needOptions, setNeedOptions] = useState<
+    { key: number; value: string; label: string }[]
+  >([]);
+  const [selectedNeeds, setSelectedNeeds] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const [diets, allergies, needs, difficultyOptions] = await Promise.all([
+        getDiet(),
+        getAllergy(),
+        getDietaryNeed(),
+        getCookingLevels(),
+      ]);
+
+      const mapUnique = (items: any[]) =>
+        Array.from(new Map(items.map((i) => [i.description, i])).values()).map(
+          (item) => ({
+            key: item.id,
+            value: item.description,
+            label: item.description,
+          })
+        );
+
+      setDietOptions(mapUnique(diets));
+      setAllergyOptions(mapUnique(allergies));
+      setNeedOptions(mapUnique(needs));
+      setDifficultyOptions(mapUnique(difficultyOptions));
+    };
+
+    fetchData();
+  }, []);
+
+  // ✅ Marcar alergias preseleccionadas
+  useEffect(() => {
+    if (allergyOptions.length > 0 && storedAllergies.length > 0) {
+      const matched = allergyOptions
+        .filter((opt) => storedAllergies.includes(opt.key))
+        .map((opt) => opt.value);
+      setSelectedAllergies(matched);
+    }
+  }, [allergyOptions, storedAllergies]);
+
+  // ✅ Marcar necesidades alimenticias preseleccionadas
+  useEffect(() => {
+    if (needOptions.length > 0 && storedNeeds.length > 0) {
+      const matched = needOptions
+        .filter((opt) => storedNeeds.includes(opt.key))
+        .map((opt) => opt.value);
+      setSelectedNeeds(matched);
+    }
+  }, [needOptions, storedNeeds]);
+  useEffect(() => {
+    if (dietOptions.length > 0 && storeDiet) {
+      const matched = dietOptions.find((opt) => opt.key === storeDiet);
+      if (matched) {
+        setFilters((prev) => ({ ...prev, diet: matched.value }));
+      }
+    }
+  }, [dietOptions, storeDiet]);
+
+  useEffect(() => {
+    if (difficultyOptions.length > 0 && storeDifficult) {
+      const matched = difficultyOptions.find(
+        (opt) => opt.key === storeDifficult
+      );
+      if (matched) {
+        setFilters((prev) => ({ ...prev, difficulty: matched.value }));
+      }
+    }
+  }, [difficultyOptions, storeDifficult]);
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -83,6 +152,16 @@ export default function RecipeFilters() {
     }));
   };
 
+  const toggleSelection = (
+    list: string[],
+    setter: (val: string[]) => void,
+    value: string
+  ) => {
+    setter(
+      list.includes(value) ? list.filter((v) => v !== value) : [...list, value]
+    );
+  };
+
   const handleFinish = async () => {
     const ingredientNames = ingredients.map((ingredient) => ingredient.name);
 
@@ -94,13 +173,9 @@ export default function RecipeFilters() {
     try {
       setLoading(true);
       setError(null);
-      console.log("Generando recetas con la información:", informationRecipe);
-
       const generatedRecipes = await generateRecipes(informationRecipe);
-
       if (generatedRecipes && generatedRecipes.length > 0) {
         setFilteredRecipes(generatedRecipes);
-        console.log("Recetas generadas correctamente:", generatedRecipes);
         router.push("/results");
       } else {
         setError("No se pudieron generar recetas. Intenta con otros filtros.");
@@ -115,7 +190,6 @@ export default function RecipeFilters() {
     }
   };
 
-  // Si está cargando, mostramos el ChefLoader
   if (loading) {
     return <ChefLoader text="Generando recetas deliciosas..." />;
   }
@@ -135,94 +209,111 @@ export default function RecipeFilters() {
         </div>
       )}
 
-      <div className="relative w-full">
-        {!isPremium && (
-          <div className="absolute inset-0 bg-white/70 backdrop-blur-sm z-10 flex items-center justify-center text-center px-4 rounded">
-            <div className="text-gray-700 text-sm flex flex-col items-center gap-2">
-              <span className="text-color-primary text-xl">Haz tu prueba sin filtros</span>
-              <p className="font-semibold text-base">
-                🔒 Filtros disponibles solo para usuarios Premium
-              </p>
-              <p className="text-sm text-gray-600">
-                Suscribite para personalizar tus recetas según tus
-                preferencias.
-              </p>
-              <button
-                onClick={() => router.push("/profile")}
-                className="mt-2 bg-[#f37b6a] text-white text-sm px-4 py-2 rounded hover:bg-[#e36455] transition"
-              >
-                Hacete Premium
-              </button>
-            </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <Select
+          name="time"
+          value={filters.time}
+          onChange={handleChange}
+          options={[
+            { value: "5m", label: "5m" },
+            { value: "15m", label: "15m" },
+            { value: "30m", label: "30m" },
+          ]}
+          label="⏱️ Tiempo"
+        />
+
+        <Select
+          name="difficulty"
+          value={filters.difficulty}
+          onChange={handleChange}
+          options={difficultyOptions}
+          label="💪 Dificultad"
+        />
+
+        <Select
+          name="diet"
+          value={filters.diet}
+          onChange={handleChange}
+          options={dietOptions}
+          label="🥦 Dieta"
+        />
+
+        <Input
+          type="number"
+          name="people"
+          value={filters.people}
+          onChange={handleChange}
+          label="👥 Cantidad de personas"
+          min="1"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <h3 className="text-lg font-medium mb-2 text-gray-800">
+            🍽️ Tipo de comida
+          </h3>
+          <CheckboxGroup
+            title=""
+            options={[
+              { value: "Desayuno", label: "Desayuno" },
+              { value: "Almuerzo", label: "Almuerzo" },
+              { value: "Cena", label: "Cena" },
+              { value: "Postre", label: "Postre" },
+              { value: "Snack", label: "Snack" },
+            ]}
+            selectedValues={filters.types}
+            onChange={handleTiposChange}
+          />
+        </div>
+
+        <div className="col-span-2">
+          <h3 className="text-lg font-medium mb-2 text-gray-800">
+            🚫 Alergias
+          </h3>
+          <div className="flex flex-wrap gap-4 text-base">
+            {allergyOptions.map((option) => (
+              <label key={option.key} className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={selectedAllergies.includes(option.value)}
+                  onChange={() =>
+                    toggleSelection(
+                      selectedAllergies,
+                      setSelectedAllergies,
+                      option.value
+                    )
+                  }
+                />
+                {option.label}
+              </label>
+            ))}
           </div>
-        )}
+        </div>
 
-        <fieldset
-          disabled={!isPremium}
-          className={`${!isPremium ? "opacity-50" : ""} w-full`}
-        >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <Select
-              name="tiempo"
-              value={filters.time}
-              onChange={handleChange}
-              options={timeOptions as any}
-              label="Tiempo de preparación"
-            />
-
-            <Select
-              name="difficulty"
-              value={filters.difficulty}
-              onChange={handleChange}
-              options={difficultyOptions as any}
-              label="Dificultad"
-            />
-
-            <Select
-              name="diet"
-              value={filters.diet}
-              onChange={handleChange}
-              options={dietOptions as any}
-              label="Dieta"
-            />
-
-            <Input
-              type="number"
-              name="people"
-              value={filters.people}
-              onChange={handleChange}
-              label="Cantidad de personas"
-              min="1"
-            />
+        <div className="col-span-2">
+          <h3 className="text-lg font-medium mb-2 text-gray-800">
+            🧬 Necesidades Alimenticias
+          </h3>
+          <div className="flex flex-wrap gap-4 text-base">
+            {needOptions.map((option) => (
+              <label key={option.key} className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={selectedNeeds.includes(option.value)}
+                  onChange={() =>
+                    toggleSelection(
+                      selectedNeeds,
+                      setSelectedNeeds,
+                      option.value
+                    )
+                  }
+                />
+                {option.label}
+              </label>
+            ))}
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <h3 className="text-lg font-medium mb-2 text-gray-800">
-                Tipo de comida
-              </h3>
-              <CheckboxGroup
-                title=""
-                options={typesOfFood}
-                selectedValues={filters.types}
-                onChange={handleTiposChange}
-              />
-            </div>
-
-            <div>
-              <h3 className="text-lg font-medium mb-2 text-gray-800">
-                Preferencias de perfil
-              </h3>
-              <Checkbox
-                id="profile-preferences"
-                name="profile-preferences"
-                checked={filters.useProfilePreferences}
-                onChange={handleProfilePreferencesChange}
-                label="Tener en cuenta las preferencias del perfil configurado"
-              />
-            </div>
-          </div>
-        </fieldset>
+        </div>
       </div>
 
       <div className="flex justify-between mt-8">
@@ -238,9 +329,10 @@ export default function RecipeFilters() {
           onClick={handleFinish}
           disabled={loading}
           className={`
-            ${loading
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-[#f37b6a] hover:bg-[#e36455] cursor-pointer"
+            ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-[#f37b6a] hover:bg-[#e36455] cursor-pointer"
             } 
             text-white px-6 py-2 rounded transition
           `}

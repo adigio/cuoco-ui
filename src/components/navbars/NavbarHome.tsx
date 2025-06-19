@@ -32,7 +32,7 @@ export default function NavbarHome() {
     <>
       <nav className="fixed top-0 left-0 w-full z-50 py-4 px-8 background-color-primary shadow transition-all duration-300">
         <div className="flex justify-between items-center">
-          <Link href="/">
+          <Link href="/home">
             <div className="flex items-center gap-2 text-3xl text-white">
               <Image
                 src="/logos/logo-blanco.png"

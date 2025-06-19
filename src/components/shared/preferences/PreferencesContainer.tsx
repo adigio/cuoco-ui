@@ -26,7 +26,7 @@ export default function PreferencesContainer({
     setFoodNeeds, 
     setAllergies 
   } = useRegisterStore();
-
+  console.log(cookingLevel,diet,foodNeeds,allergies)
   const {
     cookingLevelOptions,
     allergyOptions,
@@ -40,7 +40,7 @@ export default function PreferencesContainer({
     setIsLoaded
   } = usePreferencesStore();
 
-
+ 
   useEffect(() => {
     if (isEditMode && initialPreferences) {
       // Solo en modo edición inicializamos con los valores del usuario

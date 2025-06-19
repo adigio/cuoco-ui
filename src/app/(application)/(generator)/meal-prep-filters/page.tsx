@@ -1,186 +1,291 @@
 "use client";
 
-import { generateMealPrepRecipes } from "@/services/generateMealPrepRecipes.service";
+import { generateRecipes } from "@/services/recipe.service";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
 
 // Contexto Zustand
 import { useIngredientsStore } from "@/store/useIngredientsStore";
-import { useMealPrepStore } from "@/store/useMealPrepStore";
+import { useRecipesStore } from "@/store/useRecipesStore";
+import { useRegisterStore } from "@/store/useRegisterStore";
+import { useAuthStore } from "@/store/useAuthStore";
 
+// Componentes
+import CheckboxGroup from '@/components/shared/form/CheckboxGroup';
+import ChefLoader from '@/components/shared/loaders/ChefLoader';
+import RecipeIngredientList from "@/components/recipe-generator/IngredientList";
+import Select from "@/components/shared/form/Select";
+import Input from "@/components/shared/form/Input";
+import Checkbox from "@/components/shared/form/Checkbox";
+
+// Servicios
+import { getDiet, getAllergy, getDietaryNeed, getCookingLevels } from '@/services/getter.service';
 
 // Tipos
-import { MealPrepGenerationRequest, FiltersMealprep } from "@/types";
+import { RecipeGenerationRequest, Filters } from "@/types";
 
-export default function MealPrepFiltersPage() {
+export default function RecipeFilters() {
+  const isPremium = useAuthStore((state) => state.user?.premium);
   const { ingredients } = useIngredientsStore();
-  const [difficulty, setDifficulty] = useState("");
-  const [diet, setDiet] = useState("");
-  const [mealTypes, setMealTypes] = useState<string[]>([]);
-  const [freezerAvailable, setFreezerAvailable] = useState(false);
-  const [useProfilePreferences, setUseProfilePreferences] = useState(false);
-  const [days, setDays] = useState(5);
+  const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
-  const { setMealPreps } = useMealPrepStore(); 
+  const { setFilteredRecipes } = useRecipesStore();
 
-  const toggleMealType = (type: string) => {
-    setMealTypes((prev) =>
-      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
-    );
+  const {
+    cookingLevel,
+    diet,
+    foodNeeds,
+    allergies,
+  } = useRegisterStore();
+
+  const [filters, setFilters] = useState<Filters>({
+    time: "",
+    difficulty: "",
+    types: [],
+    diet: "",
+    people: 1,
+    useProfilePreferences: true,
+  });
+
+  const [dietOptions, setDietOptions] = useState<{ key: number; value: string; label: string }[]>([]);
+  const [difficultyOptions, setDifficultyOptions] = useState<{ key: number; value: string; label: string }[]>([]);
+  const [allergyOptions, setAllergyOptions] = useState<{ key: number; value: string; label: string }[]>([]);
+  const [selectedAllergies, setSelectedAllergies] = useState<number[]>([]);
+  const [needOptions, setNeedOptions] = useState<{ key: number; value: string; label: string }[]>([]);
+  const [selectedNeeds, setSelectedNeeds] = useState<number[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const [diets, difficulties, allergiesList, needs] = await Promise.all([
+        getDiet(),
+        getCookingLevels(),
+        getAllergy(),
+        getDietaryNeed(),
+      ]);
+
+      const mapUnique = (items: any[]) =>
+        Array.from(new Map(items.map((i) => [i.description, i])).values())
+          .map((item) => ({ key: item.id, value: item.description, label: item.description }));
+
+      const dietOpts = mapUnique(diets);
+      const difficultyOpts = mapUnique(difficulties);
+      const allergyOpts = mapUnique(allergiesList);
+      const needOpts = mapUnique(needs);
+
+      setDietOptions(dietOpts);
+      setDifficultyOptions(difficultyOpts);
+      setAllergyOptions(allergyOpts);
+      setNeedOptions(needOpts);
+
+      setFilters(prev => ({
+        ...prev,
+        difficulty: difficultyOpts.find(opt => opt.key === cookingLevel)?.value || "",
+        diet: dietOpts.find(opt => opt.key === diet)?.value || "",
+      }));
+
+      setSelectedAllergies(
+        allergiesList
+          .filter(a => allergies.includes(a.id))
+          .map(a => a.id)
+      );
+
+      setSelectedNeeds(
+        needs
+          .filter(n => foodNeeds.includes(n.id))
+          .map(n => n.id)
+      );
+    };
+
+    fetchData();
+  }, [cookingLevel, diet, foodNeeds, allergies]);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    setFilters({ ...filters, [e.target.name]: e.target.value });
   };
+
+  const handleTiposChange = (newValues: string[]) => {
+    setFilters({ ...filters, types: newValues });
+  };
+
+  const handleProfilePreferencesChange = () => {
+    setFilters((prev) => ({
+      ...prev,
+      useProfilePreferences: !prev.useProfilePreferences,
+    }));
+  };
+
+const toggleSelection = (list: number[], setter: (val: number[]) => void, value: number) => {
+  setter(list.includes(value) ? list.filter((v) => v !== value) : [...list, value]);
+};
 
   const handleFinish = async () => {
     const ingredientNames = ingredients.map((ingredient) => ingredient.name);
 
-    const informationMealPrep: MealPrepGenerationRequest = {
+    const informationRecipe: RecipeGenerationRequest = {
       ingredients: ingredientNames,
       filters: {
-        difficulty,
-        diet,
-        types: mealTypes,
-        days,
-        freezerAvailable,
-        useProfilePreferences,
+        ...filters,
+        allergies: selectedAllergies,
+        dietaryNeeds: selectedNeeds,
       },
     };
 
     try {
       setLoading(true);
       setError(null);
-      console.log(
-        "Generando mealprep con la información:",
-        informationMealPrep
-      );
-
-      const mealPrepRecipes = await generateMealPrepRecipes(
-        informationMealPrep
-      );
-
-      if (mealPrepRecipes && mealPrepRecipes.length > 0) {
-        setMealPreps(mealPrepRecipes);
-        console.log("meal preps generadas correctamente:", mealPrepRecipes);
-        router.push("/results-meal");
+      const generatedRecipes = await generateRecipes(informationRecipe);
+      if (generatedRecipes && generatedRecipes.length > 0) {
+        setFilteredRecipes(generatedRecipes);
+        router.push("/results");
       } else {
         setError("No se pudieron generar recetas. Intenta con otros filtros.");
         setLoading(false);
       }
     } catch (error) {
       console.error("Error al generar recetas:", error);
-      setError(
-        "Ocurrió un error al generar las recetas. Por favor, intenta de nuevo."
-      );
+      setError("Ocurrió un error al generar las recetas. Por favor, intenta de nuevo.");
       setLoading(false);
     }
   };
 
+  if (loading) {
+    return <ChefLoader text="Generando recetas deliciosas..." />;
+  }
+
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow rounded">
-      <h2 className="text-2xl font-bold text-center mb-6">Filtros</h2>
+    <div className="max-w-4xl mx-auto flex flex-col bg-white p-6 shadow rounded">
+      <h2 className="text-xl font-semibold text-gray-800 mb-4">
+        Ingredientes seleccionados
+      </h2>
+      <RecipeIngredientList ingredients={ingredients} enabledDelete={false} />
+      <hr className="my-6" />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        <div>
-          <label className="block mb-1 font-medium">Dificultad</label>
-          <select
-            value={difficulty}
-            onChange={(e) => setDifficulty(e.target.value)}
-            className="w-full border rounded px-3 py-2"
-          >
-            <option value="">Seleccionar</option>
-            <option value="fácil">Fácil</option>
-            <option value="media">Media</option>
-            <option value="difícil">Difícil</option>
-          </select>
-        </div>
+      <h2 className="text-3xl font-semibold mb-6 text-center">Filtros</h2>
 
-        <div>
-          <label className="block mb-1 font-medium">Dieta</label>
-          <select
-            value={diet}
-            onChange={(e) => setDiet(e.target.value)}
-            className="w-full border rounded px-3 py-2"
-          >
-            <option value="">Seleccionar</option>
-            <option value="sin gluten">Sin gluten</option>
-            <option value="vegana">Vegana</option>
-            <option value="vegetariana">Vegetariana</option>
-            <option value="alta proteina">Alta en proteína</option>
-            <option value="ninguna">Ninguna</option>
-          </select>
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          {error}
         </div>
+      )}
 
-        <div>
-          <label className="block mb-1 font-medium">Días a preparar</label>
-          <select
-            value={days}
-            onChange={(e) => setDays(Number(e.target.value))}
-            className="w-full border rounded px-3 py-2"
-          >
-            {[3, 5, 7].map((d) => (
-              <option key={d} value={d}>
-                {d} días
-              </option>
-            ))}
-          </select>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <Select
+          name="time"
+          value={filters.time}
+          onChange={handleChange}
+          options={[
+            { value: "5m", label: "5m" },
+            { value: "15m", label: "15m" },
+            { value: "30m", label: "30m" },
+          ]}
+          label="⏱️ Tiempo"
+        />
 
-        <div>
-          <label className="block mb-1 font-medium">Freezer disponible</label>
-          <label className="flex items-center gap-2 mt-1">
-            <input
-              type="checkbox"
-              checked={freezerAvailable}
-              onChange={() => setFreezerAvailable(!freezerAvailable)}
-            />
-            Sí, puedo congelar comidas
-          </label>
-        </div>
+        <Select
+          name="difficulty"
+          value={filters.difficulty}
+          onChange={handleChange}
+          options={difficultyOptions}
+          label="💪 Dificultad"
+        />
+
+        <Select
+          name="diet"
+          value={filters.diet}
+          onChange={handleChange}
+          options={dietOptions}
+          label="🥦 Dieta"
+        />
+
+        <Input
+          type="number"
+          name="people"
+          value={filters.people}
+          onChange={handleChange}
+          label="👥 Cantidad de personas"
+          min="1"
+        />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <p className="font-medium mb-2">Tipo de comida</p>
-          <div className="flex flex-wrap gap-4">
-            {["Desayuno", "Almuerzo", "Cena", "Postre", "Snack"].map((tipo) => (
-              <label key={tipo} className="flex items-center gap-2">
+          <h3 className="text-xl font-semibold mb-2 text-gray-800">
+            🍽️ Tipo de comida
+          </h3>
+          <CheckboxGroup
+            title=""
+            options={[
+              { value: "Desayuno", label: "Desayuno" },
+              { value: "Almuerzo", label: "Almuerzo" },
+              { value: "Cena", label: "Cena" },
+              { value: "Postre", label: "Postre" },
+              { value: "Snack", label: "Snack" },
+            ]}
+            selectedValues={filters.types}
+            onChange={handleTiposChange}
+          />
+        </div> 
+
+        <div className="col-span-2">
+          <h3 className="text-xl font-semibold mb-2 text-gray-800">
+            🚫 Alergias
+          </h3>
+          <div className="flex flex-wrap gap-4 text-base">
+            {allergyOptions.map((option) => (
+              <label key={option.key} className="flex items-center gap-2">
                 <input
                   type="checkbox"
-                  checked={mealTypes.includes(tipo)}
-                  onChange={() => toggleMealType(tipo)}
+                  checked={selectedAllergies?.includes(option.key)}
+                  onChange={() => toggleSelection(selectedAllergies, setSelectedAllergies, option.key)}
                 />
-                {tipo}
+                {option.label}
               </label>
             ))}
           </div>
         </div>
 
-        <div>
-          <p className="font-medium mb-2">Preferencias de perfil</p>
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={useProfilePreferences}
-              onChange={() => setUseProfilePreferences(!useProfilePreferences)}
-            />
-            Tener en cuenta las preferencias del perfil configurado
-          </label>
+        <div className="col-span-2">
+          <h3 className="text-xl font-semibold mb-2 text-gray-800">
+            🧬 Necesidades Alimenticias
+          </h3>
+          <div className="flex flex-wrap gap-4 text-base">
+            {needOptions.map((option) => (
+              <label key={option.key} className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={selectedNeeds?.includes(option.key)}
+                  onChange={() => toggleSelection(selectedNeeds, setSelectedNeeds, option.key)}
+                />
+                {option.label}
+              </label>
+            ))}
+          </div>
         </div>
       </div>
 
-      <div className="flex justify-between mt-6">
+      <div className="flex justify-between mt-10">
         <button
-          onClick={() => history.back()}
-          className="bg-gray-200 text-gray-700 px-4 py-2 rounded"
+          onClick={() => router.push("/review")}
+          className="bg-gray-200 text-gray-800 px-6 py-2 rounded hover:bg-gray-300 transition"
+          disabled={loading}
         >
           Volver
         </button>
+
         <button
           onClick={handleFinish}
-          className="bg-red-400 hover:bg-red-500 text-white px-6 py-2 rounded"
+          disabled={loading}
+          className={
+            loading
+              ? "bg-gray-400 cursor-not-allowed text-white px-6 py-2 rounded"
+              : "bg-[#f37b6a] hover:bg-[#e36455] cursor-pointer text-white px-6 py-2 rounded"
+          }
         >
-          Generar Meal Prep
+          {loading ? "Generando..." : "Generar Recetas"}
         </button>
       </div>
     </div>
