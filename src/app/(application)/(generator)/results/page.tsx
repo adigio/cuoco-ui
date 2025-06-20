@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 //Contexto
 import { useIngredientsStore } from '@/store/useIngredientsStore';
 import { useRecipesStore } from '@/store/useRecipesStore';
+import { useRecipeGeneratorSession } from '@/hooks/useRecipeGeneratorSession';
 //Componentes
 import RecipeCard from '@/components/shared/cards/RecipeCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -19,6 +20,8 @@ import SubscriptionModal from '@/components/shared/modal/SubscriptionModal';
 
 
 export default function RecipeResultsPage() {
+  useRecipeGeneratorSession();
+  
   const recipes = useRecipesStore(state => state.filteredRecipes); 
   const { ingredients } = useIngredientsStore();
   const router = useRouter();
@@ -126,7 +129,10 @@ export default function RecipeResultsPage() {
           </button>
 
           <button
-            onClick={() => router.push('/recipe-generator')}
+            onClick={() => {
+              useIngredientsStore.getState().endGeneratorSession();
+              router.push('/recipe-generator');
+            }}
             className="bg-[#f37b6a] text-white px-6 py-2 rounded hover:bg-[#e36455] transition"
           >
             Nuevo generador

@@ -6,8 +6,45 @@ import { create } from 'zustand';
 export const useIngredientsStore = create<IngredientsStore>((set, get) => ({
   ingredients: [],
   mode: null,
+  generatorSessionActive: false,
 
   setMode: (mode) => set({ mode }),
+
+  startGeneratorSession: () => {
+    set({ generatorSessionActive: true });
+  },
+
+  endGeneratorSession: () => {
+    set({ 
+      generatorSessionActive: false,
+      ingredients: [],
+      mode: null 
+    });
+  },
+
+  clearIngredientsIfNeeded: (currentPath: string) => {
+    const generatorPaths = [
+      '/recipe-generator',
+      '/review', 
+      '/filters',
+      '/results'
+    ];
+    
+    const isInGeneratorFlow = generatorPaths.some(path => currentPath.includes(path));
+    const { generatorSessionActive } = get();
+
+    
+    if (!isInGeneratorFlow && generatorSessionActive) {
+      set({ 
+        ingredients: [],
+        generatorSessionActive: false,
+        mode: null 
+      });
+    }
+    else if (isInGeneratorFlow && !generatorSessionActive) {
+      set({ generatorSessionActive: true });
+    }
+  },
 
   addIngredient: (
     name,
@@ -18,7 +55,6 @@ export const useIngredientsStore = create<IngredientsStore>((set, get) => ({
     confirmed = true
   ) => {
     if (!name || name.trim() === '') {
-      console.error('El nombre del ingrediente no puede estar vacío');
       return false;
     }
 
@@ -27,7 +63,6 @@ export const useIngredientsStore = create<IngredientsStore>((set, get) => ({
     );
 
     if (exists) {
-      console.warn(`El ingrediente "${name}" ya existe en la lista`);
       return false;
     }
 

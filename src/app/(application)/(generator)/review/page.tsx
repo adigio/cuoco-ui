@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 // contexto
 import { useIngredientsStore } from "@/store/useIngredientsStore";
+import { useRecipeGeneratorSession } from "@/hooks/useRecipeGeneratorSession";
 // components
 import AlertModal from "@/components/shared/modal/AlertModal";
 import ConfirmationModal from "@/components/shared/modal/ConfirmationModal";
@@ -12,6 +13,8 @@ import BackgroundLayers from "@/components/shared/BackgroundLayers";
 import ContainerShadow from "@/components/shared/containers/ContainerShadow";
 
 export default function ReviewPage() {
+  useRecipeGeneratorSession();
+
   const {
     ingredients,
     removeIngredient,
