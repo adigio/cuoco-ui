@@ -107,7 +107,7 @@ export interface RecipeGenerationRequest {
     unit_id: number;
   }[];
   filters: {
-    preparation_time_id: number;
+    preparation_time_id?: number|null;
     servings: number;
     cook_level_id: number;
     type_ids: number[];

@@ -6,7 +6,7 @@ import { apiUrl } from './config';
 // Crear instancia custom de axios
 export const apiClient = axios.create({
     baseURL: apiUrl,
-    timeout: 10000,
+    timeout: 100000,
 });
 
 // Interceptor de request - agregar token

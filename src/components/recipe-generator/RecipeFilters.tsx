@@ -193,7 +193,7 @@ export default function RecipeFilters() {
     const informationRecipe: RecipeGenerationRequest = {
       ingredients: ingredientList,
       filters: {
-        preparation_time_id: Number(filters.time),
+     //   preparation_time_id: Number(filters.time) === 0 ? null : Number(filters.time),
         servings: filters.people,
         cook_level_id: Number(filters.difficulty),
         type_ids: filters.types.map((t) => Number(t)),
