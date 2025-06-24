@@ -38,6 +38,7 @@ export interface User {
 export interface PreferenceItem {
   id: number;
   description: string;
+  symbol?:string;
 }
 
 export interface UserPreferences {

@@ -2,6 +2,7 @@ export interface Ingredient {
   name: string;
   quantity: number;
   unit: string;
+  symbol?: string;
   optional: boolean;
   source: string;
   confirmed: boolean;
@@ -25,6 +26,7 @@ export interface IngredientsStore {
     name: string,
     quantity: number,
     unit: string,
+    symbol?:string,
     optional?: boolean,
     source?: string,
     confirmed?: boolean

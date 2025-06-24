@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import React from "react";
 
+import { useRecipeGeneratorSession } from "@/hooks/useRecipeGeneratorSession";
 // Contexto Zustand
 import { useIngredientsStore } from "@/store/useIngredientsStore";
 import { useRecipesStore } from "@/store/useRecipesStore";
@@ -24,12 +25,15 @@ import {
   getAllergy,
   getDietaryNeed,
   getCookingLevels,
+  getPreparationTimes,
+  getMealTypes,
 } from "@/services/getter.service";
 
 // Tipos
 import { RecipeGenerationRequest, Filters } from "@/types";
 
 export default function RecipeFilters() {
+  useRecipeGeneratorSession();
   const isPremium = useAuthStore((state) => state.user?.premium);
   const { ingredients } = useIngredientsStore();
   const router = useRouter();
@@ -64,26 +68,41 @@ export default function RecipeFilters() {
   const [difficultyOptions, setDifficultyOptions] = useState<
     { key: number; value: string; label: string }[]
   >([]);
+  const [timeOptions, setTimeOptions] = useState<
+    { key: number; value: string; label: string }[]
+  >([]);
   const [selectedAllergies, setSelectedAllergies] = useState<string[]>([]);
   const [needOptions, setNeedOptions] = useState<
+    { key: number; value: string; label: string }[]
+  >([]);
+  const [mealOptions, setMealOptions] = useState<
     { key: number; value: string; label: string }[]
   >([]);
   const [selectedNeeds, setSelectedNeeds] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const [diets, allergies, needs, difficultyOptions] = await Promise.all([
+      const [
+        diets,
+        allergies,
+        needs,
+        difficultyOptions,
+        preparationTimes,
+        mealTypes,
+      ] = await Promise.all([
         getDiet(),
         getAllergy(),
         getDietaryNeed(),
         getCookingLevels(),
+        getPreparationTimes(),
+        getMealTypes(),
       ]);
 
       const mapUnique = (items: any[]) =>
         Array.from(new Map(items.map((i) => [i.description, i])).values()).map(
           (item) => ({
             key: item.id,
-            value: item.description,
+            value: item.id,
             label: item.description,
           })
         );
@@ -92,6 +111,8 @@ export default function RecipeFilters() {
       setAllergyOptions(mapUnique(allergies));
       setNeedOptions(mapUnique(needs));
       setDifficultyOptions(mapUnique(difficultyOptions));
+      setTimeOptions(mapUnique(preparationTimes));
+      setMealOptions(mapUnique(mealTypes));
     };
 
     fetchData();
@@ -163,11 +184,31 @@ export default function RecipeFilters() {
   };
 
   const handleFinish = async () => {
-    const ingredientNames = ingredients.map((ingredient) => ingredient.name);
+    const ingredientList = ingredients.map((ingredient) => ({
+      name: ingredient.name,
+      quantity: ingredient.quantity,
+      unit_id: Number(ingredient.unit), // 🔁 convertimos a número
+    }));
 
     const informationRecipe: RecipeGenerationRequest = {
-      ingredients: ingredientNames,
-      filters: filters,
+      ingredients: ingredientList,
+      filters: {
+        preparation_time_id: Number(filters.time),
+        servings: filters.people,
+        cook_level_id: Number(filters.difficulty),
+        type_ids: filters.types.map((t) => Number(t)),
+        diet_id: Number(filters.diet),
+        allergies_ids: allergyOptions
+          .filter((opt) => selectedAllergies.includes(opt.value))
+          .map((opt) => opt.key),
+        dietary_needs_ids: needOptions
+          .filter((opt) => selectedNeeds.includes(opt.value))
+          .map((opt) => opt.key),
+      },
+      configuration: {
+        size: 10, // o lo que quieras enviar
+        not_include: [], // o valores omitidos
+      },
     };
 
     try {
@@ -214,11 +255,7 @@ export default function RecipeFilters() {
           name="time"
           value={filters.time}
           onChange={handleChange}
-          options={[
-            { value: "5m", label: "5m" },
-            { value: "15m", label: "15m" },
-            { value: "30m", label: "30m" },
-          ]}
+          options={timeOptions}
           label="⏱️ Tiempo"
         />
 
@@ -255,13 +292,7 @@ export default function RecipeFilters() {
           </h3>
           <CheckboxGroup
             title=""
-            options={[
-              { value: "Desayuno", label: "Desayuno" },
-              { value: "Almuerzo", label: "Almuerzo" },
-              { value: "Cena", label: "Cena" },
-              { value: "Postre", label: "Postre" },
-              { value: "Snack", label: "Snack" },
-            ]}
+            options={mealOptions}
             selectedValues={filters.types}
             onChange={handleTiposChange}
           />

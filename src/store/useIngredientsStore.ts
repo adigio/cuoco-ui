@@ -50,6 +50,7 @@ export const useIngredientsStore = create<IngredientsStore>((set, get) => ({
     name,
     quantity,
     unit,
+    symbol,
     optional = false,
     source = 'manual',
     confirmed = true
@@ -69,7 +70,8 @@ export const useIngredientsStore = create<IngredientsStore>((set, get) => ({
     const newIngredient: Ingredient = {
       name: name.trim(),
       quantity,
-      unit: unit.trim(),
+      unit: unit,
+      symbol,
       optional,
       source,
       confirmed,

@@ -35,7 +35,7 @@ export default function RecipeIngredientList({
     }
     setIsDeleteModalOpen(false);
     setDeleteTarget(null);
-  };
+  }; 
 
   return (
     <>
@@ -48,7 +48,7 @@ export default function RecipeIngredientList({
               key={idx}
               className="bg-gray-200 text-sm px-3 py-1 rounded-full flex items-center gap-2"
             >
-              {`${item.name} ${item.quantity ?? ""} ${item.unit ?? ""}`.trim()}
+              {`${item.name} ${item.quantity ?? ""} ${item.symbol ?? ""}`.trim()}
               {enabledDelete && onRemove && (
                 <button
                   onClick={() => handleRequestDelete(idx, item.name)}

@@ -1,26 +1,49 @@
 "use client";
 
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { useIngredientsStore } from "@/store/useIngredientsStore";
+
+// Servicios
+import { getUnitTypes } from "@/services/getter.service";
 
 export default function RecipeIngredientInput() {
   const [name, setName] = useState<string>("");
   const [quantity, setQuantity] = useState<string>("");
-  const [unit, setUnit] = useState<string>("g");
+  const [unit, setUnit] = useState<string>(""); // el value va a ser el id
+  const [unitTypes, setUnitTypes] = useState<any[]>([]); // podés tiparlo mejor si tenés la interfaz
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const [unitTypesData] = await Promise.all([getUnitTypes()]);
+      setUnitTypes(unitTypesData);
+      if (unitTypesData.length > 0) setUnit(String(unitTypesData[0].id));
+    };
+    fetchData();
+  }, []);
 
   const addIngredient = useIngredientsStore((state) => state.addIngredient);
 
-  const addIngrdient = (
-    name: string,
-    origin = "manual",
-    confirm = true
-  ) => {
-    const displayName = quantity && unit ? `${quantity} ${unit} ${name}` : name;
-    const agregado = addIngredient(name, Number(quantity), unit, false, 'manual', true);
+  const addIngrdient = (name: string, origin = "manual", confirm = true) => {
+    const selectedUnit = unitTypes.find((u) => u.id === Number(unit));
+
+    const displayName =
+      quantity && selectedUnit
+        ? `${quantity} ${selectedUnit.symbol} ${name}`
+        : name;
+    console.log(displayName, unit, selectedUnit.symbol);
+    const agregado = addIngredient(
+      name,
+      Number(quantity),
+      selectedUnit.id,
+      selectedUnit.symbol,
+      false,
+      origin,
+      confirm
+    );
     if (agregado) {
       setName("");
       setQuantity("");
-      setUnit("g");
+      setUnit(unitTypes.length > 0 ? unitTypes[0].id : "");
     }
   };
 
@@ -50,7 +73,7 @@ export default function RecipeIngredientInput() {
 
         {/* Cantidad */}
         <input
-          type="input"
+          type="text"
           placeholder="Cantidad"
           value={quantity}
           onChange={(e) => setQuantity(e.target.value)}
@@ -63,9 +86,11 @@ export default function RecipeIngredientInput() {
           onChange={(e) => setUnit(e.target.value)}
           className="border rounded px-2 py-2"
         >
-          <option value="g">gr</option>
-          <option value="kg">ml</option>  
-          <option value="unidad">unidad</option>
+          {unitTypes.map((u) => (
+            <option key={u.id} value={u.id}>
+              {u.symbol}
+            </option>
+          ))}
         </select>
 
         {/* Botón Agregar */}

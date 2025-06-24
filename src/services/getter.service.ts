@@ -47,3 +47,30 @@ export async function getDietaryNeed(): Promise<PreferenceItem[]> {
     throw new Error(message);
   }
 }
+export async function getUnitTypes(): Promise<PreferenceItem[]> {
+  try {
+    const response = await apiClient.get('units');
+    return response.data;
+  } catch (error: any) {
+    const message = error.response?.data?.message || 'Error al obtener necesidades de dieta';
+    throw new Error(message);
+  }
+}
+export async function getPreparationTimes(): Promise<PreferenceItem[]> {
+  try {
+    const response = await apiClient.get('preparation-times');
+    return response.data;
+  } catch (error: any) {
+    const message = error.response?.data?.message || 'Error al obtener necesidades de dieta';
+    throw new Error(message);
+  }
+}
+export async function getMealTypes(): Promise<PreferenceItem[]> {
+  try {
+    const response = await apiClient.get('meal-types');
+    return response.data;
+  } catch (error: any) {
+    const message = error.response?.data?.message || 'Error al obtener necesidades de dieta';
+    throw new Error(message);
+  }
+}
