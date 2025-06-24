@@ -16,7 +16,11 @@ type Mode = 'meal-prep' | 'cook-now' | null;
 export interface IngredientsStore {
   ingredients: Ingredient[];
   mode: string | null;
+  generatorSessionActive: boolean;
   setMode: (mode: string | null) => void;
+  startGeneratorSession: () => void;
+  endGeneratorSession: () => void;
+  clearIngredientsIfNeeded: (currentPath: string) => void;
   addIngredient: (
     name: string,
     quantity: number,
