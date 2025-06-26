@@ -28,23 +28,23 @@ export default function Favs() {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [recipesRes, mealPrepsRes] = await Promise.all([
+        const [recipesRes, mealPrepsRes = [{data: []}]] = await Promise.all([
           getFavRecipes(recipesPage),
-          getFavMealPreps(mealPrepsPage),
+          //getFavMealPreps(mealPrepsPage),
         ]);
-
-        const recipesList = Array.isArray(recipesRes.data[0])
+        console.log("recipe res",recipesRes)
+        const recipesList = Array.isArray(recipesRes)
           ? recipesRes.data.flat()
           : recipesRes.data;
 
-        const mealPrepsList = Array.isArray(mealPrepsRes.data[0])
-          ? mealPrepsRes.data.flat()
-          : mealPrepsRes.data;
+        // const mealPrepsList = Array.isArray(mealPrepsRes.data[0])
+        //   ? mealPrepsRes.data.flat()
+        //   : mealPrepsRes.data;
 
         setRecipes(recipesList);
-        setMealPreps(mealPrepsList);
-        setRecipesTotalPages(recipesRes.totalPages);
-        setMealPrepsTotalPages(mealPrepsRes.totalPages);
+        //setMealPreps(mealPrepsList);
+        // setRecipesTotalPages(recipesRes.totalPages);
+        // setMealPrepsTotalPages(mealPrepsRes.totalPages);
       } catch (err) {
         console.error("Error al traer favoritos", err);
       } finally {
@@ -53,12 +53,13 @@ export default function Favs() {
     };
 
     fetchData();
-  }, [recipesPage, mealPrepsPage]);
+  }, [recipesPage]);
 
   if (loading) return <ChefLoader text="Cargando tus favoritos..." />;
 
   const filteredRecipes = recipes.filter((recipe: Recipe) => {
     const term = searchTerm.toLowerCase();
+
     return (
       recipe.name.toLowerCase().includes(term) ||
       recipe.instructions.some((instruction) =>

@@ -1,5 +1,5 @@
 import { RecipeCardProps } from '@/types/components/recipe-generator.types';
-import React, { ReactNode } from 'react';
+import React from 'react';
 import Image from 'next/image';
 
 export default function RecipeCard({ recipe, customClass = '', children, colorFont = 'text-red-400' }: RecipeCardProps) {
