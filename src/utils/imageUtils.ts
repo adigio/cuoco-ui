@@ -6,7 +6,7 @@ export const buildRecipeImageUrl = (recipeId: number | string, imageName: string
 
 export const getRecipeImageUrl = (
   recipe: { id: number | string; image?: string }, 
-  fallbackImage: string = '/default-recipe.png'
+  fallbackImage: string = '/others/default-recipe.png'
 ): string => {
   if (recipe.image && (recipe.image.startsWith('http') || recipe.image.startsWith('//'))) {
     return recipe.image;
