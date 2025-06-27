@@ -8,13 +8,20 @@ export const getRecipeImageUrl = (
   recipe: { id: number | string; image?: string }, 
   fallbackImage: string = '/others/default-recipe.png'
 ): string => {
-  if (recipe.image && (recipe.image.startsWith('http') || recipe.image.startsWith('//'))) {
+  if (!recipe.image) {
+    return fallbackImage;
+  }
+  
+  if (recipe.image.startsWith('http') || recipe.image.startsWith('//')) {
     return recipe.image;
   }
   
-  if (recipe.image || recipe.id) {
-    return buildRecipeImageUrl(recipe.id);
+  // Si es "main", agregar ".png"
+  let imageName = recipe.image;
+  if (recipe.image === 'main') {
+    imageName = 'main.png';
   }
   
-  return fallbackImage;
+  // Construir la URL del servidor
+  return buildRecipeImageUrl(recipe.id, imageName);
 }; 
