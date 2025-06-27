@@ -111,7 +111,7 @@ export interface RecipeGenerationRequest {
     servings: number;
     cook_level_id: number;
     type_ids: number[];
-    diet_id: number;
+    diet_id: number|null;
     allergies_ids: number[];
     dietary_needs_ids: number[];
   };

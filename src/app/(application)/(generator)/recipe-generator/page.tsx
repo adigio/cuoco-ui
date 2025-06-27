@@ -27,7 +27,6 @@ export default function RecipeGeneratorPage() {
   // Tomamos del store si el usuario es premium
   const {
     ingredients,
-    addIngredient,
     addMultipleIngredients,
   } = useIngredientsStore();
   const isPremium = useAuthStore((state) => state.user?.premium);
@@ -94,7 +93,6 @@ export default function RecipeGeneratorPage() {
             images={images}
             setImages={setImages}
             ingredients={ingredients}
-            addIngredient={addIngredient}
           />
 
           {error && (

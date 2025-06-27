@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
 import { useIngredientsStore } from '@/store/useIngredientsStore';
 import { usePathname } from 'next/navigation';
+import { useEffect } from 'react';
 
 export const useRecipeGeneratorSession = () => {
     const pathname = usePathname();

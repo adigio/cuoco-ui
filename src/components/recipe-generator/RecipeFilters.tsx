@@ -193,11 +193,11 @@ export default function RecipeFilters() {
     const informationRecipe: RecipeGenerationRequest = {
       ingredients: ingredientList,
       filters: {
-     //   preparation_time_id: Number(filters.time) === 0 ? null : Number(filters.time),
+        preparation_time_id: Number(filters.time) === 0 ? null : Number(filters.time),
         servings: filters.people,
         cook_level_id: Number(filters.difficulty),
         type_ids: filters.types.map((t) => Number(t)),
-        diet_id: Number(filters.diet),
+        diet_id: Number(filters.diet) === 0 ? null : Number(filters.diet),
         allergies_ids: allergyOptions
           .filter((opt) => selectedAllergies.includes(opt.value))
           .map((opt) => opt.key),
@@ -206,7 +206,7 @@ export default function RecipeFilters() {
           .map((opt) => opt.key),
       },
       configuration: {
-        size: 10, // o lo que quieras enviar
+        size: 4, // o lo que quieras enviar
         not_include: [], // o valores omitidos
       },
     };

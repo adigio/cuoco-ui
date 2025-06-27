@@ -5,7 +5,7 @@ export interface RecipeImageUploaderProps {
   images: File[];
   setImages: React.Dispatch<React.SetStateAction<File[]>>;
   ingredients: Ingredient[];
-  addIngredient: (
+  addIngredient?: (
   name: string,
   quantity: number,
   unit: string,

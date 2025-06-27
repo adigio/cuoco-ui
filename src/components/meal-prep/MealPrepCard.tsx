@@ -5,6 +5,7 @@ import React, { ReactNode } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import Link from "next/link";
+import { getRecipeImageUrl } from '@/utils/imageUtils';
 
 interface Props {
   mealPrep: MealPrep;
@@ -40,7 +41,7 @@ export default function MealPrepCard({ mealPrep, onClick, children }: Props) {
               {recipe.image && (
                 <div className="w-full relative h-32">
                   <Image
-                    src={recipe.image}
+                    src={getRecipeImageUrl(recipe)}
                     alt={recipe.title}
                     fill
                     className="object-cover rounded"

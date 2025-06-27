@@ -35,7 +35,7 @@ function LocalImage({ file, alt, className }: { file: File; alt: string; classNa
   );
 }
 
-export default function RecipeImageUploader({ images, setImages, ingredients, addIngredient }: RecipeImageUploaderProps) {
+export default function RecipeImageUploader({ images, setImages, ingredients }: RecipeImageUploaderProps) {
   const removeIngredient = useIngredientsStore((state) => state.removeIngredient);
   const isPremium = useAuthStore((state) => state.user?.premium);
 

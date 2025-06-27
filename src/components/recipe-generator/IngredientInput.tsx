@@ -26,6 +26,10 @@ export default function RecipeIngredientInput() {
   const addIngrdient = (name: string, origin = "manual", confirm = true) => {
     const selectedUnit = unitTypes.find((u) => u.id === Number(unit));
 
+    if (!selectedUnit) {
+      return;
+    }
+
     const displayName =
       quantity && selectedUnit
         ? `${quantity} ${selectedUnit.symbol} ${name}`
@@ -33,8 +37,8 @@ export default function RecipeIngredientInput() {
     console.log(displayName, unit, selectedUnit.symbol);
     const agregado = addIngredient(
       name,
-      Number(quantity),
-      selectedUnit.id,
+      Number(quantity) || 0,
+      String(selectedUnit.id),
       selectedUnit.symbol,
       false,
       origin,
@@ -43,7 +47,7 @@ export default function RecipeIngredientInput() {
     if (agregado) {
       setName("");
       setQuantity("");
-      setUnit(unitTypes.length > 0 ? unitTypes[0].id : "");
+      setUnit(unitTypes.length > 0 ? String(unitTypes[0].id) : "");
     }
   };
 
