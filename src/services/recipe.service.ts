@@ -48,3 +48,13 @@ export const getRecipeById = async (id: string) => {
     throw error;
   }
 };
+
+export const addRecipeToFavorites = async (recipeId: number) => {
+  try {
+    const response = await apiClient.post(`/users/recipes/${recipeId}`);
+    return response.data; // Debería retornar true si es exitoso
+  } catch (error) {
+    console.error("Error al agregar receta a favoritos:", error);
+    throw error;
+  }
+};

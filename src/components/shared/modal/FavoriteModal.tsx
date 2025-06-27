@@ -2,6 +2,7 @@ import { UpgradePlan } from "@/components/shared/cards/UpgradePlan";
 import Button from "@/components/shared/form/Button";
 import Modal from "@/components/shared/modal/Modal";
 import { useAuthStore } from "@/store/useAuthStore";
+import { addRecipeToFavorites } from "@/services/recipe.service";
 
 export const FavoriteModal = ({
     type = 'recipe',
@@ -9,6 +10,7 @@ export const FavoriteModal = ({
     isOpen,
     onClose,
     onUpgrade,
+    onFavoriteSuccess,
     recipeId
 }: {
     type?: 'recipe' | 'meal-prep';
@@ -16,6 +18,7 @@ export const FavoriteModal = ({
     isOpen: boolean;
     onClose: () => void;
     onUpgrade: () => void;
+    onFavoriteSuccess?: () => void;
     recipeId: number;
 }) => {
 
@@ -24,9 +27,12 @@ export const FavoriteModal = ({
 
     const handleAddToFavorites = async () => {
         try {
-            // TODO: --- service para agregar a favoritos. 
-            console.log('Agregando a favoritos:', recipeId);
-            onClose();
+            const result = await addRecipeToFavorites(recipeId);
+            if (result) {
+
+                onFavoriteSuccess?.();
+                onClose();
+            }
         } catch (error) {
             console.error('Error al agregar a favoritos:', error);
         }

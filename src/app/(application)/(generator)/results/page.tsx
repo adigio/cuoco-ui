@@ -10,6 +10,7 @@ import { useRecipeGeneratorSession } from '@/hooks/useRecipeGeneratorSession';
 import RecipeCard from '@/components/shared/cards/RecipeCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock, faHeart } from '@fortawesome/free-regular-svg-icons';
+import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
 import { faRotate } from '@fortawesome/free-solid-svg-icons';
 import Container from '@/components/shared/containers/Container';
 import BackgroundLayers from '@/components/shared/BackgroundLayers';
@@ -30,6 +31,7 @@ export default function RecipeResultsPage() {
   const [showRefreshModal, setShowRefreshModal] = useState(false);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);	
   const [selectedRecipe, setSelectedRecipe] = useState<null | { id: number, name: string }>(null);
+  const [favoriteRecipes, setFavoriteRecipes] = useState<Set<number>>(new Set());
 
   
   useEffect(() => {
@@ -38,12 +40,20 @@ export default function RecipeResultsPage() {
     }, 3000);
     
     return () => clearTimeout(timer);
-  }, []); //de momento hasta que esté la integracion con el back
+  }, []);
 
   
   const handleFavoriteClick = (recipe: { id: number, name: string }) => {
+    if (favoriteRecipes.has(recipe.id)) {
+      return;
+    }
+    
     setSelectedRecipe(recipe);
     setShowFavoriteModal(true);
+  };
+
+  const handleFavoriteSuccess = (recipeId: number) => {
+    setFavoriteRecipes(prev => new Set(prev).add(recipeId));
   };
 
   const handleRefreshRecipe = (recipe: { id: number, name: string }) => {
@@ -92,30 +102,42 @@ export default function RecipeResultsPage() {
             </div>
           ) : (
             <div className="flex gap-4 justify-center px-4 pb-12 flex-wrap">
-              {recipes.map((recipe) => (
-                <RecipeCard customClass={"mx-auto"} key={recipe.id} recipe={recipe}>
-                  <div className='flex justify-between items-center px-2 text-red-400'>
-                    <div className='flex items-center gap-2.5 w-15'>
-                      <FontAwesomeIcon className='w-4 h-4' icon={faClock} />
-                      <p>{recipe.preparationTime} ´</p>
+              {recipes.map((recipe) => {
+                const isFavorite = favoriteRecipes.has(recipe.id);
+                
+                return (
+                  <RecipeCard customClass={"mx-auto"} key={recipe.id} recipe={recipe}>
+                    <div className='flex justify-between items-center px-2 text-red-400'>
+                      <div className='flex items-center gap-2.5 w-15'>
+                        <FontAwesomeIcon className='w-4 h-4' icon={faClock} />
+                        <p>{recipe.preparationTime} ´</p>
+                      </div>
+                      <div className='flex items-center gap-3'>
+                        <button 
+                          className='cursor-pointer w-5 px-2' 
+                          onClick={() => handleRefreshRecipe({ id: recipe.id, name: recipe.name })}
+                        >
+                          <FontAwesomeIcon className='w-4 h-4' icon={faRotate} />
+                        </button>
+                        <button 
+                          className={`w-4 px-2 ${
+                            isFavorite 
+                              ? 'cursor-not-allowed text-red-400' 
+                              : 'cursor-pointer text-red-400 hover:text-red-400'
+                          }`}
+                          onClick={() => handleFavoriteClick({ id: recipe.id, name: recipe.name })}
+                          disabled={isFavorite}
+                        >
+                          <FontAwesomeIcon 
+                            className='w-4 h-4' 
+                            icon={isFavorite ? faHeartSolid : faHeart} 
+                          />
+                        </button>
+                      </div>
                     </div>
-                    <div className='flex items-center gap-3'>
-                      <button 
-                        className='cursor-pointer w-5 px-2' 
-                        onClick={() => handleRefreshRecipe({ id: recipe.id, name: recipe.name })}
-                      >
-                        <FontAwesomeIcon className='w-4 h-4' icon={faRotate} />
-                      </button>
-                      <button 
-                        className='cursor-pointer w-4 px-2' 
-                        onClick={() => handleFavoriteClick({ id: recipe.id, name: recipe.name })}
-                      >
-                        <FontAwesomeIcon className='w-4 h-4' icon={faHeart} />
-                      </button>
-                    </div>
-                  </div>
-                </RecipeCard>
-              ))}
+                  </RecipeCard>
+                );
+              })}
             </div>
           )}
         </Container>
@@ -154,6 +176,7 @@ export default function RecipeResultsPage() {
               setShowFavoriteModal(false);
               setSelectedRecipe(null);
             }}
+            onFavoriteSuccess={() => selectedRecipe && handleFavoriteSuccess(selectedRecipe.id)}
             recipeId={selectedRecipe.id}
           />
           <RefreshModal
