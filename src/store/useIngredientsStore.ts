@@ -103,7 +103,7 @@ export const useIngredientsStore = create<IngredientsStore>((set, get) => ({
     updateIngredient(idx, { confirmed: true });
   },
 
-  addMultipleIngredients: (newIngredients) => {
+  addMultipleIngredients: (newIngredients) => { 
     const lowerNames = get().ingredients.map((ing) =>
       ing.name.toLowerCase()
     );

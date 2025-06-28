@@ -149,7 +149,7 @@ export default function ReviewPage() {
                           {item.name}
                         </td>
                         <td className="px-4 py-2">{item.quantity || "-"}</td>
-                        <td className="px-4 py-2">{item.unit || "-"}</td>
+                        <td className="px-4 py-2">{item.symbol || "-"}</td>
                         <td className="px-4 py-2 text-gray-600 capitalize">
                           {item.source === "manual" && "Manual (texto)"}
                           {item.source === "voz" && "Por voz"}

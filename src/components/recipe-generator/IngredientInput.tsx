@@ -24,17 +24,14 @@ export default function RecipeIngredientInput() {
   const addIngredient = useIngredientsStore((state) => state.addIngredient);
 
   const addIngrdient = (name: string, origin = "manual", confirm = true) => {
-    const selectedUnit = unitTypes.find((u) => u.id === Number(unit));
-
+    const selectedUnit = unitTypes.find((u) => u.id === Number(unit)); 
     if (!selectedUnit) {
       return;
     }
-
     const displayName =
       quantity && selectedUnit
         ? `${quantity} ${selectedUnit.symbol} ${name}`
-        : name;
-    console.log(displayName, unit, selectedUnit.symbol);
+        : name;  
     const agregado = addIngredient(
       name,
       Number(quantity) || 0,

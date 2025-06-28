@@ -37,11 +37,12 @@ export const analyzeImagesWithAPI = async (
     
     response.data.forEach((imageResult: any) => {
       if (imageResult.ingredients && Array.isArray(imageResult.ingredients)) {
-        imageResult.ingredients.forEach((ingredient: any) => {
+        imageResult.ingredients.forEach((ingredient: any) => { 
           allIngredients.push({
             name: String(ingredient.name || "").trim(),
             quantity: Number(ingredient.quantity) || 0,
-            unit: String(ingredient.unit?.symbol || "").trim(),
+            unit: String(ingredient.unit?.id || "").trim(),
+            symbol: String(ingredient.unit?.description || "").trim(),
             optional: false,
             source: "imagen",
             confirmed: Boolean(ingredient.confirmed),

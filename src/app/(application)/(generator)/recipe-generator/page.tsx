@@ -25,10 +25,7 @@ export default function RecipeGeneratorPage() {
   useRecipeGeneratorSession();
 
   // Tomamos del store si el usuario es premium
-  const {
-    ingredients,
-    addMultipleIngredients,
-  } = useIngredientsStore();
+  const { ingredients, addMultipleIngredients } = useIngredientsStore();
   const isPremium = useAuthStore((state) => state.user?.premium);
   const router = useRouter();
 
@@ -56,8 +53,8 @@ export default function RecipeGeneratorPage() {
         if (!detectados || detectados.length === 0) {
           setError("No se detectaron ingredientes en las imágenes");
           return;
-        }
-
+        } 
+        console.log(detectados)
         const cantidadAgregada = addMultipleIngredients(detectados);
         if (cantidadAgregada === 0) {
           setError("No se pudieron agregar nuevos ingredientes");
