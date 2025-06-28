@@ -1,4 +1,4 @@
-import { Ingredient } from "../ingredient/ingredient.types";
+import { Ingredient, IngredientRequest } from "../ingredient/ingredient.types";
 
 export interface Filters {
   time: string;
@@ -122,6 +122,8 @@ export interface RecipeGenerationRequest {
 }
 
 
+
+
 export interface PageProps {
   params: Promise<{ id: string }>;
 }
@@ -162,3 +164,21 @@ export interface MealPrep {
 }
 
 export type MealPrepResponse = MealPrep[];
+
+ 
+interface FiltersMealPrep {
+  freeze?: boolean;
+  preparation_time_id?: number;
+  servings?: number;
+  cook_level_id?: number;
+  type_ids?: number[];
+  diet_id?: number;
+  allergies_ids?: number[];
+  dietary_needs_ids?: number[];
+}
+
+export interface MealPrepRequest {
+  ingredients: IngredientRequest[];
+  filters: FiltersMealPrep;
+}
+

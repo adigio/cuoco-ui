@@ -1,14 +1,16 @@
 import { mealPreps } from "@/mocks/mealprep";
-import { MealPrep, MealPrepGenerationRequest, MealPrepResponse } from "@/types";
+import { MealPrep, MealPrepGenerationRequest, MealPrepRequest, MealPrepResponse } from "@/types";
 import { ApiResponse, Recipe } from "@/types";
 import axios from "axios";
+import apiClient from "@/lib/axios.config";
 
-export const generateMealPrepRecipes = async (requestData: MealPrepGenerationRequest): Promise<MealPrepResponse> => {
+export const generateMealPrepRecipes = async (requestData: MealPrepRequest): Promise<MealPrepResponse> => {
+
   try {
     // Simulación de delay para desarrollo
     await new Promise(resolve => setTimeout(resolve, 2000));
 
-    const response = await axios.post('/api/generate-meal-prep', 
+    const response = await apiClient.post('/meal-preps', 
       requestData,
       {
         headers: {

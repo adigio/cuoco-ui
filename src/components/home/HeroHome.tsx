@@ -13,8 +13,7 @@ import Input from "../shared/form/Input";
 export default function HeroHome() {
   const [saludo, setSaludo] = useState("");
   const [fastRecipeName, setFastRecipeName] = useState("");
-  const [ModalFastRecipe, setModalFastRecipe] = useState("");
-  console.log(useAuthStore((state) => state.user?.name));
+  const [ModalFastRecipe, setModalFastRecipe] = useState(""); 
   const user = useAuthStore((state) => state.user?.name);
   const isPremium = useAuthStore((state) => state.user?.premium);
   const setMode = useIngredientsStore((state) => state.setMode);

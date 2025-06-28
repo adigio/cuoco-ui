@@ -7,6 +7,11 @@ export interface Ingredient {
   source: string;
   confirmed: boolean;
 }
+export interface IngredientRequest {
+  name :string;
+  quantity:number;
+  unit_id:number;
+}
 
 export interface IngredientFormData {
     name: string;
