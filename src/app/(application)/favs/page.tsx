@@ -58,16 +58,13 @@ export default function Favs() {
   if (loading) return <ChefLoader text="Cargando tus favoritos..." />;
 
   const filteredRecipes = recipes.filter((recipe: Recipe) => {
+    if (!searchTerm.trim()) return true;
+
     const term = searchTerm.toLowerCase();
 
     return (
-      recipe.name.toLowerCase().includes(term) ||
-      recipe.instructions.some((instruction) =>
-        instruction.toLowerCase().includes(term)
-      ) ||
-      recipe.ingredients.some((ing: Ingredient) =>
-        ing.name?.toLowerCase().includes(term)
-      )
+      recipe?.name?.toLowerCase().includes(term) ||
+      recipe?.subtitle?.toLowerCase().includes(term)
     );
   });
 

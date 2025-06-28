@@ -23,14 +23,9 @@ export const generateRecipes = async (
 
 export const getRecipeById = async (id: string) => {
   try {
-    if (DEVELOPMENT_DELAY > 0) {
-      await new Promise((resolve) => setTimeout(resolve, DEVELOPMENT_DELAY));
-    }
-
     const response = await apiClient.get(`/recipes/${id}`);
     return response.data;
   } catch (error) {
-    console.error("Error al obtener receta:", error);
     throw error;
   }
 };
