@@ -2,7 +2,9 @@ import { UpgradePlan } from "@/components/shared/cards/UpgradePlan";
 import Button from "@/components/shared/form/Button";
 import Modal from "@/components/shared/modal/Modal";
 import { useAuthStore } from "@/store/useAuthStore";
-import { addRecipeToFavorites } from "@/services/recipe.service";
+import { addRecipeToFavorites } from "@/services/favs.service";
+import { useNotification } from "@/hooks/useNotification";
+import { useState } from "react";
 
 export const FavoriteModal = ({
     type = 'recipe',
@@ -24,17 +26,28 @@ export const FavoriteModal = ({
 
     const { user, updateUser } = useAuthStore();
     const isPremium = user?.premium ?? false;
+    const { showNotification } = useNotification();
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleAddToFavorites = async () => {
+        setIsLoading(true);
         try {
             const result = await addRecipeToFavorites(recipeId);
-            if (result) {
-
+            if (result.success) {
+                showNotification('Receta agregada a favoritos exitosamente', 'success');
                 onFavoriteSuccess?.();
                 onClose();
             }
-        } catch (error) {
-            console.error('Error al agregar a favoritos:', error);
+        } catch (error: any) {
+            const errorMessage = error.message || 'Error al agregar a favoritos';
+            showNotification(errorMessage, 'error');
+            
+            // Si la receta ya está en favoritos, cerrar el modal
+            if (error.message?.includes('ya está en tus favoritos')) {
+                onClose();
+            }
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -53,8 +66,9 @@ export const FavoriteModal = ({
                         <Button
                             variant="primary"
                             onClick={handleAddToFavorites}
+                            disabled={isLoading}
                         >
-                            Agregar
+                            {isLoading ? 'Agregando...' : 'Agregar'}
                         </Button>
                     </div>
                 </div>

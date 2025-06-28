@@ -104,13 +104,12 @@ export default function RecipeResultsPage() {
             <div className="flex gap-4 justify-center px-4 pb-12 flex-wrap">
               {recipes.map((recipe) => {
                 const isFavorite = favoriteRecipes.has(recipe.id);
-                
                 return (
                   <RecipeCard customClass={"mx-auto"} key={recipe.id} recipe={recipe}>
                     <div className='flex justify-between items-center px-2 text-red-400'>
-                      <div className='flex items-center gap-2.5 w-15'>
+                      <div className='flex items-center gap-2.5 w-20'>
                         <FontAwesomeIcon className='w-4 h-4' icon={faClock} />
-                        <p>{recipe.preparationTime} ´</p>
+                        <p className='text-xs'>{recipe.preparationTime}</p>
                       </div>
                       <div className='flex items-center gap-3'>
                         <button 

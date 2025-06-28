@@ -93,7 +93,7 @@ export interface RecipeFormData {
   description: string;
   ingredients: Ingredient[];
   instructions: string[];
-  preparationTime: number;
+  preparationTime: string;
   servings: number;
   difficulty: string;
   images?: File[];

@@ -14,7 +14,13 @@ export const generateRecipes = async (
 ) => {
   try {
     const response = await apiClient.post("/recipes", informationRecipe);
-    return response.data;
+    
+    const mappedData = response.data.map((recipe: any) => ({
+      ...recipe,
+      preparationTime: recipe.preparation_time?.description || recipe.preparationTime
+    }));
+    
+    return mappedData;
   } catch (error) {
     console.error("Error al generar recetas:", error);
     throw error;
@@ -26,16 +32,6 @@ export const getRecipeById = async (id: string) => {
     const response = await apiClient.get(`/recipes/${id}`);
     return response.data;
   } catch (error) {
-    throw error;
-  }
-};
-
-export const addRecipeToFavorites = async (recipeId: number) => {
-  try {
-    const response = await apiClient.post(`/users/recipes/${recipeId}`);
-    return response.data; // Debería retornar true si es exitoso
-  } catch (error) {
-    console.error("Error al agregar receta a favoritos:", error);
     throw error;
   }
 };
