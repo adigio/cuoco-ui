@@ -11,6 +11,7 @@ import { useIngredientsStore } from "@/store/useIngredientsStore";
 import { useRecipesStore } from "@/store/useRecipesStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useRegisterStore } from "@/store/useRegisterStore";
+import { useRecipeFiltersStore } from "@/store/useRecipeFiltersStore";
 
 // Componentes
 import CheckboxGroup from "@/components/shared/form/CheckboxGroup";
@@ -39,7 +40,6 @@ export default function RecipeFilters() {
   const router = useRouter();
   const { setFilteredRecipes } = useRecipesStore();
 
-  // 🔽 Traer preferencias almacenadas
   const {
     allergies: storedAllergies,
     foodNeeds: storedNeeds,
@@ -47,17 +47,18 @@ export default function RecipeFilters() {
     cookingLevel: storeDifficult,
   } = useRegisterStore();
 
+  const user = useAuthStore((state) => state.user);
+  const userPreferences = user?.preferences;
+
+  const finalAllergies = (userPreferences?.allergies && userPreferences.allergies.length > 0) ? userPreferences.allergies : storedAllergies;
+  const finalNeeds = (userPreferences?.dietaryRestrictions && userPreferences.dietaryRestrictions.length > 0) ? userPreferences.dietaryRestrictions : storedNeeds;
+  const finalDiet = userPreferences?.diet || storeDiet;
+  const finalCookingLevel = userPreferences?.cook_level || storeDifficult;
+
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [filters, setFilters] = useState<Filters>({
-    time: "",
-    difficulty: "",
-    types: [],
-    diet: "",
-    people: 1,
-    useProfilePreferences: false,
-  });
+  const { filters, setFilters } = useRecipeFiltersStore();
 
   const [dietOptions, setDietOptions] = useState<
     { key: number; value: string; label: string }[]
@@ -118,44 +119,61 @@ export default function RecipeFilters() {
     fetchData();
   }, []);
 
-  // ✅ Marcar alergias preseleccionadas
   useEffect(() => {
-    if (allergyOptions.length > 0 && storedAllergies.length > 0) {
+    if (allergyOptions.length > 0 && finalAllergies.length > 0) {
       const matched = allergyOptions
-        .filter((opt) => storedAllergies.includes(opt.key))
-        .map((opt) => opt.value);
+        .filter((opt) => finalAllergies.includes(opt.key))
+        .map((opt) => opt.value.toString());
+      
       setSelectedAllergies(matched);
+      
+      setFilters(prev => ({
+        ...prev,
+        allergies_ids: finalAllergies
+      }));
     }
-  }, [allergyOptions, storedAllergies]);
+  }, [allergyOptions, finalAllergies]);
 
-  // ✅ Marcar necesidades alimenticias preseleccionadas
+  // Inicializar necesidades dietarias desde las preferencias del usuario  
   useEffect(() => {
-    if (needOptions.length > 0 && storedNeeds.length > 0) {
+    if (needOptions.length > 0 && finalNeeds.length > 0) {
       const matched = needOptions
-        .filter((opt) => storedNeeds.includes(opt.key))
-        .map((opt) => opt.value);
+        .filter((opt) => finalNeeds.includes(opt.key))
+        .map((opt) => opt.value.toString()); // ✅ Convertir a string para la UI
+      
       setSelectedNeeds(matched);
+      
+      setFilters(prev => ({
+        ...prev,
+        dietary_needs_ids: finalNeeds
+      }));
     }
-  }, [needOptions, storedNeeds]);
+  }, [needOptions, finalNeeds]);
+
   useEffect(() => {
-    if (dietOptions.length > 0 && storeDiet) {
-      const matched = dietOptions.find((opt) => opt.key === storeDiet);
+    if (dietOptions.length > 0 && finalDiet) {
+      const matched = dietOptions.find((opt) => opt.key === finalDiet);
       if (matched) {
-        setFilters((prev) => ({ ...prev, diet: matched.value }));
+        setFilters(prev => ({ ...prev, diet: matched.value.toString() })); // ✅ Convertir a string
       }
     }
-  }, [dietOptions, storeDiet]);
+  }, [dietOptions, finalDiet]);
 
   useEffect(() => {
-    if (difficultyOptions.length > 0 && storeDifficult) {
+    if (difficultyOptions.length > 0 && finalCookingLevel) {
       const matched = difficultyOptions.find(
-        (opt) => opt.key === storeDifficult
+        (opt) => opt.key === finalCookingLevel
       );
       if (matched) {
-        setFilters((prev) => ({ ...prev, difficulty: matched.value }));
+        setFilters(prev => ({ ...prev, difficulty: matched.value.toString() })); // ✅ Convertir a string
       }
     }
-  }, [difficultyOptions, storeDifficult]);
+  }, [difficultyOptions, finalCookingLevel]);
+
+  useEffect(() => {
+    setFilters(prev => ({ ...prev, types: [] }));
+  }, []); // Solo se ejecuta al montar el componente
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -166,12 +184,6 @@ export default function RecipeFilters() {
     setFilters({ ...filters, types: newValues });
   };
 
-  const handleProfilePreferencesChange = () => {
-    setFilters((prev) => ({
-      ...prev,
-      useProfilePreferences: !prev.useProfilePreferences,
-    }));
-  };
 
   const toggleSelection = (
     list: string[],
@@ -181,6 +193,22 @@ export default function RecipeFilters() {
     setter(
       list.includes(value) ? list.filter((v) => v !== value) : [...list, value]
     );
+  };
+
+  const handleAllergiesChange = (newValues: string[]) => {
+    setSelectedAllergies(newValues);
+    const allergyIds = allergyOptions
+      .filter((opt) => newValues.includes(opt.value))
+      .map((opt) => opt.key);
+    setFilters({ ...filters, allergies_ids: allergyIds });
+  };
+
+  const handleNeedsChange = (newValues: string[]) => {
+    setSelectedNeeds(newValues);
+    const needIds = needOptions
+      .filter((opt) => newValues.includes(opt.value))
+      .map((opt) => opt.key);
+    setFilters({ ...filters, dietary_needs_ids: needIds });
   };
 
   const handleFinish = async () => {
@@ -198,12 +226,8 @@ export default function RecipeFilters() {
         cook_level_id: Number(filters.difficulty),
         type_ids: filters.types.map((t) => Number(t)),
         diet_id: Number(filters.diet) === 0 ? null : Number(filters.diet),
-        allergies_ids: allergyOptions
-          .filter((opt) => selectedAllergies.includes(opt.value))
-          .map((opt) => opt.key),
-        dietary_needs_ids: needOptions
-          .filter((opt) => selectedNeeds.includes(opt.value))
-          .map((opt) => opt.key),
+        allergies_ids: filters.allergies_ids,
+        dietary_needs_ids: filters.dietary_needs_ids,
       },
       configuration: {
         size: 4, // o lo que quieras enviar
@@ -308,13 +332,12 @@ export default function RecipeFilters() {
                 <input
                   type="checkbox"
                   checked={selectedAllergies.includes(option.value)}
-                  onChange={() =>
-                    toggleSelection(
-                      selectedAllergies,
-                      setSelectedAllergies,
-                      option.value
-                    )
-                  }
+                  onChange={() => {
+                    const newValues = selectedAllergies.includes(option.value)
+                      ? selectedAllergies.filter(v => v !== option.value)
+                      : [...selectedAllergies, option.value];
+                    handleAllergiesChange(newValues);
+                  }}
                 />
                 {option.label}
               </label>
@@ -332,13 +355,12 @@ export default function RecipeFilters() {
                 <input
                   type="checkbox"
                   checked={selectedNeeds.includes(option.value)}
-                  onChange={() =>
-                    toggleSelection(
-                      selectedNeeds,
-                      setSelectedNeeds,
-                      option.value
-                    )
-                  }
+                  onChange={() => {
+                    const newValues = selectedNeeds.includes(option.value)
+                      ? selectedNeeds.filter(v => v !== option.value)
+                      : [...selectedNeeds, option.value];
+                    handleNeedsChange(newValues);
+                  }}
                 />
                 {option.label}
               </label>

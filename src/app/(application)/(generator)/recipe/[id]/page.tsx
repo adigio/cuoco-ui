@@ -11,8 +11,11 @@ import { RecipeDetailSkeleton } from '@/components/shared/skeleton/RecipeDetailS
 import RecipeHeader from '@/components/recipe/Header';
 import RecipeStepBlock from '@/components/recipe/StepBlock';
 import RecipeSidebar from '@/components/recipe/Sidebar';
+import { useRecipeGeneratorSession } from '@/hooks/useRecipeGeneratorSession';
 
 export default function RecipeDetailPage({ params }: PageProps) {
+  useRecipeGeneratorSession();
+  
   const router = useRouter();
   const { id: recipeId } = use(params);
   const [recipe, setRecipe] = useState<RecipeDetail | null>(null);

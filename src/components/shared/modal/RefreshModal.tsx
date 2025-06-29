@@ -1,31 +1,95 @@
 import { UpgradePlan } from "@/components/shared/cards/UpgradePlan";
 import Button from "@/components/shared/form/Button";
 import Modal from "@/components/shared/modal/Modal";
+import { useState } from "react";
+import { useRecipesStore } from '@/store/useRecipesStore';
+import { useRecipeFiltersStore } from "@/store/useRecipeFiltersStore";
+import { useIngredientsStore } from "@/store/useIngredientsStore";
+import { refreshRecipe } from "@/services/recipe.service";
+import { RecipeGenerationRequest } from "@/types";
+import { useAuthStore } from "@/store/useAuthStore";
+
 
 export const RefreshModal = ({
     type = 'recipe',
     recipeText,
     isOpen,
-    isPremium,
     onClose,
     onUpgrade,
-    recipeId
+    recipeId,
+    showSuccess,
+    showError
 }: {
     type?: 'recipe' | 'meal-prep';
     recipeText: string;
     isOpen: boolean;
-    isPremium: boolean;
     onClose: () => void;
     onUpgrade: () => void;
     recipeId: number;
+    onRefreshSuccess?: () => void;
+    showSuccess: (message: string, additionalMessage?: string) => void;
+    showError: (message: string, additionalMessage?: string) => void;
 }) => {
-    const handleAddToRefresh = async () => {
+    const [isLoading, setIsLoading] = useState(false);
+    const { filters } = useRecipeFiltersStore();
+    const { ingredients } = useIngredientsStore();
+    const { filteredRecipes, replaceRecipe: replaceRecipeInStore } = useRecipesStore();
+    const isPremium = useAuthStore((state) => state.user?.premium);
+
+    const handleRefreshRecipe = async () => {
         try {
-            // TODO: --- service para agregar a refresh. 
-            console.log('Refrescando receta:', recipeId);
-            onClose();
+            setIsLoading(true);
+
+            const currentRecipeIds = filteredRecipes.map(r => r.id);
+            
+            const ingredientList = ingredients
+                .filter(ing => ing.confirmed)
+                .map((ingredient) => ({
+                    name: ingredient.name,
+                    quantity: ingredient.quantity,
+                    unit_id: Number(ingredient.unit), 
+                }));
+            
+            const refreshRequest: RecipeGenerationRequest = {
+                ingredients: ingredientList,
+                filters: {
+                    preparation_time_id: !filters.time || filters.time === "" ? null : Number(filters.time),
+                    servings: filters.people,
+                    cook_level_id: Number(filters.difficulty),
+                    type_ids: filters.types.map((t) => Number(t)),
+                    diet_id: !filters.diet || filters.diet === "" ? null : Number(filters.diet),
+                    allergies_ids: filters.allergies_ids,
+                    dietary_needs_ids: filters.dietary_needs_ids,
+                },
+                configuration: {
+                    size: 1,
+                    not_include: currentRecipeIds,
+                },
+            };
+
+            const newRecipe = await refreshRecipe(refreshRequest);
+            
+            if (newRecipe) {
+                replaceRecipeInStore(recipeId, newRecipe);
+                showSuccess(
+                    'Receta refrescada exitosamente',
+                    `Se generó una nueva receta: "${newRecipe.name}"`
+                );
+                onClose();
+            } else {
+                showError(
+                    'No se pudo obtener una nueva receta',
+                    'Intenta nuevamente en unos momentos'
+                );
+            }
         } catch (error) {
-            console.error('Error al agregar a favoritos:', error);
+            console.error('Error al refrescar receta:', error);
+            showError(
+                'Error al refrescar la receta',
+                'Ocurrió un problema al generar una nueva receta. Intenta nuevamente.'
+            );
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -43,9 +107,10 @@ export const RefreshModal = ({
                     <div className="flex justify-end gap-4">
                         <Button
                             variant="primary"
-                            onClick={handleAddToRefresh}
+                            onClick={handleRefreshRecipe}
+                            disabled={isLoading}
                         >
-                            Refrescar
+                            {isLoading ? 'Refrescando...' : 'Refrescar'}
                         </Button>
                     </div>
                 </div>

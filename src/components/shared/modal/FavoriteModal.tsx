@@ -3,7 +3,6 @@ import Button from "@/components/shared/form/Button";
 import Modal from "@/components/shared/modal/Modal";
 import { useAuthStore } from "@/store/useAuthStore";
 import { addRecipeToFavorites } from "@/services/favs.service";
-import { useNotification } from "@/hooks/useNotification";
 import { useState } from "react";
 
 export const FavoriteModal = ({
@@ -13,7 +12,9 @@ export const FavoriteModal = ({
     onClose,
     onUpgrade,
     onFavoriteSuccess,
-    recipeId
+    recipeId,
+    showSuccess,
+    showError
 }: {
     type?: 'recipe' | 'meal-prep';
     recipeText: string;
@@ -22,11 +23,12 @@ export const FavoriteModal = ({
     onUpgrade: () => void;
     onFavoriteSuccess?: () => void;
     recipeId: number;
+    showSuccess: (message: string, additionalMessage?: string) => void;
+    showError: (message: string, additionalMessage?: string) => void;
 }) => {
 
     const { user, updateUser } = useAuthStore();
     const isPremium = user?.premium ?? false;
-    const { showNotification } = useNotification();
     const [isLoading, setIsLoading] = useState(false);
 
     const handleAddToFavorites = async () => {
@@ -34,13 +36,13 @@ export const FavoriteModal = ({
         try {
             const result = await addRecipeToFavorites(recipeId);
             if (result.success) {
-                showNotification('Receta agregada a favoritos exitosamente', 'success');
+                showSuccess('Receta agregada a favoritos exitosamente', `"${recipeText}" ahora está en tus favoritos`);
                 onFavoriteSuccess?.();
                 onClose();
             }
         } catch (error: any) {
             const errorMessage = error.message || 'Error al agregar a favoritos';
-            showNotification(errorMessage, 'error');
+            showError(errorMessage, 'Intenta nuevamente en unos momentos');
             
             // Si la receta ya está en favoritos, cerrar el modal
             if (error.message?.includes('ya está en tus favoritos')) {

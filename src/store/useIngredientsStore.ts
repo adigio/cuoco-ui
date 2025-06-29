@@ -27,13 +27,13 @@ export const useIngredientsStore = create<IngredientsStore>((set, get) => ({
       '/recipe-generator',
       '/review', 
       '/filters',
-      '/results'
+      '/results',
+      '/recipe/'
     ];
     
     const isInGeneratorFlow = generatorPaths.some(path => currentPath.includes(path));
     const { generatorSessionActive } = get();
 
-    
     if (!isInGeneratorFlow && generatorSessionActive) {
       set({ 
         ingredients: [],

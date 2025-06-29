@@ -10,6 +10,7 @@ type RecipesState = {
   filteredRecipes: Recipe[];
   setFilteredRecipes: (recipes: Recipe[]) => void;
   clearRecipes: () => void;
+  replaceRecipe: (oldRecipeId: number, newRecipe: Recipe) => void;
 };
 
 export const useRecipesStore = create<RecipesState>()(
@@ -18,6 +19,11 @@ export const useRecipesStore = create<RecipesState>()(
       filteredRecipes: [],
       setFilteredRecipes: (recipes) => set({ filteredRecipes: recipes }),
       clearRecipes: () => set({ filteredRecipes: [] }),
+      replaceRecipe: (oldRecipeId, newRecipe) => set((state) => ({
+        filteredRecipes: state.filteredRecipes.map(recipe => 
+          recipe.id === oldRecipeId ? newRecipe : recipe
+        )
+      })),
     }),
     {
       name: 'filteredRecipes', // nombre de la clave en localStorage

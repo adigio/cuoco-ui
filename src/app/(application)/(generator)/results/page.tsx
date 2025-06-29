@@ -18,6 +18,9 @@ import { RecipeCardSkeleton } from '@/components/shared/skeleton/RecipeCardSkele
 import { FavoriteModal } from '@/components/shared/modal/FavoriteModal';
 import { RefreshModal } from '@/components/shared/modal/RefreshModal';
 import SubscriptionModal from '@/components/shared/modal/SubscriptionModal';
+import NotificationModal from '@/components/shared/modal/NotificationModal';
+import { useNotification } from '@/hooks/useNotification';
+import { RecipeGenerationRequest } from '@/types';
 
 
 export default function RecipeResultsPage() {
@@ -33,7 +36,16 @@ export default function RecipeResultsPage() {
   const [selectedRecipe, setSelectedRecipe] = useState<null | { id: number, name: string }>(null);
   const [favoriteRecipes, setFavoriteRecipes] = useState<Set<number>>(new Set());
 
-  
+  const { 
+    message, 
+    additionalMessage, 
+    type, 
+    show, 
+    showSuccess, 
+    showError, 
+    clearNotification 
+  } = useNotification();
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -59,13 +71,6 @@ export default function RecipeResultsPage() {
   const handleRefreshRecipe = (recipe: { id: number, name: string }) => {
     setSelectedRecipe(recipe);
     setShowRefreshModal(true);
-  };
-
-
-  // Función para mostrar detalle de receta
-  const handleViewRecipe = (recipeId: number) => {
-    console.log('Ver detalle de receta:', recipeId);
-    router.push(`/recipe/${recipeId}`);
   };
 
   const handleBack = () => {
@@ -177,10 +182,11 @@ export default function RecipeResultsPage() {
             }}
             onFavoriteSuccess={() => selectedRecipe && handleFavoriteSuccess(selectedRecipe.id)}
             recipeId={selectedRecipe.id}
+            showSuccess={showSuccess}
+            showError={showError}
           />
           <RefreshModal
             recipeText={selectedRecipe.name}
-            isPremium={false}
             isOpen={showRefreshModal}
             onClose={() => {
               setShowRefreshModal(false);
@@ -190,7 +196,9 @@ export default function RecipeResultsPage() {
               setShowRefreshModal(false);
               setShowSubscriptionModal(true);
             }}
-            recipeId={selectedRecipe.id}
+            recipeId={selectedRecipe?.id}
+            showSuccess={showSuccess}
+            showError={showError}
           />
           <SubscriptionModal
             isOpen={showSubscriptionModal}
@@ -199,6 +207,15 @@ export default function RecipeResultsPage() {
           />
         </>
       )}
+
+
+        <NotificationModal
+          show={show}
+          onClose={clearNotification}
+          message={message}
+          additionalMessage={additionalMessage}
+          type={type}
+        />
     </main>
     </>
   );

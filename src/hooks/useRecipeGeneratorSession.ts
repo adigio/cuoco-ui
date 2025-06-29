@@ -7,11 +7,9 @@ export const useRecipeGeneratorSession = () => {
     const { clearIngredientsIfNeeded, startGeneratorSession } = useIngredientsStore();
 
     useEffect(() => {
-        // Verificar si necesitamos limpiar ingredientes basado en la ruta actual
         clearIngredientsIfNeeded(pathname || '');
         
-        // Si estamos en el flujo del generador, activar sesión
-        const generatorPaths = ['/recipe-generator', '/review', '/filters', '/results'];
+        const generatorPaths = ['/recipe-generator', '/review', '/filters', '/results', '/recipe/'];
         const isInGeneratorFlow = generatorPaths.some(path => pathname?.includes(path));
         
         if (isInGeneratorFlow) {

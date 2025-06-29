@@ -6,6 +6,8 @@ export interface Filters {
   types: string[];
   diet: string;
   people: number;
+  allergies_ids: number[];
+  dietary_needs_ids: number[];
   useProfilePreferences: boolean;
 }
 export interface FiltersMealprep {
