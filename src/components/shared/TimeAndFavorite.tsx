@@ -6,25 +6,23 @@ import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons";
 
 interface TimeAndFavoriteProps {
-  minutes: number;
+  time: string;
   onToggleFavorite: () => void;
   isFavorite?: boolean;
 }
 
 const TimeAndFavorite: React.FC<TimeAndFavoriteProps> = ({
-  minutes,
+  time,
   onToggleFavorite,
   isFavorite = false,
 }) => {
-  const hrs = Math.floor(minutes / 60);
-  const mins = String(minutes % 60).padStart(2, "0");
 
   return (
     <div className="flex items-center gap-6 text-[#f27f6c] font-semibold text-xl">
       {/* Tiempo */}
       <div className="flex items-center gap-2">
         <FontAwesomeIcon icon={faClock} className="w-7 h-7" />
-        <span>{hrs}:{mins} min</span>
+        <span>{time}</span>
       </div>
 
       {/* Botón favorito */}

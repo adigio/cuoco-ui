@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { RecipeDetail } from "@/types/recipe/recipe.types";
 import TimeAndFavorite from "@/components/shared/TimeAndFavorite";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FavoriteModal } from "@/components/shared/modal/FavoriteModal";
+import { UnfavoriteModal } from "@/components/shared/modal/UnfavoriteModal";
 import SubscriptionModal from "@/components/shared/modal/SubscriptionModal";
+import { useFavoritesStore } from "@/store/useFavoritesStore";
+import { useNotification } from "@/hooks/useNotification";
 
 type Props = RecipeDetail;
 
@@ -13,17 +16,40 @@ export default function RecipeHeader({
   name,
   time,
   servings,
-  isFavorite,
+  isFavorite: initialIsFavorite,
   subtitle,
   difficulty
 }: Props) {
   const [showFavoriteModal, setShowFavoriteModal] = useState(false);
+  const [showUnfavoriteModal, setShowUnfavoriteModal] = useState(false);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+  
+  const { isFavorite: isFavoriteFromStore, addFavorite, removeFavorite } = useFavoritesStore();
+  const { showSuccess, showError } = useNotification();
+  
+  const [currentIsFavorite, setCurrentIsFavorite] = useState(initialIsFavorite);
+
+  useEffect(() => {
+    const storeStatus = isFavoriteFromStore(id);
+    setCurrentIsFavorite(storeStatus);
+  }, [id, isFavoriteFromStore]);
 
   const handleFavRecipe = (recipeId: number) => {
-    if (!isFavorite) {
+    if (!currentIsFavorite) {
       setShowFavoriteModal(true);
+    } else {
+      setShowUnfavoriteModal(true);
     }
+  };
+
+  const handleFavoriteSuccess = () => {
+    addFavorite(id);
+    setCurrentIsFavorite(true);
+  };
+
+  const handleUnfavoriteSuccess = () => {
+    removeFavorite(id);
+    setCurrentIsFavorite(false);
   };
 
   return (
@@ -38,9 +64,9 @@ export default function RecipeHeader({
               {servings}
             </span>
             <TimeAndFavorite
-              minutes={time}
+              time={time}
               onToggleFavorite={() => handleFavRecipe(id)}
-              isFavorite={isFavorite}
+              isFavorite={currentIsFavorite}
             />
           </div>
         </div>
@@ -55,6 +81,17 @@ export default function RecipeHeader({
           setShowFavoriteModal(false);
           setShowSubscriptionModal(true);
         }}
+        onFavoriteSuccess={handleFavoriteSuccess}
+        showSuccess={showSuccess}
+        showError={showError}
+      />
+
+      <UnfavoriteModal
+        recipeId={id}
+        recipeName={name}
+        isOpen={showUnfavoriteModal}
+        onClose={() => setShowUnfavoriteModal(false)}
+        onUnfavoriteSuccess={handleUnfavoriteSuccess}
       />
 
       <SubscriptionModal

@@ -1,42 +1,27 @@
 "use client";
 
-import React, { useEffect, useState, use } from 'react';
+import React, { use } from 'react';
 import { useRouter } from 'next/navigation';
-import { getRecipeById } from '@/services/recipe.service';
 import BackgroundLayers from '@/components/shared/BackgroundLayers';
 import ContainerShadow from '@/components/shared/containers/ContainerShadow';
 import { PageProps } from '@/types';
-import { RecipeDetail, RecipeDetailSection } from '@/types/recipe/recipe.types';
+import { RecipeDetailSection } from '@/types/recipe/recipe.types';
 import { RecipeDetailSkeleton } from '@/components/shared/skeleton/RecipeDetailSkeleton';
 import RecipeHeader from '@/components/recipe/Header';
 import RecipeStepBlock from '@/components/recipe/StepBlock';
 import RecipeSidebar from '@/components/recipe/Sidebar';
 import { useRecipeGeneratorSession } from '@/hooks/useRecipeGeneratorSession';
+import { useNotification } from '@/hooks/useNotification';
+import { useRecipeDetail } from '@/hooks/useRecipeDetail';
+import NotificationModal from '@/components/shared/modal/NotificationModal';
 
 export default function RecipeDetailPage({ params }: PageProps) {
   useRecipeGeneratorSession();
   
   const router = useRouter();
   const { id: recipeId } = use(params);
-  const [recipe, setRecipe] = useState<RecipeDetail | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchRecipe = async () => {
-      try {
-        const res = await getRecipeById(recipeId);
-        if (res) {
-          setRecipe(res);
-        }
-      } catch (error) {
-        console.error("Error al obtener la receta:", error);
-        setRecipe(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchRecipe();
-  }, [recipeId]);
+  const { recipe, loading } = useRecipeDetail(recipeId);
+  const { message, additionalMessage, type, show, clearNotification } = useNotification();
 
   if (loading) {
     return <RecipeDetailSkeleton />;
@@ -81,6 +66,14 @@ export default function RecipeDetailPage({ params }: PageProps) {
           </div>
         </main>
       </ContainerShadow>
+      
+      <NotificationModal
+        show={show}
+        message={message || ''}
+        additionalMessage={additionalMessage}
+        type={type}
+        onClose={clearNotification}
+      />
     </>
   );
 }

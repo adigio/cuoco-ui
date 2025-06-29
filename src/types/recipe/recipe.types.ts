@@ -79,7 +79,7 @@ export interface RecipeDetail {
   id: number;
   name: string;
   subtitle: string;
-  time: number;
+  time: string;
   servings: number;
   difficulty: string;
   isFavorite: boolean;
