@@ -3,8 +3,8 @@ import PreferencesSteps from './PreferencesSteps';
 import { PreferencesContainerProps } from '@/types/components/preferences.types';
 import { BRAND_COLORS } from '@/constants/colors';
 import { useRegisterStore } from '@/store/useRegisterStore';
-import { getCookingLevels, getAllergy, getDiet, getDietaryNeed } from '@/services/getter.service'
-import { usePreferencesStore } from '@/store/usePreferencesStore';
+import { useFilterOptionsCache } from '@/hooks/useFilterOptionsCache';
+import ChefLoader from '@/components/shared/loaders/ChefLoader';
 
 export default function PreferencesContainer({
   initialPreferences,
@@ -26,21 +26,16 @@ export default function PreferencesContainer({
     setFoodNeeds, 
     setAllergies 
   } = useRegisterStore();
-  console.log(cookingLevel,diet,foodNeeds,allergies)
-  const {
-    cookingLevelOptions,
-    allergyOptions,
-    dietOptions,
-    dietaryNeedOptions,
-    setCookingLevelOptions,
-    setAllergyOptions,
-    setDietOptions,
-    setDietaryNeedOptions,
-    isLoaded,
-    setIsLoaded
-  } = usePreferencesStore();
 
- 
+  // Usar el hook de cache en lugar de hacer llamadas directas
+  const {
+    isLoaded,
+    cookingLevelOptions,
+    originalAllergyOptions: allergyOptions,
+    originalDietOptions: dietOptions,
+    originalDietaryNeedOptions: dietaryNeedOptions,
+  } = useFilterOptionsCache();
+
   useEffect(() => {
     if (isEditMode && initialPreferences) {
       // Solo en modo edición inicializamos con los valores del usuario
@@ -52,31 +47,6 @@ export default function PreferencesContainer({
     // En modo registro, useRegisterStore mantiene sus valores por defecto
   }, [isEditMode, initialPreferences]);
 
-  useEffect(() => {
-    if (isLoaded) return;
-
-    async function fetchPreferences() {
-      try {
-        const [levels, allergies, diets, needs] = await Promise.all([
-          getCookingLevels(),
-          getAllergy(),
-          getDiet(),
-          getDietaryNeed()
-        ]);
-
-        setCookingLevelOptions(levels);
-        setAllergyOptions(allergies);
-        setDietOptions(diets);
-        setDietaryNeedOptions(needs);
-        setIsLoaded(true);
-      } catch (error) {
-        console.error("Error fetching preferences:", error);
-      }
-    }
-
-    fetchPreferences();
-  }, [isLoaded]);
-
   const handleComplete = () => {
     // Crear objeto de preferencias con los valores actuales del registerStore
     const preferences = {
@@ -85,8 +55,16 @@ export default function PreferencesContainer({
       dietaryRestrictions: foodNeeds,
       allergies: allergies,
     };
-          onComplete(preferences);
+    onComplete(preferences);
   };
+
+  if (!isLoaded) {
+    return (
+      <div className="w-full max-w-md">
+        <ChefLoader text="Cargando preferencias..." />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-md">

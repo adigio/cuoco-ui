@@ -1,17 +1,16 @@
 "use client";
 
-import { generateRecipes } from "@/services/recipe.service";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import React from "react";
 
-// Contexto Zustand
 import { useIngredientsStore } from "@/store/useIngredientsStore";
-import { useRecipesStore } from "@/store/useRecipesStore";
 import { useRegisterStore } from "@/store/useRegisterStore";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useMealPrepFiltersStore } from "@/store/useMealPrepFiltersStore";
+import { useMealPrepStore } from "@/store/useMealPrepStore";
+import { useFilterOptionsCache } from "@/hooks/useFilterOptionsCache";
 
-// Componentes
 import CheckboxGroup from "@/components/shared/form/CheckboxGroup";
 import ChefLoader from "@/components/shared/loaders/ChefLoader";
 import RecipeIngredientList from "@/components/recipe-generator/IngredientList";
@@ -19,205 +18,187 @@ import Select from "@/components/shared/form/Select";
 import Input from "@/components/shared/form/Input";
 import Checkbox from "@/components/shared/form/Checkbox";
 
-// Servicios
-import {
-  getDiet,
-  getAllergy,
-  getDietaryNeed,
-  getCookingLevels,
-  getMealTypes,
-  getPreparationTimes,
-} from "@/services/getter.service";
-
-// Tipos
-import { MealPrepRequest, Filters } from "@/types";
+import { MealPrepRequest } from "@/types";
 import { generateMealPrepRecipes } from "@/services/generateMealPrepRecipes.service";
-import { useMealPrepStore } from "@/store/useMealPrepStore";
 
-export default function RecipeFilters() {
-  const isPremium = useAuthStore((state) => state.user?.premium);
+export default function MealPrepFilters() {
   const { ingredients } = useIngredientsStore();
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
-  const [freeze, setFreeze] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const { setMealPreps } = useMealPrepStore();
+  const { filters, setFilters } = useMealPrepFiltersStore();
 
-  const { cookingLevel, diet, foodNeeds, allergies } = useRegisterStore();
+  const {
+    allergies: storedAllergies,
+    foodNeeds: storedNeeds,
+    diet: storeDiet,
+    cookingLevel: storeCookingLevel,
+  } = useRegisterStore();
 
-  const [filters, setFilters] = useState<Filters>({
-    time: "",
-    difficulty: "",
-    types: [],
-    diet: "",
-    people: 1,
-    useProfilePreferences: true,
-  });
+  const user = useAuthStore((state) => state.user);
+  const userPreferences = user?.preferences;
 
-  const [dietOptions, setDietOptions] = useState<
-    { key: number; value: string; label: string }[]
-  >([]);
-  const [difficultyOptions, setDifficultyOptions] = useState<
-    { key: number; value: string; label: string }[]
-  >([]);
-  const [allergyOptions, setAllergyOptions] = useState<
-    { key: number; value: string; label: string }[]
-  >([]);
-  const [timeOptions, setTimeOptions] = useState<
-    { key: number; value: string; label: string }[]
-  >([]);
-  const [selectedAllergies, setSelectedAllergies] = useState<number[]>([]);
-  const [needOptions, setNeedOptions] = useState<
-    { key: number; value: string; label: string }[]
-  >([]);
-  const [mealOptions, setMealOptions] = useState<
-    { key: number; value: string; label: string }[]
-  >([]);
-  const [selectedNeeds, setSelectedNeeds] = useState<number[]>([]);
+  // Usar useMemo para estabilizar las preferencias finales
+  const finalAllergies = useMemo(() => 
+    (userPreferences?.allergies && userPreferences.allergies.length > 0) ? userPreferences.allergies : storedAllergies,
+    [userPreferences?.allergies, storedAllergies]
+  );
+  
+  const finalNeeds = useMemo(() => 
+    (userPreferences?.dietaryRestrictions && userPreferences.dietaryRestrictions.length > 0) ? userPreferences.dietaryRestrictions : storedNeeds,
+    [userPreferences?.dietaryRestrictions, storedNeeds]
+  );
+  
+  const finalDiet = useMemo(() => 
+    userPreferences?.diet || storeDiet,
+    [userPreferences?.diet, storeDiet]
+  );
+  
+  const finalCookingLevel = useMemo(() => 
+    userPreferences?.cook_level || storeCookingLevel,
+    [userPreferences?.cook_level, storeCookingLevel]
+  );
 
+  // Flags de inicialización para evitar bucles infinitos
+  const [allergiesInitialized, setAllergiesInitialized] = useState<boolean>(false);
+  const [needsInitialized, setNeedsInitialized] = useState<boolean>(false);
+  const [dietInitialized, setDietInitialized] = useState<boolean>(false);
+  const [difficultyInitialized, setDifficultyInitialized] = useState<boolean>(false);
+
+  // Estados para las selecciones locales
+  const [selectedAllergies, setSelectedAllergies] = useState<string[]>([]);
+  const [selectedNeeds, setSelectedNeeds] = useState<string[]>([]);
+
+  // Usar el hook de cache en lugar de llamadas directas
+  const {
+    isLoaded: optionsLoaded,
+    difficultyOptions,
+    allergyOptions,
+    dietOptions,
+    needOptions,
+    timeOptions,
+    mealOptions
+  } = useFilterOptionsCache();
+
+  // useEffect para inicializar alergias
   useEffect(() => {
-    const fetchData = async () => {
-      const [
-        diets,
-        difficulties,
-        allergiesList,
-        needs,
-        mealTypes,
-        preparationTimes,
-      ] = await Promise.all([
-        getDiet(),
-        getCookingLevels(),
-        getAllergy(),
-        getDietaryNeed(),
-        getMealTypes(),
-        getPreparationTimes(),
-      ]);
-
-      const mapUnique = (items: any[]) =>
-        Array.from(new Map(items.map((i) => [i.description, i])).values()).map(
-          (item) => ({
-            key: item.id,
-            value: item.description,
-            label: item.description,
-          })
-        );
-
-      const dietOpts = mapUnique(diets);
-      const difficultyOpts = mapUnique(difficulties);
-      const allergyOpts = mapUnique(allergiesList);
-      const needOpts = mapUnique(needs);
-
-      setTimeOptions(mapUnique(preparationTimes));
-      setDietOptions(dietOpts);
-      setDifficultyOptions(difficultyOpts);
-      setAllergyOptions(allergyOpts);
-      setNeedOptions(needOpts);
-      setMealOptions(mapUnique(mealTypes));
-      setFilters((prev) => ({
+    if (!optionsLoaded || allergiesInitialized) return;
+    
+    if (allergyOptions.length > 0 && finalAllergies.length > 0) {
+      const matched = allergyOptions
+        .filter((opt) => finalAllergies.includes(opt.key))
+        .map((opt) => opt.value.toString());
+      
+      setSelectedAllergies(matched);
+      
+      setFilters(prev => ({
         ...prev,
-        difficulty:
-          difficultyOpts.find((opt) => opt.key === cookingLevel)?.value || "",
-        diet: dietOpts.find((opt) => opt.key === diet)?.value || "",
+        allergies_ids: finalAllergies
       }));
+      
+      setAllergiesInitialized(true);
+    }
+  }, [optionsLoaded, allergyOptions, finalAllergies, allergiesInitialized]);
 
-      setSelectedAllergies(
-        allergiesList.filter((a) => allergies.includes(a.id)).map((a) => a.id)
+  // useEffect para inicializar necesidades dietéticas
+  useEffect(() => {
+    if (!optionsLoaded || needsInitialized) return;
+    
+    if (needOptions.length > 0 && finalNeeds.length > 0) {
+      const matched = needOptions
+        .filter((opt) => finalNeeds.includes(opt.key))
+        .map((opt) => opt.value.toString());
+      
+      setSelectedNeeds(matched);
+      
+      setFilters(prev => ({
+        ...prev,
+        dietary_needs_ids: finalNeeds
+      }));
+      
+      setNeedsInitialized(true);
+    }
+  }, [optionsLoaded, needOptions, finalNeeds, needsInitialized]);
+
+  // useEffect para inicializar dieta
+  useEffect(() => {
+    if (!optionsLoaded || dietInitialized) return;
+    
+    if (dietOptions.length > 0 && finalDiet) {
+      const matched = dietOptions.find((opt) => opt.key === finalDiet);
+      if (matched) {
+        setFilters(prev => ({ ...prev, diet: matched.value.toString() }));
+        setDietInitialized(true);
+      }
+    }
+  }, [optionsLoaded, dietOptions, finalDiet, dietInitialized]);
+
+  // useEffect para inicializar dificultad
+  useEffect(() => {
+    if (!optionsLoaded || difficultyInitialized) return;
+    
+    if (difficultyOptions.length > 0 && finalCookingLevel) {
+      const matched = difficultyOptions.find(
+        (opt) => opt.key === finalCookingLevel
       );
+      if (matched) {
+        setFilters(prev => ({ ...prev, difficulty: matched.value.toString() }));
+        setDifficultyInitialized(true);
+      }
+    }
+  }, [optionsLoaded, difficultyOptions, finalCookingLevel, difficultyInitialized]);
 
-      setSelectedNeeds(
-        needs.filter((n) => foodNeeds.includes(n.id)).map((n) => n.id)
-      );
-    };
-
-    fetchData();
-  }, [cookingLevel, diet, foodNeeds, allergies]);
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    setFilters({ ...filters, [e.target.name]: e.target.value });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFilters(prev => ({ ...prev, [name]: value }));
   };
 
   const handleTiposChange = (newValues: string[]) => {
-    setFilters({ ...filters, types: newValues });
+    setFilters(prev => ({ ...prev, types: newValues }));
   };
 
-  const handleProfilePreferencesChange = () => {
-    setFilters((prev) => ({
-      ...prev,
-      useProfilePreferences: !prev.useProfilePreferences,
-    }));
+  const handleFreezeChange = () => {
+    setFilters(prev => ({ ...prev, freeze: !prev.freeze }));
   };
 
-  const toggleSelection = (
-    list: number[],
-    setter: (val: number[]) => void,
-    value: number
-  ) => {
-    setter(
-      list.includes(value) ? list.filter((v) => v !== value) : [...list, value]
-    );
+  const handleAllergiesChange = (newValues: string[]) => {
+    setSelectedAllergies(newValues);
+    const allergyIds = allergyOptions
+      .filter((opt) => newValues.includes(opt.value))
+      .map((opt) => opt.key);
+    setFilters(prev => ({ ...prev, allergies_ids: allergyIds }));
+  };
+
+  const handleNeedsChange = (newValues: string[]) => {
+    setSelectedNeeds(newValues);
+    const needIds = needOptions
+      .filter((opt) => newValues.includes(opt.value))
+      .map((opt) => opt.key);
+    setFilters(prev => ({ ...prev, dietary_needs_ids: needIds }));
   };
 
   const handleFinish = async () => {
-    const ingredientList = ingredients.map((ingredient) => ({
-      name: ingredient.name,
-      quantity: ingredient.quantity,
-      unit_id: Number(ingredient.unit),
-    }));
-    // 👉 Declaramos las variables
-    const preparationTimeId = timeOptions.find(
-      (opt) => opt.value === filters.time
-    )?.key;
-    const cookLevelId = difficultyOptions.find(
-      (opt) => opt.value === filters.difficulty
-    )?.key;
+    const preparationTimeId = timeOptions.find((opt) => opt.value === filters.time)?.key;
+    const cookLevelId = difficultyOptions.find((opt) => opt.value === filters.difficulty)?.key;
     const dietId = dietOptions.find((opt) => opt.value === filters.diet)?.key;
     const typeIds = filters.types
-      .map(
-        (typeValue) => mealOptions.find((opt) => opt.value === typeValue)?.key
-      )
+      .map((typeValue) => mealOptions.find((opt) => opt.value === typeValue)?.key)
       .filter((key): key is number => key !== undefined);
-    const servings = filters.people || null; // Si es 0 lo tomamos como null
-    const allergiesIds =
-      selectedAllergies.length > 0 ? selectedAllergies : null;
-    const dietaryNeedsIds = selectedNeeds.length > 0 ? selectedNeeds : null;
 
-    // 👉 Construimos filters dinámicamente
     const filtersToSend: Record<string, any> = {
-      freeze: freeze,
+      freeze: filters.freeze,
     };
 
-    if (preparationTimeId !== undefined) {
-      filtersToSend.preparation_time_id = preparationTimeId;
-    }
+    if (preparationTimeId !== undefined) filtersToSend.preparation_time_id = preparationTimeId;
+    if (cookLevelId !== undefined) filtersToSend.cook_level_id = cookLevelId;
+    if (dietId !== undefined) filtersToSend.diet_id = dietId;
+    if (typeIds.length > 0) filtersToSend.type_ids = typeIds;
+    if (filters.people !== null) filtersToSend.servings = filters.people;
+    if (filters.allergies_ids.length > 0) filtersToSend.allergies_ids = filters.allergies_ids;
+    if (filters.dietary_needs_ids.length > 0) filtersToSend.dietary_needs_ids = filters.dietary_needs_ids;
 
-    if (cookLevelId !== undefined) {
-      filtersToSend.cook_level_id = cookLevelId;
-    }
-
-    if (dietId !== undefined) {
-      filtersToSend.diet_id = dietId;
-    }
-
-    if (typeIds.length > 0) {
-      filtersToSend.type_ids = typeIds;
-    }
-
-    if (servings !== null) {
-      filtersToSend.servings = servings;
-    }
-
-    if (allergiesIds !== null) {
-      filtersToSend.allergies_ids = allergiesIds;
-    }
-
-    if (dietaryNeedsIds !== null) {
-      filtersToSend.dietary_needs_ids = dietaryNeedsIds;
-    }
-
-    // 👉 Armamos el request
-    const informationRecipe: MealPrepRequest = {
+    const informationMealPrep: MealPrepRequest = {
       ingredients: ingredients.map((ingredient) => ({
         name: ingredient.name,
         quantity: ingredient.quantity,
@@ -225,40 +206,41 @@ export default function RecipeFilters() {
       })),
       filters: filtersToSend,
     };
-    console.log(informationRecipe);
+
     try {
       setLoading(true);
       setError(null);
-      const generatedMealPreps = await generateMealPrepRecipes(informationRecipe);
+      const generatedMealPreps = await generateMealPrepRecipes(informationMealPrep);
       if (generatedMealPreps && generatedMealPreps.length > 0) {
         setMealPreps(generatedMealPreps);
-        router.push("/results");
+        router.push("/results-meal");
       } else {
-        setError("No se pudieron generar recetas. Intenta con otros filtros.");
+        setError("No se pudieron generar meal preps. Intenta con otros filtros.");
         setLoading(false);
       }
     } catch (error) {
-      console.error("Error al generar recetas:", error);
-      setError(
-        "Ocurrió un error al generar las recetas. Por favor, intenta de nuevo."
-      );
+      console.error("Error al generar meal preps:", error);
+      setError("Ocurrió un error al generar los meal preps. Por favor, intenta de nuevo.");
       setLoading(false);
     }
   };
 
   if (loading) {
-    return <ChefLoader text="Generando recetas deliciosas..." />;
+    return <ChefLoader text="Generando meal preps deliciosos..." />;
+  }
+
+  if (!optionsLoaded) {
+    return <ChefLoader text="Cargando filtros..." />;
   }
 
   return (
-    <div className="max-w-4xl mx-auto flex flex-col bg-white p-6 shadow rounded">
+    <div className="flex flex-col bg-[#fefefe] p-6">
       <h2 className="text-xl font-semibold text-gray-800 mb-4">
         Ingredientes seleccionados
       </h2>
       <RecipeIngredientList ingredients={ingredients} enabledDelete={false} />
       <hr className="my-6" />
-
-      <h2 className="text-3xl font-semibold mb-6 text-center">Filtros</h2>
+      <h2 className="text-3xl font-semibold mb-4 text-center">Filtros Meal Prep</h2>
 
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -266,7 +248,7 @@ export default function RecipeFilters() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <Select
           name="time"
           value={filters.time}
@@ -301,9 +283,19 @@ export default function RecipeFilters() {
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-4 mb-6">
+        <Checkbox
+          id="freeze"
+          name="freeze"
+          checked={filters.freeze}
+          onChange={handleFreezeChange}
+          label="🧊 Tengo freezer disponible"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <h3 className="text-xl font-semibold mb-2 text-gray-800">
+          <h3 className="text-lg font-medium mb-2 text-gray-800">
             🍽️ Tipo de comida
           </h3>
           <CheckboxGroup
@@ -313,21 +305,9 @@ export default function RecipeFilters() {
             onChange={handleTiposChange}
           />
         </div>
-        <div>
-          <h3 className="text-xl font-semibold mb-2 text-gray-800">
-            ❄️ Opciones de conservación
-          </h3>
-          <Checkbox
-            id="checkbox-freeze"
-            name="checkbox-freeze"
-            checked={freeze}
-            onChange={() => setFreeze(!freeze)}
-            label="Permite congelar"
-          />
-        </div>
 
         <div className="col-span-2">
-          <h3 className="text-xl font-semibold mb-2 text-gray-800">
+          <h3 className="text-lg font-medium mb-2 text-gray-800">
             🚫 Alergias
           </h3>
           <div className="flex flex-wrap gap-4 text-base">
@@ -335,14 +315,13 @@ export default function RecipeFilters() {
               <label key={option.key} className="flex items-center gap-2">
                 <input
                   type="checkbox"
-                  checked={selectedAllergies?.includes(option.key)}
-                  onChange={() =>
-                    toggleSelection(
-                      selectedAllergies,
-                      setSelectedAllergies,
-                      option.key
-                    )
-                  }
+                  checked={selectedAllergies.includes(option.value)}
+                  onChange={() => {
+                    const newValues = selectedAllergies.includes(option.value)
+                      ? selectedAllergies.filter(v => v !== option.value)
+                      : [...selectedAllergies, option.value];
+                    handleAllergiesChange(newValues);
+                  }}
                 />
                 {option.label}
               </label>
@@ -351,7 +330,7 @@ export default function RecipeFilters() {
         </div>
 
         <div className="col-span-2">
-          <h3 className="text-xl font-semibold mb-2 text-gray-800">
+          <h3 className="text-lg font-medium mb-2 text-gray-800">
             🧬 Necesidades Alimenticias
           </h3>
           <div className="flex flex-wrap gap-4 text-base">
@@ -359,10 +338,13 @@ export default function RecipeFilters() {
               <label key={option.key} className="flex items-center gap-2">
                 <input
                   type="checkbox"
-                  checked={selectedNeeds?.includes(option.key)}
-                  onChange={() =>
-                    toggleSelection(selectedNeeds, setSelectedNeeds, option.key)
-                  }
+                  checked={selectedNeeds.includes(option.value)}
+                  onChange={() => {
+                    const newValues = selectedNeeds.includes(option.value)
+                      ? selectedNeeds.filter(v => v !== option.value)
+                      : [...selectedNeeds, option.value];
+                    handleNeedsChange(newValues);
+                  }}
                 />
                 {option.label}
               </label>
@@ -371,7 +353,7 @@ export default function RecipeFilters() {
         </div>
       </div>
 
-      <div className="flex justify-between mt-10">
+      <div className="flex justify-between mt-8">
         <button
           onClick={() => router.push("/review")}
           className="bg-gray-200 text-gray-800 px-6 py-2 rounded hover:bg-gray-300 transition"
@@ -383,13 +365,16 @@ export default function RecipeFilters() {
         <button
           onClick={handleFinish}
           disabled={loading}
-          className={
-            loading
-              ? "bg-gray-400 cursor-not-allowed text-white px-6 py-2 rounded"
-              : "bg-[#f37b6a] hover:bg-[#e36455] cursor-pointer text-white px-6 py-2 rounded"
-          }
+          className={`
+            ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-[#f37b6a] hover:bg-[#e36455] cursor-pointer"
+            } 
+            text-white px-6 py-2 rounded transition
+          `}
         >
-          {loading ? "Generando..." : "Generar Recetas"}
+          {loading ? "Generando..." : "Generar Meal Preps"}
         </button>
       </div>
     </div>
