@@ -100,7 +100,7 @@ export default function RecipeFilters() {
       
       setAllergiesInitialized(true);
     }
-  }, [optionsLoaded, allergyOptions, finalAllergies, allergiesInitialized]);
+  }, [optionsLoaded, allergyOptions, finalAllergies, allergiesInitialized,setFilters]);
 
   useEffect(() => {
     if (!optionsLoaded || needsInitialized) return;
@@ -119,7 +119,7 @@ export default function RecipeFilters() {
       
       setNeedsInitialized(true);
     }
-  }, [optionsLoaded, needOptions, finalNeeds, needsInitialized]);
+  }, [optionsLoaded, needOptions, finalNeeds, needsInitialized,setFilters]);
 
   useEffect(() => {
     if (!optionsLoaded || dietInitialized) return;
@@ -131,7 +131,7 @@ export default function RecipeFilters() {
         setDietInitialized(true);
       }
     }
-  }, [optionsLoaded, dietOptions, finalDiet, dietInitialized]);
+  }, [optionsLoaded, dietOptions, finalDiet, dietInitialized,setFilters]);
 
   useEffect(() => {
     if (!optionsLoaded || difficultyInitialized) return;
@@ -145,11 +145,11 @@ export default function RecipeFilters() {
         setDifficultyInitialized(true);
       }
     }
-  }, [optionsLoaded, difficultyOptions, finalCookingLevel, difficultyInitialized]);
+  }, [optionsLoaded, difficultyOptions, finalCookingLevel, difficultyInitialized,setFilters]);
 
   useEffect(() => {
     setFilters(prev => ({ ...prev, types: [] }));
-  }, []);
+  }, [setFilters]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>

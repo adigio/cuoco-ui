@@ -99,7 +99,7 @@ export default function MealPrepFilters() {
       
       setAllergiesInitialized(true);
     }
-  }, [optionsLoaded, allergyOptions, finalAllergies, allergiesInitialized]);
+  }, [optionsLoaded, allergyOptions, finalAllergies, allergiesInitialized,setFilters]);
 
   // useEffect para inicializar necesidades dietéticas
   useEffect(() => {
@@ -119,7 +119,7 @@ export default function MealPrepFilters() {
       
       setNeedsInitialized(true);
     }
-  }, [optionsLoaded, needOptions, finalNeeds, needsInitialized]);
+  }, [optionsLoaded, needOptions, finalNeeds, needsInitialized,setFilters]);
 
   // useEffect para inicializar dieta
   useEffect(() => {
@@ -132,7 +132,7 @@ export default function MealPrepFilters() {
         setDietInitialized(true);
       }
     }
-  }, [optionsLoaded, dietOptions, finalDiet, dietInitialized]);
+  }, [optionsLoaded, dietOptions, finalDiet, dietInitialized,setFilters]);
 
   // useEffect para inicializar dificultad
   useEffect(() => {
@@ -147,7 +147,7 @@ export default function MealPrepFilters() {
         setDifficultyInitialized(true);
       }
     }
-  }, [optionsLoaded, difficultyOptions, finalCookingLevel, difficultyInitialized]);
+  }, [optionsLoaded, difficultyOptions, finalCookingLevel, difficultyInitialized,setFilters]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;

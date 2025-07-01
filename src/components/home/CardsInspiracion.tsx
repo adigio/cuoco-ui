@@ -23,8 +23,7 @@ export default function CardsInspiracion() {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleViewRecipe = (recipeId: number) => {
-    console.log('Ver detalle de receta:', recipeId);
+  const handleViewRecipe = (recipeId: number) => { 
     router.push(`/recipe/${recipeId}`);
   };
 

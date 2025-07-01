@@ -12,13 +12,11 @@ export const cookieConfig = {
 
 export const tokenService = {
     setToken: (token: string) => {
-        Cookies.set(AUTH_TOKEN_KEY, token, cookieConfig);
-        console.log('Token guardado en cookie');
+        Cookies.set(AUTH_TOKEN_KEY, token, cookieConfig); 
     },
 
     getToken: (): string | undefined => {
-        const token = Cookies.get(AUTH_TOKEN_KEY);
-        console.log('Token desde cookie:', token ? 'Presente' : 'No encontrado');
+        const token = Cookies.get(AUTH_TOKEN_KEY); 
         return token;
     },
 

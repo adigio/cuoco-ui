@@ -23,7 +23,7 @@ export const useFilterOptionsCache = () => {
       store.setLastFetchTimestamp(null);
       store.setLoadedWithAuth(false);
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, store]);
 
   const shouldFetchData = () => {
     if (store.isFetching) {
@@ -105,7 +105,7 @@ export const useFilterOptionsCache = () => {
     };
 
     fetchAllFilterOptions();
-  }, [isAuthenticated]);
+  }, [isAuthenticated,shouldFetchData]);
 
   const mapToSelectOptions = (items: any[]) =>
     Array.from(new Map(items.map((i) => [i.description, i])).values()).map(

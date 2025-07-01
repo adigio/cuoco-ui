@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from "react";
 
 interface UseApiDetailOptions {
   onError?: (error: Error) => void;
@@ -20,37 +20,41 @@ export const useApiDetail = <T>(
   const [error, setError] = useState<Error | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  // Estabilizar la función onError
-  const stableOnError = useCallback((err: Error) => {
-    options?.onError?.(err);
-  }, [options?.onError]);
+  const { onError } = options ?? {};
+
+  const stableOnError = useCallback(
+    (err: Error) => {
+      onError?.(err);
+    },
+    [onError]
+  );
 
   useEffect(() => {
     // Abortar request anterior si existe
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
-    
+
     const controller = new AbortController();
     abortControllerRef.current = controller;
-    
+
     const fetchData = async () => {
       try {
         setLoading(true);
         setError(null);
-        
+
         const result = await fetchFunction(id, controller.signal);
-        
+
         if (!controller.signal.aborted) {
           setData(result || null); // Handle undefined results
           setLoading(false);
         }
       } catch (err) {
         if (!controller.signal.aborted) {
-          const error = err instanceof Error ? err : new Error('Unknown error');
+          const error = err instanceof Error ? err : new Error("Unknown error");
           setError(error);
           setLoading(false);
-          
+
           // Call custom error handler if provided
           stableOnError(error);
         }
@@ -69,4 +73,4 @@ export const useApiDetail = <T>(
   }, [id, fetchFunction, stableOnError]);
 
   return { data, loading, error };
-}; 
+};

@@ -18,15 +18,19 @@ export default function RecipeHeader({
   servings,
   isFavorite: initialIsFavorite,
   subtitle,
-  difficulty
+  difficulty,
 }: Props) {
   const [showFavoriteModal, setShowFavoriteModal] = useState(false);
   const [showUnfavoriteModal, setShowUnfavoriteModal] = useState(false);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
-  
-  const { isFavorite: isFavoriteFromStore, addFavorite, removeFavorite } = useFavoritesStore();
+
+  const {
+    isFavorite: isFavoriteFromStore,
+    addFavorite,
+    removeFavorite,
+  } = useFavoritesStore();
   const { showSuccess, showError } = useNotification();
-  
+
   const [currentIsFavorite, setCurrentIsFavorite] = useState(initialIsFavorite);
 
   useEffect(() => {
@@ -60,7 +64,10 @@ export default function RecipeHeader({
 
           <div className="flex items-center gap-2">
             <span className="flex items-center gap-1 text-color-primary-medium">
-              <FontAwesomeIcon icon={faUser} className="text-color-primary-medium" />
+              <FontAwesomeIcon
+                icon={faUser}
+                className="text-color-primary-medium"
+              />
               {servings}
             </span>
             <TimeAndFavorite
@@ -88,10 +95,12 @@ export default function RecipeHeader({
 
       <UnfavoriteModal
         recipeId={id}
-        recipeName={name}
+        recipeText={name}
         isOpen={showUnfavoriteModal}
         onClose={() => setShowUnfavoriteModal(false)}
         onUnfavoriteSuccess={handleUnfavoriteSuccess}
+        showSuccess={showSuccess}
+        showError={showError}
       />
 
       <SubscriptionModal
@@ -101,4 +110,4 @@ export default function RecipeHeader({
       />
     </>
   );
-} 
+}

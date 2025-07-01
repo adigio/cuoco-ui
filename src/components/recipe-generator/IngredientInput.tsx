@@ -18,7 +18,7 @@ export default function RecipeIngredientInput() {
       setUnit(String(unitOptions[0].key));
       setIsInitialized(true);
     }
-  }, [isLoaded, unitOptions.length, isInitialized]); // Usamos length en lugar del array completo
+  }, [isLoaded, unitOptions.length, isInitialized,unitOptions]); // Usamos length en lugar del array completo
 
 
   const addIngredient = useIngredientsStore((state) => state.addIngredient);

@@ -45,7 +45,7 @@ export default function PreferencesContainer({
       setAllergies(initialPreferences.allergies || []);
     }
     // En modo registro, useRegisterStore mantiene sus valores por defecto
-  }, [isEditMode, initialPreferences]);
+  }, [isEditMode, initialPreferences, setCookingLevel, setDiet, setFoodNeeds, setAllergies]);
 
   const handleComplete = () => {
     // Crear objeto de preferencias con los valores actuales del registerStore

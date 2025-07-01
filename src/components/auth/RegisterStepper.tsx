@@ -103,8 +103,7 @@ export default function RegisterStepper({
             type="text"
             name="name"
             value={name}
-            onChange={(e) => {
-              console.log("e ", e.target.value);
+            onChange={(e) => { 
               setName(e.target.value);
             }}
             placeholder="nombre"

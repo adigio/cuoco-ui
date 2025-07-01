@@ -18,16 +18,14 @@ apiClient.interceptors.request.use(
         if (token) {
             // Verificar si el token no está expirado
             if (!jwtService.isExpired(token)) {
-                config.headers.Authorization = `Bearer ${token}`;
-                console.log('Token agregado al header Authorization');
+                config.headers.Authorization = `Bearer ${token}`; 
             } else {
                 // Token expirado, remover y no agregar header
                 console.warn('Token expirado, removiendo...');
                 tokenService.removeToken();
                 // TODO: logout ()  ?
             }
-        } else {
-            console.log('No hay token, request sin Authorization header');
+        } else { 
         }
 
         return config;
