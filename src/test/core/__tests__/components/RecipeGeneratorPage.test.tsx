@@ -1,84 +1,72 @@
 // src/test/core/__tests__/components/RecipeGeneratorPage.test.tsx
 
 import React from "react";
-import {
-  render,
-  screen,
-  fireEvent,
-  waitFor,
-} from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import RecipeGeneratorPage from "@/app/(application)/(generator)/recipe-generator/page";
 import { useRouter } from "next/navigation";
-import * as ingredientsStoreModule from "@/store/useIngredientsStore";
-import * as authStoreModule from "@/store/useAuthStore";
+import { useIngredientsStore } from "@/store/useIngredientsStore";
+import { useAuthStore } from "@/store/useAuthStore";
 import * as visionService from "@/services/vision.service";
 
 // ——— Stub ImageUploader para evitar LocalImage useEffect ———
-jest.mock(
-  "@/components/recipe-generator/ImageUploader",
-  () => ({
-    __esModule: true,
-    default: (props: any) => (
-      <input
-        data-testid="file-input"
-        type="file"
-        multiple
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          const files = Array.from(e.target.files || []);
-          props.setImages(files);
-        }}
-      />
-    ),
-  })
-);
+jest.mock("@/components/recipe-generator/ImageUploader", () => ({
+  __esModule: true,
+  default: (props: any) => (
+    <input
+      data-testid="file-input"
+      type="file"
+      multiple
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = Array.from(e.target.files || []);
+        props.setImages(files);
+      }}
+    />
+  ),
+}));
 
 // ——— Mocks de módulos centrales ———
-jest.mock("next/navigation", () => ({ useRouter: jest.fn() }));
+jest.mock("next/navigation", () => ({
+  useRouter: jest.fn(),
+  usePathname: jest.fn().mockReturnValue("/recipe-generator"),
+}));
+
 jest.mock("@/store/useIngredientsStore");
 jest.mock("@/store/useAuthStore");
 jest.mock("@/services/vision.service");
 
-import { useIngredientsStore } from "@/store/useIngredientsStore";
-import { useAuthStore }        from "@/store/useAuthStore";
-
-const mockedUseIngredientsStore = useIngredientsStore as jest.Mock;
-const mockedUseAuthStore        = useAuthStore        as jest.Mock;
-const mockedUseRouter           = useRouter           as jest.MockedFunction<typeof useRouter>;
-const mockedAnalyzeImages       = visionService.analyzeImagesWithAPI as jest.MockedFunction<
-  typeof visionService.analyzeImagesWithAPI
->;
+// Tipado correcto de mocks
+const mockedUseIngredientsStore = jest.mocked(useIngredientsStore);
+const mockedUseAuthStore = jest.mocked(useAuthStore);
+const mockedUseRouter = jest.mocked(useRouter);
+const mockedAnalyzeImages = jest.mocked(visionService.analyzeImagesWithAPI);
 
 describe("RecipeGeneratorPage", () => {
   const pushMock = jest.fn();
 
   beforeAll(() => {
-    // silenciar errores en consola
     jest.spyOn(console, "error").mockImplementation(() => {});
-    // stub URL.createObjectURL por si se cuela LocalImage
     global.URL.createObjectURL = jest.fn().mockReturnValue("blob:fake");
-    global.URL.revokeObjectURL  = jest.fn();
+    global.URL.revokeObjectURL = jest.fn();
   });
 
   beforeEach(() => {
     jest.clearAllMocks();
 
-    // mock del router
     mockedUseRouter.mockReturnValue({ push: pushMock } as any);
 
-    // mock base de useIngredientsStore
     mockedUseIngredientsStore.mockImplementation((selector?: any) => {
       const storeStub = {
         ingredients: [],
         addIngredient: jest.fn(),
         addMultipleIngredients: jest.fn().mockReturnValue(1),
         removeIngredient: jest.fn(),
+        clearIngredientsIfNeeded: jest.fn(), // <-- agregado
+        startGeneratorSession: jest.fn(), // <-- agregado
         mode: "basic",
       };
-      // si me pasan selector, lo ejecuto; si no, devuelvo todo el store
       return typeof selector === "function" ? selector(storeStub) : storeStub;
     });
 
-    // mock base de useAuthStore
     mockedUseAuthStore.mockImplementation((selector?: any) => {
       const authStub = { user: { premium: true }, isAuthenticated: true };
       return typeof selector === "function" ? selector(authStub) : authStub;
@@ -110,16 +98,16 @@ describe("RecipeGeneratorPage", () => {
   });
 
   it("redirige directamente si ya hay ingredientes", async () => {
-    // Stub con ingredientes ya cargados
     const storeWithIng = {
       ingredients: ["lechuga"],
       addIngredient: jest.fn(),
       addMultipleIngredients: jest.fn(),
       removeIngredient: jest.fn(),
+      clearIngredientsIfNeeded: jest.fn(),
+      startGeneratorSession: jest.fn(),
       mode: "basic",
     };
 
-    // Reemplazo la implementación PARA ESTE CASO concreto:
     mockedUseIngredientsStore.mockImplementation((selector?: any) =>
       typeof selector === "function" ? selector(storeWithIng) : storeWithIng
     );
@@ -134,7 +122,6 @@ describe("RecipeGeneratorPage", () => {
   });
 
   it("activa suscripción si es free y sube >2 imágenes", async () => {
-    // Stub de auth no-premium
     const authFree = { user: { premium: false }, isAuthenticated: true };
     mockedUseAuthStore.mockImplementation((selector?: any) =>
       typeof selector === "function" ? selector(authFree) : authFree
@@ -156,7 +143,18 @@ describe("RecipeGeneratorPage", () => {
   });
 
   it("procesa imágenes y redirige si detecta ingredientes", async () => {
-    const fakeResult = [{ name: "pepino", origin: "image", confirm: true }];
+    const fakeResult = [
+      {
+        name: "pepino",
+        origin: "image",
+        confirm: true,
+        quantity: 1,
+        unit: "unidad",
+        optional: false,
+        source: "mock",
+        confirmed: true,
+      },
+    ];
     mockedAnalyzeImages.mockResolvedValueOnce(fakeResult);
 
     render(<RecipeGeneratorPage />);

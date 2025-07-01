@@ -1,4 +1,3 @@
-import axios from "axios";
 import { Ingredient } from "@/types";
 import { apiClient } from "@/lib/axios.config";
 import { useAuthStore } from "@/store/useAuthStore";
