@@ -19,7 +19,7 @@ jest.mock('@/services/recipe.service', () => {
 // Configuración global para tests
 beforeAll(() => {
   // Configurar variables de entorno para tests
-  process.env.NEXT_PUBLIC_API_URL = 'http://localhost:3000';
+  process.env.NEXT_PUBLIC_API_URL = 'https://localhost:3000';
 });
 
 // Limpiar todos los mocks después de cada test

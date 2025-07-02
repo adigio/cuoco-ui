@@ -10,8 +10,11 @@ import RecipeCard from '@/components/calendar/RecipeCard';
 import Container from '@/components/shared/containers/Container';
 import Button from '@/components/shared/form/Button';
 import ConfirmationModal from '@/components/shared/modal/ConfirmationModal';
+import { useRecipeGeneratorSession } from '@/hooks/useRecipeGeneratorSession';
 
 export default function CalendarPage() {
+  // Limpiar ingredientes al estar fuera del flujo del generador
+  useRecipeGeneratorSession();
   const [schedule, setSchedule] = useState<WeeklySchedule>([]);
   const [originalSchedule, setOriginalSchedule] = useState<WeeklySchedule>([]);
   const [favorites, setFavorites] = useState<Record<string, CalendarRecipe[]>>({});

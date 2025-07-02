@@ -36,10 +36,10 @@ export const useRegisterStore = create<RegisterStore>()(
       email: '',
       password: '',
       confirmPass: '',
-      cookingLevel: 2,
-      diet: 1,
-      foodNeeds: [],
-      allergies: [],
+      cookingLevel: 2, // Radio button: primer nivel por defecto
+      diet: 1, // Radio button: primera dieta por defecto  
+      foodNeeds: [], // Checkboxes: empezar vacíos
+      allergies: [], // Checkboxes: empezar vacíos
       termsAccepted: false,
       favouriteCuisines: [],
 
@@ -60,8 +60,8 @@ export const useRegisterStore = create<RegisterStore>()(
           email: '',
           password: '',
           confirmPass: '',
-          cookingLevel: 0,
-          diet: 0,
+          cookingLevel: 2,
+          diet: 1,
           foodNeeds: [],
           allergies: [],
           termsAccepted: false,
@@ -70,15 +70,15 @@ export const useRegisterStore = create<RegisterStore>()(
 
       resetPreferences: () =>
         set({
-          cookingLevel: 0,
-          diet: 0,
+          cookingLevel: 1,
+          diet: 1,
           foodNeeds: [],
           allergies: [],
           favouriteCuisines: [],
         }),
     }),
     {
-      name: 'register-store', // clave en localStorage
+      name: 'register-store',
     }
   )
 )

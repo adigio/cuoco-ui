@@ -42,8 +42,7 @@ export default function SignIn() {
     e.preventDefault();
 
     try {
-      setLoading(true);
-      console.log("Form submitted:", formData);
+      setLoading(true); 
 
       const response = await login(formData.email, formData.password);
  
@@ -136,7 +135,7 @@ export default function SignIn() {
               fullWidth
               onClick={() => console.log("Google login")}
               size={"sm"}
-              disabled={loading}
+              disabled={true}
             >
               Iniciar sesión con Google
             </Button>
@@ -146,7 +145,7 @@ export default function SignIn() {
               fullWidth
               size={"sm"}
               onClick={() => console.log("Facebook login")}
-              disabled={loading}
+              disabled={true}
             >
               Iniciar sesión con Facebook
             </Button>

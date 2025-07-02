@@ -2,10 +2,10 @@
 
 import { generateRecipes } from "@/services/recipe.service";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import React from "react";
+import { useEffect, useState, useMemo } from "react";
 
 import { useRecipeGeneratorSession } from "@/hooks/useRecipeGeneratorSession";
+import { useFilterOptionsCache } from "@/hooks/useFilterOptionsCache";
 // Contexto Zustand
 import { useIngredientsStore } from "@/store/useIngredientsStore";
 import { useRecipesStore } from "@/store/useRecipesStore";
@@ -20,22 +20,10 @@ import RecipeIngredientList from "@/components/recipe-generator/IngredientList";
 import Select from "@/components/shared/form/Select";
 import Input from "@/components/shared/form/Input";
 
-// Servicios
-import {
-  getDiet,
-  getAllergy,
-  getDietaryNeed,
-  getCookingLevels,
-  getPreparationTimes,
-  getMealTypes,
-} from "@/services/getter.service";
-
-// Tipos
-import { RecipeGenerationRequest, Filters } from "@/types";
+import { RecipeGenerationRequest } from "@/types";
 
 export default function RecipeFilters() {
   useRecipeGeneratorSession();
-  const isPremium = useAuthStore((state) => state.user?.premium);
   const { ingredients } = useIngredientsStore();
   const router = useRouter();
   const { setFilteredRecipes } = useRecipesStore();
@@ -50,76 +38,54 @@ export default function RecipeFilters() {
   const user = useAuthStore((state) => state.user);
   const userPreferences = user?.preferences;
 
-  const finalAllergies = (userPreferences?.allergies && userPreferences.allergies.length > 0) ? userPreferences.allergies : storedAllergies;
-  const finalNeeds = (userPreferences?.dietaryRestrictions && userPreferences.dietaryRestrictions.length > 0) ? userPreferences.dietaryRestrictions : storedNeeds;
-  const finalDiet = userPreferences?.diet || storeDiet;
-  const finalCookingLevel = userPreferences?.cook_level || storeDifficult;
+  const finalAllergies = useMemo(() => 
+    (userPreferences?.allergies && userPreferences.allergies.length > 0) ? userPreferences.allergies : storedAllergies,
+    [userPreferences?.allergies, storedAllergies]
+  );
+  
+  const finalNeeds = useMemo(() => 
+    (userPreferences?.dietaryRestrictions && userPreferences.dietaryRestrictions.length > 0) ? userPreferences.dietaryRestrictions : storedNeeds,
+    [userPreferences?.dietaryRestrictions, storedNeeds]
+  );
+  
+  const finalDiet = useMemo(() => 
+    userPreferences?.diet || storeDiet,
+    [userPreferences?.diet, storeDiet]
+  );
+  
+  const finalCookingLevel = useMemo(() => 
+    userPreferences?.cook_level || storeDifficult,
+    [userPreferences?.cook_level, storeDifficult]
+  );
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // Flags de inicialización para evitar bucles infinitos
+  const [allergiesInitialized, setAllergiesInitialized] = useState<boolean>(false);
+  const [needsInitialized, setNeedsInitialized] = useState<boolean>(false);
+  const [dietInitialized, setDietInitialized] = useState<boolean>(false);
+  const [difficultyInitialized, setDifficultyInitialized] = useState<boolean>(false);
 
   const { filters, setFilters } = useRecipeFiltersStore();
 
-  const [dietOptions, setDietOptions] = useState<
-    { key: number; value: string; label: string }[]
-  >([]);
-  const [allergyOptions, setAllergyOptions] = useState<
-    { key: number; value: string; label: string }[]
-  >([]);
-  const [difficultyOptions, setDifficultyOptions] = useState<
-    { key: number; value: string; label: string }[]
-  >([]);
-  const [timeOptions, setTimeOptions] = useState<
-    { key: number; value: string; label: string }[]
-  >([]);
+  const {
+    isLoaded: optionsLoaded,
+    difficultyOptions,
+    allergyOptions,
+    dietOptions,
+    needOptions,
+    timeOptions,
+    mealOptions
+  } = useFilterOptionsCache();
+
   const [selectedAllergies, setSelectedAllergies] = useState<string[]>([]);
-  const [needOptions, setNeedOptions] = useState<
-    { key: number; value: string; label: string }[]
-  >([]);
-  const [mealOptions, setMealOptions] = useState<
-    { key: number; value: string; label: string }[]
-  >([]);
   const [selectedNeeds, setSelectedNeeds] = useState<string[]>([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const [
-        diets,
-        allergies,
-        needs,
-        difficultyOptions,
-        preparationTimes,
-        mealTypes,
-      ] = await Promise.all([
-        getDiet(),
-        getAllergy(),
-        getDietaryNeed(),
-        getCookingLevels(),
-        getPreparationTimes(),
-        getMealTypes(),
-      ]);
-
-      const mapUnique = (items: any[]) =>
-        Array.from(new Map(items.map((i) => [i.description, i])).values()).map(
-          (item) => ({
-            key: item.id,
-            value: item.id,
-            label: item.description,
-          })
-        );
-
-      setDietOptions(mapUnique(diets));
-      setAllergyOptions(mapUnique(allergies));
-      setNeedOptions(mapUnique(needs));
-      setDifficultyOptions(mapUnique(difficultyOptions));
-      setTimeOptions(mapUnique(preparationTimes));
-      setMealOptions(mapUnique(mealTypes));
-    };
-
-    fetchData();
-  }, []);
 
   useEffect(() => {
+    if (!optionsLoaded || allergiesInitialized) return;
+    
     if (allergyOptions.length > 0 && finalAllergies.length > 0) {
       const matched = allergyOptions
         .filter((opt) => finalAllergies.includes(opt.key))
@@ -131,15 +97,18 @@ export default function RecipeFilters() {
         ...prev,
         allergies_ids: finalAllergies
       }));
+      
+      setAllergiesInitialized(true);
     }
-  }, [allergyOptions, finalAllergies]);
+  }, [optionsLoaded, allergyOptions, finalAllergies, allergiesInitialized,setFilters]);
 
-  // Inicializar necesidades dietarias desde las preferencias del usuario  
   useEffect(() => {
+    if (!optionsLoaded || needsInitialized) return;
+    
     if (needOptions.length > 0 && finalNeeds.length > 0) {
       const matched = needOptions
         .filter((opt) => finalNeeds.includes(opt.key))
-        .map((opt) => opt.value.toString()); // ✅ Convertir a string para la UI
+        .map((opt) => opt.value.toString());
       
       setSelectedNeeds(matched);
       
@@ -147,32 +116,40 @@ export default function RecipeFilters() {
         ...prev,
         dietary_needs_ids: finalNeeds
       }));
+      
+      setNeedsInitialized(true);
     }
-  }, [needOptions, finalNeeds]);
+  }, [optionsLoaded, needOptions, finalNeeds, needsInitialized,setFilters]);
 
   useEffect(() => {
+    if (!optionsLoaded || dietInitialized) return;
+    
     if (dietOptions.length > 0 && finalDiet) {
       const matched = dietOptions.find((opt) => opt.key === finalDiet);
       if (matched) {
-        setFilters(prev => ({ ...prev, diet: matched.value.toString() })); // ✅ Convertir a string
+        setFilters(prev => ({ ...prev, diet: matched.value.toString() }));
+        setDietInitialized(true);
       }
     }
-  }, [dietOptions, finalDiet]);
+  }, [optionsLoaded, dietOptions, finalDiet, dietInitialized,setFilters]);
 
   useEffect(() => {
+    if (!optionsLoaded || difficultyInitialized) return;
+    
     if (difficultyOptions.length > 0 && finalCookingLevel) {
       const matched = difficultyOptions.find(
         (opt) => opt.key === finalCookingLevel
       );
       if (matched) {
-        setFilters(prev => ({ ...prev, difficulty: matched.value.toString() })); // ✅ Convertir a string
+        setFilters(prev => ({ ...prev, difficulty: matched.value.toString() }));
+        setDifficultyInitialized(true);
       }
     }
-  }, [difficultyOptions, finalCookingLevel]);
+  }, [optionsLoaded, difficultyOptions, finalCookingLevel, difficultyInitialized,setFilters]);
 
   useEffect(() => {
     setFilters(prev => ({ ...prev, types: [] }));
-  }, []); // Solo se ejecuta al montar el componente
+  }, [setFilters]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -182,17 +159,6 @@ export default function RecipeFilters() {
 
   const handleTiposChange = (newValues: string[]) => {
     setFilters({ ...filters, types: newValues });
-  };
-
-
-  const toggleSelection = (
-    list: string[],
-    setter: (val: string[]) => void,
-    value: string
-  ) => {
-    setter(
-      list.includes(value) ? list.filter((v) => v !== value) : [...list, value]
-    );
   };
 
   const handleAllergiesChange = (newValues: string[]) => {
@@ -215,7 +181,7 @@ export default function RecipeFilters() {
     const ingredientList = ingredients.map((ingredient) => ({
       name: ingredient.name,
       quantity: ingredient.quantity,
-      unit_id: Number(ingredient.unit), // 🔁 convertimos a número
+      unit_id: Number(ingredient.unit),
     }));
 
     const informationRecipe: RecipeGenerationRequest = {
@@ -230,8 +196,8 @@ export default function RecipeFilters() {
         dietary_needs_ids: filters.dietary_needs_ids,
       },
       configuration: {
-        size: 3, // o lo que quieras enviar
-        not_include: [], // o valores omitidos
+        size: 3,
+        not_include: [],
       },
     };
 
@@ -257,6 +223,10 @@ export default function RecipeFilters() {
 
   if (loading) {
     return <ChefLoader text="Generando recetas deliciosas..." />;
+  }
+
+  if (!optionsLoaded) {
+    return <ChefLoader text="Cargando filtros..." />;
   }
 
   return (

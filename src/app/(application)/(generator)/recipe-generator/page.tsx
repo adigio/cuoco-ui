@@ -53,8 +53,7 @@ export default function RecipeGeneratorPage() {
         if (!detectados || detectados.length === 0) {
           setError("No se detectaron ingredientes en las imágenes");
           return;
-        } 
-        console.log(detectados)
+        }  
         const cantidadAgregada = addMultipleIngredients(detectados);
         if (cantidadAgregada === 0) {
           setError("No se pudieron agregar nuevos ingredientes");

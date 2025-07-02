@@ -1,12 +1,15 @@
 "use client";
 
-import React, { useEffect, useState, use } from "react";
+import React, { useState, use } from "react";
 import { useRouter } from "next/navigation";
-import { getMealPrepById } from "@/services/generateMealPrepRecipes.service";
+import { useMealPrepDetail } from "@/hooks/useMealPrepDetail";
+import { useFavoritesStore } from "@/store/useFavoritesStore";
+import { useNotification } from "@/hooks/useNotification";
+
 import ChefLoader from "@/components/shared/loaders/ChefLoader";
 import BackgroundLayers from "@/components/shared/BackgroundLayers";
 import ContainerShadow from "@/components/shared/containers/ContainerShadow";
-import { MealPrep, PageProps } from "@/types";
+import { PageProps } from "@/types";
 import RecipeTags from "@/components/meal-prep/RecipeTags";
 import MealPrepSteps from "@/components/meal-prep/MealPrepSteps";
 import ObservationInfo from "@/components/meal-prep/ObservationInfo";
@@ -14,36 +17,51 @@ import IngredientsList from "@/components/meal-prep/IngredientList";
 import PortionSummary from "@/components/meal-prep/PortionSummary";
 import TimeAndFavorite from "@/components/shared/TimeAndFavorite";
 import { FavoriteModal } from "@/components/shared/modal/FavoriteModal";
+import { UnfavoriteModal } from "@/components/shared/modal/UnfavoriteModal";
+import SubscriptionModal from "@/components/shared/modal/SubscriptionModal";
+import NotificationModal from "@/components/shared/modal/NotificationModal";
 
 export default function MealPrepPage({ params }: PageProps) {
   const router = useRouter();
   const { id: mealPrepId } = use(params);
-  const [mealPrep, setmealPrep] = useState<MealPrep | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { mealPrep, loading } = useMealPrepDetail(mealPrepId);
+  const { isFavoriteMealPrep, addFavoriteMealPrep, removeFavoriteMealPrep } = useFavoritesStore();
   const [showFavoriteModal, setShowFavoriteModal] = useState(false);
+  const [showUnfavoriteModal, setShowUnfavoriteModal] = useState(false);
+  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
 
-  useEffect(() => {
-    const fetchMeal = async () => {
-      try {
-        const idMealPrep = Number(mealPrepId);
-        const res = await getMealPrepById(idMealPrep);
+  const { 
+    message, 
+    additionalMessage, 
+    type, 
+    show, 
+    showSuccess, 
+    showError, 
+    clearNotification 
+  } = useNotification();
 
-        if (res) {
-          setmealPrep(res);
-        }
-      } catch (error) {
-        console.error("Error al obtener la receta:", error);
-        setmealPrep(null);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const handleFavMealPrep = () => {
+    if (!mealPrep) return;
+    
+    const isCurrentlyFavorite = isFavoriteMealPrep(mealPrep.id);
+    
+    if (isCurrentlyFavorite) {
+      setShowUnfavoriteModal(true);
+    } else {
+      setShowFavoriteModal(true);
+    }
+  };
 
-    fetchMeal();
-  }, [mealPrepId]);
+  const handleFavoriteSuccess = () => {
+    if (mealPrep) {
+      addFavoriteMealPrep(mealPrep.id);
+    }
+  };
 
-  const handleFavMealPrep = (recipeId: number) => {
-    setShowFavoriteModal(true);
+  const handleUnfavoriteSuccess = () => {
+    if (mealPrep) {
+      removeFavoriteMealPrep(mealPrep.id);
+    }
   };
 
   const handleBack = () => {
@@ -51,16 +69,18 @@ export default function MealPrepPage({ params }: PageProps) {
   };
 
   if (loading) {
-    return <ChefLoader text="...Receta..." />;
+    return <ChefLoader text="Cargando meal prep..." />;
   }
 
   if (!mealPrep) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p className="text-red-600 text-lg">Receta no encontrada</p>
+        <p className="text-red-600 text-lg">Meal prep no encontrado</p>
       </div>
     );
   }
+
+  const isCurrentlyFavorite = isFavoriteMealPrep(mealPrep.id);
 
   return (
     <>
@@ -83,7 +103,8 @@ export default function MealPrepPage({ params }: PageProps) {
                 {/* Tiempo + favorito */}
                 <TimeAndFavorite
                   minutes={mealPrep.estimatedCookingTime}
-                  onToggleFavorite={() => handleFavMealPrep(mealPrep.id)}
+                  onToggleFavorite={handleFavMealPrep}
+                  isFavorite={isCurrentlyFavorite}
                 />
               </div>
 
@@ -97,6 +118,7 @@ export default function MealPrepPage({ params }: PageProps) {
               {mealPrep.observation && <ObservationInfo observation={mealPrep.observation} />}
             </aside>
           </div>
+          
           <div className="flex justify-center mt-8">
             <button
               onClick={handleBack}
@@ -108,13 +130,45 @@ export default function MealPrepPage({ params }: PageProps) {
         </ContainerShadow>
       </main>
 
+      {/* Modales */}
       <FavoriteModal
         type="meal-prep"
         recipeId={mealPrep.id}
         recipeText={mealPrep.title}
         isOpen={showFavoriteModal}
         onClose={() => setShowFavoriteModal(false)}
-        onUpgrade={() => {}} // No hace falta porque al ser premium no se mostrará nunca el modal
+        onUpgrade={() => {
+          setShowFavoriteModal(false);
+          setShowSubscriptionModal(true);
+        }}
+        onFavoriteSuccess={handleFavoriteSuccess}
+        showSuccess={showSuccess}
+        showError={showError}
+      />
+
+      <UnfavoriteModal
+        type="meal-prep"
+        recipeId={mealPrep.id}
+        recipeText={mealPrep.title}
+        isOpen={showUnfavoriteModal}
+        onClose={() => setShowUnfavoriteModal(false)}
+        onUnfavoriteSuccess={handleUnfavoriteSuccess}
+        showSuccess={showSuccess}
+        showError={showError}
+      />
+
+      <SubscriptionModal
+        isOpen={showSubscriptionModal}
+        onClose={() => setShowSubscriptionModal(false)}
+        title=""
+      />
+
+      <NotificationModal
+        show={show}
+        onClose={clearNotification}
+        message={message}
+        additionalMessage={additionalMessage}
+        type={type}
       />
     </>
   );

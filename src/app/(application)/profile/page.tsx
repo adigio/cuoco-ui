@@ -37,8 +37,7 @@ export default function Profile() {
 
   const handleSavePreferences = async (newPreferences: UserPreferences) => {
     try {
-      //TODO: guardar preferencias (SERVICE) 
-      console.log('Guardando preferencias:', newPreferences);
+      //TODO: guardar preferencias (SERVICE)  
       
       // Actualizar el estado local
       setPreferences(newPreferences);
@@ -61,8 +60,7 @@ export default function Profile() {
     setLoading(true);
 
     try {
-      const result = await recoverPassword(email);
-      console.log(result);
+      const result = await recoverPassword(email); 
       setMessage(result.message);
       setDone(true);
     } catch (error: any) {

@@ -9,83 +9,16 @@ import { mockCategorizedFavorites, mockSchedule } from "@/mocks/calendar";
 //Define como se responde a las APIs mockeadas
 
 export const handlers = [
-  http.post("/api/analyze-images", async ({ request }) => {
-    // const body = await request.json();
-
-    console.log("[MSW] Interceptando solicitud a /api/analyze-images");
+  http.post("/api/analyze-images", async ({ request }) => { 
 
     return HttpResponse.json(mocksIngredients, { status: 200 });
-  }),
-
-  // http.post("/api/ingredients/image", async ({ request }) => {
-  //   // const body = await request.json();
-
-  //   console.log("[MSW] Interceptando solicitud a /api/generate-recipes");
-
-  //   return HttpResponse.json(mockRecipes, { status: 200 });
-  // }),
-  http.get("/api/recipe/:id", async ({ params }) => {
-    console.log("[MSW] Interceptando solicitud a /api/recipe/:id");
-    const id = parseInt((params.id as string) || "0", 10) - 1;
-    console.log(id);
+  }), 
+  http.get("/api/recipe/:id", async ({ params }) => { 
+    const id = parseInt((params.id as string) || "0", 10) - 1; 
     return HttpResponse.json(mockDetailsRecipes[id], { status: 200 });
-  }),
-  // http.post("/api/login", async ({ request }) => {
-  //   const body = await request.json();
-
-  //   if (!body || typeof body !== "object") {
-  //     return HttpResponse.json({ message: "Bad request" }, { status: 400 });
-  //   }
-
-  //   const { email, password } = body;
-
-  //   console.log("[MSW] Login:", { email, password });
-
-  //   if (email === "test@cuoco.com" && password === "123456") {
-  //     return HttpResponse.json({
-  //       user: {
-  //         name: "Usuario Free",
-  //         email,
-  //         token: "fake-jwt-123",
-  //         premium: false,
-  //         preferences: {
-  //           cookingLevel: "Medio",
-  //           diet: "Omnívoro",
-  //           dietaryRestrictions: ["Sin lactosa"],
-  //           allergies: [],
-  //           favoriteCuisines: []
-  //         }
-  //       },
-  //     });
-  //   }
-  //   if (email === "premium@cuoco.com" && password === "123456") {
-  //     return HttpResponse.json({
-  //       user: {
-  //         name: "Usuario Premium",
-  //         email,
-  //         token: "fake-jwt-123",
-  //         premium: true,
-  //         preferences: {
-  //           cookingLevel: "Alto",
-  //           diet: "Vegetariano",
-  //           dietaryRestrictions: ["Sin gluten"],
-  //           allergies: ["Maní"],
-  //           favoriteCuisines: [],
-  //         },
-  //       },
-  //     });
-  //   }
-
-  //   return HttpResponse.json(
-  //     { message: "Credenciales inválidas" },
-  //     { status: 401 }
-  //   );
-  // }),
+  }), 
   http.post("/api/reset-password", async ({ request }) => {
-    const body = await request.json();
-
-    console.log("[MSW] Interceptando solicitud a /api/reset-password", body);
-
+    const body = await request.json(); 
     // Validación segura
     if (!body || typeof body !== "object" || typeof body.email !== "string") {
       return HttpResponse.json(
@@ -155,10 +88,7 @@ export const handlers = [
     return HttpResponse.json({ user: mockUser });
   }),
   http.post("/api/generate-meal-prep", async ({ request }) => {
-    const body = (await request.json()) as MealPrepGenerationRequest;
-
-    console.log("[MSW] Interceptando solicitud a /api/generate-meal-prep");
-
+    const body = (await request.json()) as MealPrepGenerationRequest; 
     return HttpResponse.json(mealPreps, { status: 200 });
   }),
   http.get("/api/meal-prep/:id", ({ params }) => {
@@ -174,12 +104,7 @@ export const handlers = [
   http.get("/api/fav/recipes", ({ request }) => {
     const url = new URL(request.url);
     const page = Number(url.searchParams.get("page") || 1);
-    const limit = Number(url.searchParams.get("limit") || 2); // valor por defecto
-
-    console.log("[MSW] Interceptando solicitud a /api/fav/recipes", {
-      page,
-      limit,
-    });
+    const limit = Number(url.searchParams.get("limit") || 2);  
 
     // Suponiendo que mockRecipes es un array plano
     const allRecipes = mockRecipes;
@@ -197,9 +122,7 @@ export const handlers = [
   }),
 
   // También mock de mealpreps
-  http.get("/api/fav/mealpreps", ({ request }) => {
-    console.log("[MSW] Interceptando solicitud a /api/fav/mealpreps");
-
+  http.get("/api/fav/mealpreps", ({ request }) => { 
     const url = new URL(request.url);
     const page = Number(url.searchParams.get("page") || "1");
     const limit = Number(url.searchParams.get("limit") || "2");
@@ -220,9 +143,7 @@ export const handlers = [
   }),
 
   http.post("/api/getRecipe", async ({ request }) => {
-    const body = (await request.json()) as { nombre: string };
-
-    console.log("[MSW] Interceptando receta rápida:", body);
+    const body = (await request.json()) as { nombre: string }; 
 
     const nombre = body.nombre || "sin-nombre";
 

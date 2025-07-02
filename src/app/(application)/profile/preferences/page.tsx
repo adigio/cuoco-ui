@@ -12,8 +12,7 @@ export default function ProfilePreferencesPage() {
 
   const handleSavePreferences = async (preferences: UserPreferences) => {
     try {
-      //TODO: service de preferencias
-      console.log('Guardando preferencias:', preferences);
+      //TODO: service de preferencias 
       router.push('/profile');
     } catch (error) {
       console.error('Error al guardar preferencias:', error);

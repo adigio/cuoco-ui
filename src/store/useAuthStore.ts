@@ -43,8 +43,7 @@ export const useAuthStore = create<AuthState>()(
             allergies: backendUser.preferences?.allergies,
             favourite_cuisines: backendUser.preferences?.favourite_cuisines,
           }
-        };
-        console.log('Usuario transformado:', user);
+        }; 
         
         // traer usePreferencesStore con TODAS las opciones usando getters
         if (typeof window !== 'undefined') {
@@ -76,8 +75,7 @@ export const useAuthStore = create<AuthState>()(
 
         tokenService.setToken(token);
         // TODO: decodificar para obtener info adicional si es necesario  
-        const decodedToken = jwtService.decode(token);
-        console.log('Token decodificado:', decodedToken);
+        const decodedToken = jwtService.decode(token); 
         
         set({ 
           user, 
@@ -125,9 +123,7 @@ export const useAuthStore = create<AuthState>()(
               isAuthenticated: true 
               // user ya está cargado desde persist
             });
-          } else {
-            // Token expirado, limpiar todo
-            console.log('❌ Token expirado al inicializar - Limpiando sesión');
+          } else { 
             tokenService.removeToken();
             set({ 
               user: null, 

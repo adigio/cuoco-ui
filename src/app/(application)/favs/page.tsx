@@ -13,8 +13,11 @@ import BackgroundLayers from "@/components/shared/BackgroundLayers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeartCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { useNotification } from "@/hooks/useNotification";
+import { useRecipeGeneratorSession } from "@/hooks/useRecipeGeneratorSession";
 
 export default function Favs() {
+  // Limpiar ingredientes al estar fuera del flujo del generador
+  useRecipeGeneratorSession();
   const [loading, setLoading] = useState(true);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [mealPreps, setMealPreps] = useState<MealPrep[]>([]);
@@ -34,7 +37,15 @@ export default function Favs() {
     name: string;
   } | null>(null);
 
-  const { message, additionalMessage, type, show, clearNotification } = useNotification();
+  const { 
+    message, 
+    additionalMessage, 
+    type, 
+    show, 
+    showSuccess, 
+    showError, 
+    clearNotification 
+  } = useNotification();
 
   const pageSize = 1; // Cantidad de recetas por página
 
@@ -229,7 +240,9 @@ export default function Favs() {
           }}
           onUnfavoriteSuccess={handleUnfavoriteSuccess}
           recipeId={selectedRecipeToRemove.id}
-          recipeName={selectedRecipeToRemove.name}
+          recipeText={selectedRecipeToRemove.name}
+          showSuccess={showSuccess}
+          showError={showError}
         />
       )}
 

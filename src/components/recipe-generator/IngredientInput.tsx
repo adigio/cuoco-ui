@@ -2,49 +2,54 @@
 
 import { useEffect, useState } from "react";
 import { useIngredientsStore } from "@/store/useIngredientsStore";
-
-// Servicios
-import { getUnitTypes } from "@/services/getter.service";
+import { useFilterOptionsCache } from "@/hooks/useFilterOptionsCache";
 
 export default function RecipeIngredientInput() {
   const [name, setName] = useState<string>("");
   const [quantity, setQuantity] = useState<string>("");
-  const [unit, setUnit] = useState<string>(""); // el value va a ser el id
-  const [unitTypes, setUnitTypes] = useState<any[]>([]); // podés tiparlo mejor si tenés la interfaz
+  const [unit, setUnit] = useState<string>("");
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
+  
+  const { unitOptions, isLoaded } = useFilterOptionsCache();
 
   useEffect(() => {
-    const fetchData = async () => {
-      const [unitTypesData] = await Promise.all([getUnitTypes()]);
-      setUnitTypes(unitTypesData);
-      if (unitTypesData.length > 0) setUnit(String(unitTypesData[0].id));
-    };
-    fetchData();
-  }, []);
+
+    if (isLoaded && unitOptions.length > 0 && !isInitialized) {
+      setUnit(String(unitOptions[0].key));
+      setIsInitialized(true);
+    }
+  }, [isLoaded, unitOptions.length, isInitialized,unitOptions]); // Usamos length en lugar del array completo
+
 
   const addIngredient = useIngredientsStore((state) => state.addIngredient);
 
   const addIngrdient = (name: string, origin = "manual", confirm = true) => {
-    const selectedUnit = unitTypes.find((u) => u.id === Number(unit)); 
+    if (!name.trim()) {
+      return;
+    }
+    
+    const selectedUnit = unitOptions.find((u) => u.key === Number(unit)); 
     if (!selectedUnit) {
       return;
     }
-    const displayName =
-      quantity && selectedUnit
-        ? `${quantity} ${selectedUnit.symbol} ${name}`
-        : name;  
+    
     const agregado = addIngredient(
       name,
       Number(quantity) || 0,
-      String(selectedUnit.id),
-      selectedUnit.symbol,
+      String(selectedUnit.key),
+      selectedUnit.symbol || selectedUnit.label,
       false,
       origin,
       confirm
     );
+    
     if (agregado) {
       setName("");
       setQuantity("");
-      setUnit(unitTypes.length > 0 ? String(unitTypes[0].id) : "");
+      // Resetear a la primera unidad disponible
+      if (unitOptions.length > 0) {
+        setUnit(String(unitOptions[0].key));
+      }
     }
   };
 
@@ -84,14 +89,23 @@ export default function RecipeIngredientInput() {
         {/* Unidad */}
         <select
           value={unit}
-          onChange={(e) => setUnit(e.target.value)}
+          onChange={(e) => {
+            setUnit(e.target.value);
+          }}
           className="border rounded px-2 py-2"
+          disabled={!isLoaded || unitOptions.length === 0}
         >
-          {unitTypes.map((u) => (
-            <option key={u.id} value={u.id}>
-              {u.symbol}
-            </option>
-          ))}
+          {!isLoaded ? (
+            <option value="">Cargando...</option>
+          ) : unitOptions.length === 0 ? (
+            <option value="">Sin opciones</option>
+          ) : (
+            unitOptions.map((u) => (
+              <option key={u.key} value={u.key}>
+                {u.label}
+              </option>
+            ))
+          )}
         </select>
 
         {/* Botón Agregar */}
