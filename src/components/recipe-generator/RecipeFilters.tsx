@@ -230,7 +230,7 @@ export default function RecipeFilters() {
         dietary_needs_ids: filters.dietary_needs_ids,
       },
       configuration: {
-        size: 4, // o lo que quieras enviar
+        size: 3, // o lo que quieras enviar
         not_include: [], // o valores omitidos
       },
     };
