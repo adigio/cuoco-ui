@@ -13,7 +13,7 @@ const PortionSummary: React.FC<PortionSummaryProps> = ({ recipes }) => (
     <ul className="list-disc list-inside text-sm text-gray-700">
       {recipes.map((r, i) => (
         <li key={i}>
-          {r.title}{r.portions ? `: ${r.portions} porciones` : ''}
+          {r.name}{r.portions ? `: ${r.portions} porciones` : ''}
         </li>
       ))}
     </ul>

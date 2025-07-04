@@ -16,7 +16,6 @@ import { useNotification } from "@/hooks/useNotification";
 import { useRecipeGeneratorSession } from "@/hooks/useRecipeGeneratorSession";
 
 export default function Favs() {
-  // Limpiar ingredientes al estar fuera del flujo del generador
   useRecipeGeneratorSession();
   const [loading, setLoading] = useState(true);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -28,41 +27,43 @@ export default function Favs() {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchTermMealPrep, setSearchTermMealPrep] = useState("");
 
-  const [showRecipes, setShowRecipes] = useState(false);
-  const [showMealPreps, setShowMealPreps] = useState(false);
+  const [showRecipes, setShowRecipes] = useState(true);
+  const [showMealPreps, setShowMealPreps] = useState(true);
 
   const [showUnfavoriteModal, setShowUnfavoriteModal] = useState(false);
-  const [selectedRecipeToRemove, setSelectedRecipeToRemove] = useState<{
+  const [selectedToRemove, setSelectedToRemove] = useState<{
     id: number;
     name: string;
+    type: "recipe" | "meal-prep";
   } | null>(null);
 
-  const { 
-    message, 
-    additionalMessage, 
-    type, 
-    show, 
-    showSuccess, 
-    showError, 
-    clearNotification 
+  const {
+    message,
+    additionalMessage,
+    type,
+    show,
+    showSuccess,
+    showError,
+    clearNotification,
   } = useNotification();
 
-  const pageSize = 1; // Cantidad de recetas por página
+  const recipesPageSize = 3;
+  const mealPrepsPageSize = 1;
 
-  const fetchRecipes = async () => {
+  const fetchFavorites = async () => {
     setLoading(true);
     try {
-      const [recipesRes] = await Promise.all([
+      const [recipesRes, mealPrepsRes] = await Promise.all([
         getFavRecipes(),
-        // getFavMealPreps(),
+        getFavMealPreps(),
       ]);
 
       const recipesList = Array.isArray(recipesRes)
         ? recipesRes.flat()
         : recipesRes.data;
 
-      setRecipes(recipesList);
-      // setMealPreps(mealPrepsRes.data);
+      setRecipes(recipesList || []);
+      setMealPreps(mealPrepsRes.data || []);
     } catch (err) {
       console.error("Error al traer favoritos", err);
     } finally {
@@ -71,22 +72,22 @@ export default function Favs() {
   };
 
   useEffect(() => {
-    fetchRecipes();
+    fetchFavorites();
   }, []);
 
-  const handleRemoveFromFavorites = (recipeId: number, recipeName: string) => {
-    setSelectedRecipeToRemove({ id: recipeId, name: recipeName });
+  const handleRemove = (id: number, name: string, type: "recipe" | "meal-prep") => {
+    setSelectedToRemove({ id, name, type });
     setShowUnfavoriteModal(true);
   };
 
   const handleUnfavoriteSuccess = () => {
-    fetchRecipes();
-    setSelectedRecipeToRemove(null);
+    fetchFavorites();
+    setSelectedToRemove(null);
   };
 
   if (loading) return <ChefLoader text="Cargando tus favoritos..." />;
 
-  // Filtrado y paginado recetas
+  // Filtrado y paginado recipes
   const filteredRecipes = recipes.filter((recipe: Recipe) => {
     if (!searchTerm.trim()) return true;
     const term = searchTerm.toLowerCase();
@@ -96,10 +97,10 @@ export default function Favs() {
     );
   });
 
-  const recipesTotalPages = Math.ceil(filteredRecipes.length / pageSize);
+  const recipesTotalPages = Math.ceil(filteredRecipes.length / recipesPageSize);
   const paginatedRecipes = filteredRecipes.slice(
-    (recipesPage - 1) * pageSize,
-    recipesPage * pageSize
+    (recipesPage - 1) * recipesPageSize,
+    recipesPage * recipesPageSize
   );
 
   // Filtrado y paginado meal preps
@@ -111,10 +112,10 @@ export default function Favs() {
     );
   });
 
-  const mealPrepsTotalPages = Math.ceil(filteredMealPreps.length / pageSize);
+  const mealPrepsTotalPages = Math.ceil(filteredMealPreps.length / mealPrepsPageSize);
   const paginatedMealPreps = filteredMealPreps.slice(
-    (mealPrepsPage - 1) * pageSize,
-    mealPrepsPage * pageSize
+    (mealPrepsPage - 1) * mealPrepsPageSize,
+    mealPrepsPage * mealPrepsPageSize
   );
 
   return (
@@ -142,7 +143,7 @@ export default function Favs() {
                 value={searchTerm}
                 onChange={(e) => {
                   setSearchTerm(e.target.value);
-                  setRecipesPage(1); // Reinicia a la primera página si cambia el search
+                  setRecipesPage(1);
                 }}
                 className="mb-4 px-4 py-2 border rounded w-full"
               />
@@ -155,12 +156,15 @@ export default function Favs() {
                         <div className="w-full flex justify-end items-end">
                           <button
                             onClick={() =>
-                              handleRemoveFromFavorites(recipe.id, recipe.name)
+                              handleRemove(recipe.id, recipe.name, "recipe")
                             }
                             className="w-10 text-3xl bg-red-900 hover:bg-red-900 text-white p-1 px-3 rounded-full shadow-md transition-colors"
                             title="Eliminar de favoritos"
                           >
-                            <FontAwesomeIcon icon={faHeartCircleXmark} className="w-5 h-5" />
+                            <FontAwesomeIcon
+                              icon={faHeartCircleXmark}
+                              className="w-5 h-5"
+                            />
                           </button>
                         </div>
                       </RecipeCard>
@@ -202,7 +206,7 @@ export default function Favs() {
                 value={searchTermMealPrep}
                 onChange={(e) => {
                   setSearchTermMealPrep(e.target.value);
-                  setMealPrepsPage(1); // Reinicia a la primera página si cambia el search
+                  setMealPrepsPage(1);
                 }}
                 className="mb-4 px-4 py-2 border rounded w-full"
               />
@@ -210,7 +214,24 @@ export default function Favs() {
               {paginatedMealPreps.length > 0 ? (
                 <div className="grid grid-cols-1 gap-4">
                   {paginatedMealPreps.map((mp) => (
-                    <MealPrepCard key={mp.id} mealPrep={mp} onClick={() => { }} />
+                    <div key={mp.id} className="relative">
+                      <MealPrepCard mealPrep={mp}>
+                        <div className="w-full flex justify-end items-end">
+                          <button
+                            onClick={() =>
+                              handleRemove(mp.id, mp.title, "meal-prep")
+                            }
+                            className="w-10 text-3xl bg-red-900 hover:bg-red-900 text-white p-1 px-3 rounded-full shadow-md transition-colors"
+                            title="Eliminar de favoritos"
+                          >
+                            <FontAwesomeIcon
+                              icon={faHeartCircleXmark}
+                              className="w-5 h-5"
+                            />
+                          </button>
+                        </div>
+                      </MealPrepCard>
+                    </div>
                   ))}
                 </div>
               ) : (
@@ -231,16 +252,17 @@ export default function Favs() {
         </section>
       </main>
 
-      {selectedRecipeToRemove && (
+      {selectedToRemove && (
         <UnfavoriteModal
           isOpen={showUnfavoriteModal}
           onClose={() => {
             setShowUnfavoriteModal(false);
-            setSelectedRecipeToRemove(null);
+            setSelectedToRemove(null);
           }}
           onUnfavoriteSuccess={handleUnfavoriteSuccess}
-          recipeId={selectedRecipeToRemove.id}
-          recipeText={selectedRecipeToRemove.name}
+          recipeId={selectedToRemove.id}
+          recipeText={selectedToRemove.name}
+          type={selectedToRemove.type}
           showSuccess={showSuccess}
           showError={showError}
         />

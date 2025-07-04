@@ -1,15 +1,11 @@
-"use client";
+'use client';
 
-import React, { useState, use } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useMealPrepDetail } from "@/hooks/useMealPrepDetail";
-import { useFavoritesStore } from "@/store/useFavoritesStore";
-import { useNotification } from "@/hooks/useNotification";
-
+import apiClient from "@/lib/axios.config";
 import ChefLoader from "@/components/shared/loaders/ChefLoader";
 import BackgroundLayers from "@/components/shared/BackgroundLayers";
 import ContainerShadow from "@/components/shared/containers/ContainerShadow";
-import { PageProps } from "@/types";
 import RecipeTags from "@/components/meal-prep/RecipeTags";
 import MealPrepSteps from "@/components/meal-prep/MealPrepSteps";
 import ObservationInfo from "@/components/meal-prep/ObservationInfo";
@@ -20,31 +16,62 @@ import { FavoriteModal } from "@/components/shared/modal/FavoriteModal";
 import { UnfavoriteModal } from "@/components/shared/modal/UnfavoriteModal";
 import SubscriptionModal from "@/components/shared/modal/SubscriptionModal";
 import NotificationModal from "@/components/shared/modal/NotificationModal";
+import { useFavoritesStore } from "@/store/useFavoritesStore";
+import { useNotification } from "@/hooks/useNotification";
 
-export default function MealPrepPage({ params }: PageProps) {
+export default function MealPrepPage({
+  params
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const router = useRouter();
-  const { id: mealPrepId } = use(params);
-  const { mealPrep, loading } = useMealPrepDetail(mealPrepId);
+
+  // Desempaquetar params con React.use()
+  const { id: mealPrepId } = React.use(params);
+
   const { isFavoriteMealPrep, addFavoriteMealPrep, removeFavoriteMealPrep } = useFavoritesStore();
+  const { show, message, additionalMessage, type, showSuccess, showError, clearNotification } = useNotification();
+
+  const [mealPrep, setMealPrep] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const [showFavoriteModal, setShowFavoriteModal] = useState(false);
   const [showUnfavoriteModal, setShowUnfavoriteModal] = useState(false);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
 
-  const { 
-    message, 
-    additionalMessage, 
-    type, 
-    show, 
-    showSuccess, 
-    showError, 
-    clearNotification 
-  } = useNotification();
+  useEffect(() => {
+    const fetchMealPrep = async () => {
+      try {
+        setLoading(true);
+        const { data } = await apiClient.get(`/meal-preps/${mealPrepId}`);
+
+        // Mapeo para camelCase
+        const mapped = {
+          id: data.id,
+          title: data.title,
+          estimatedCookingTime: data.estimated_cooking_time,
+          servings: data.servings,
+          freeze: data.freeze,
+          steps: data.steps,
+          recipes: data.recipes,
+          ingredients: data.ingredients,
+          observation: data.observation || undefined
+        };
+
+        setMealPrep(mapped);
+      } catch (err) {
+        console.error("Error al traer el meal prep", err);
+        setMealPrep(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMealPrep();
+  }, [mealPrepId]);
 
   const handleFavMealPrep = () => {
     if (!mealPrep) return;
-    
     const isCurrentlyFavorite = isFavoriteMealPrep(mealPrep.id);
-    
     if (isCurrentlyFavorite) {
       setShowUnfavoriteModal(true);
     } else {
@@ -78,47 +105,44 @@ export default function MealPrepPage({ params }: PageProps) {
         <p className="text-red-600 text-lg">Meal prep no encontrado</p>
       </div>
     );
-  }
-
+  } 
+  console.log(mealPrep)
   const isCurrentlyFavorite = isFavoriteMealPrep(mealPrep.id);
 
   return (
     <>
       <BackgroundLayers />
-
       <div className="w-full border-b-4 border-purple-400 mb-6"></div>
 
       <main className="flex-1 relative">
         <ContainerShadow customClass="container">
           <RecipeTags recipes={mealPrep.recipes} />
 
-          {/* Layout principal dividido 75% - 25% */}
           <div className="flex flex-col lg:flex-row gap-8">
-            {/* Columna principal - Timeline (75%) */}
             <section className="w-full lg:w-3/4">
               <div className="flex justify-between items-center mb-6">
-                {/* Título */}
                 <h2 className="text-2xl font-bold text-[#333]">Paso a paso</h2>
 
-                {/* Tiempo + favorito */}
                 <TimeAndFavorite
                   minutes={mealPrep.estimatedCookingTime}
                   onToggleFavorite={handleFavMealPrep}
                   isFavorite={isCurrentlyFavorite}
                 />
               </div>
-
+              
               <MealPrepSteps steps={mealPrep.steps} />
             </section>
 
-            {/* Sidebar derecha (25%) */}
             <aside className="w-full lg:w-1/4 flex flex-col gap-6">
               <PortionSummary recipes={mealPrep.recipes} />
+
               <IngredientsList ingredients={mealPrep.ingredients} />
-              {mealPrep.observation && <ObservationInfo observation={mealPrep.observation} />}
+              {mealPrep.observation && (
+                <ObservationInfo observation={mealPrep.observation} />
+              )}
             </aside>
           </div>
-          
+
           <div className="flex justify-center mt-8">
             <button
               onClick={handleBack}
@@ -130,7 +154,6 @@ export default function MealPrepPage({ params }: PageProps) {
         </ContainerShadow>
       </main>
 
-      {/* Modales */}
       <FavoriteModal
         type="meal-prep"
         recipeId={mealPrep.id}

@@ -3,7 +3,7 @@ import React from "react";
 
 interface Recipe {
   id: string;
-  title: string;
+  name: string;
 }
 
 interface RecipeTagsProps {
@@ -20,7 +20,7 @@ const RecipeTags: React.FC<RecipeTagsProps> = ({ recipes }) => {
             key={recipe.id}
             className="bg-[rgba(242,127,108,0.1)] border border-[#f27f6c] text-[#f27f6c] rounded-full px-5 py-2 text-base font-medium hover:bg-[rgba(242,127,108,0.2)] transition"
           >
-            {recipe.title}
+            {recipe.name}
           </button>
         ))}
       </div>

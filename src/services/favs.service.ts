@@ -14,18 +14,14 @@ export const getFavRecipes = async (page = 1) => {
   });
 
   return {
-    data: mappedRecipes,
-    currentPage: 1,
-    totalPages: 1
+    data: mappedRecipes 
   };
 };
 
 export const getFavMealPreps = async (page = 1) => {
-  const res = await axios.get(`/api/fav/mealpreps?page=${page}`);
+  const res = await apiClient.get(`/users/meal-preps`); 
   return {
-    data: res.data.data,
-    currentPage: res.data.currentPage,
-    totalPages: res.data.totalPages
+    data: res.data 
   };
 };
 
@@ -67,6 +63,46 @@ export const removeRecipeFromFavorites = async (recipeId: number) => {
       default:
         console.error("Error al eliminar receta de favoritos:", error);
         throw new Error("Error al eliminar la receta de favoritos");
+    }
+  }
+};
+export const addMealPrepToFavorites = async (mealPrepId: number) => {
+  try {
+    const response = await apiClient.post(`/users/meal-preps/${mealPrepId}`);
+    return { success: true, data: response.data };
+  } catch (error: any) {
+    const status = error?.response?.status;
+    const message = error?.response?.data?.message || "Error desconocido";
+
+    switch (status) {
+      case 404:
+        throw new Error("El meal prep no fue encontrado");
+      case 409:
+        throw new Error("Este meal prep ya está en tus favoritos");
+      case 503:
+        throw new Error("Servicio no disponible temporalmente");
+      default:
+        console.error("Error al agregar meal prep a favoritos:", error);
+        throw new Error("Error al agregar el meal prep a favoritos");
+    }
+  }
+};
+export const removeMealPrepFromFavorites = async (mealPrepId: number) => {
+  try {
+    const response = await apiClient.delete(`/users/meal-preps/${mealPrepId}`);
+    return { success: true, data: response.data };
+  } catch (error: any) {
+    const status = error?.response?.status;
+    const message = error?.response?.data?.message || "Error desconocido";
+
+    switch (status) {
+      case 404:
+        throw new Error("El meal prep no fue encontrado en tus favoritos");
+      case 503:
+        throw new Error("Servicio no disponible temporalmente");
+      default:
+        console.error("Error al eliminar meal prep de favoritos:", error);
+        throw new Error("Error al eliminar el meal prep de favoritos");
     }
   }
 };

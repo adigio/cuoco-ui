@@ -144,7 +144,7 @@ export interface MealPrepGenerationRequest {
 
 export interface MealPrepRecipe {
   id: string;
-  title: string;
+  name: string;
   image: string;
   portions?: number;
 }
@@ -152,7 +152,7 @@ export interface MealPrepRecipe {
 export interface MealPrep {
   id: number;
   title: string;
-  estimatedCookingTime: number;
+  estimated_cooking_time: number;
   totalPortions: number;
   ingredients: string[];
   observation?: string;

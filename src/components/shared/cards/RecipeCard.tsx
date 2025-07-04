@@ -14,9 +14,8 @@ export default function RecipeCard({
 
   return (
     <div
-      className={`w-[240px] ${cardHeight} bg-white rounded-xl shadow-md overflow-hidden flex flex-col ${customClass}`}
-    >
-      <a className="flex-1 flex flex-col" href={`/recipe/${recipe.id}`}>
+      className={`w-[240px] ${cardHeight} bg-white rounded-xl shadow-md overflow-hidden flex flex-col ${customClass}`}>
+      <a className="flex-1 flex flex-col" href={`/recipe/${recipe.id}`}> 
         <div className="relative h-[160px] w-[240px] flex-shrink-0 overflow-hidden rounded-t-2xl">
           <Image
             src={imageSrc}

@@ -30,7 +30,7 @@ export const getMealPrepById = async (id: number) => {
     // Simulación de delay para mostrar el loader (solo para desarrollo)
     await new Promise(resolve => setTimeout(resolve, 1500));
         
-    const response: ApiResponse<MealPrep>  = await axios.get(`/api/meal-prep/${id}`,  
+    const response: ApiResponse<MealPrep>  = await apiClient.get(`/meal-preps/${id}`,  
       {
         headers: {
           'Content-Type': 'application/json'

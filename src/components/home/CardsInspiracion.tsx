@@ -2,32 +2,37 @@
 
 import RecipeCard from "@/components/shared/cards/RecipeCard";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClock, faHeart } from '@fortawesome/free-regular-svg-icons';
-import { faRotate } from '@fortawesome/free-solid-svg-icons'; 
+import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { Recipe } from '@/types';
+import { RecipeDetail } from '@/types';
+import { getRandomRecipes } from "@/services/recipe.service"; // Ajustá el path según donde lo pongas
 
 export default function CardsInspiracion() {
   const router = useRouter();
-  const [inspirationalRecipes, setInspirationalRecipes] = useState<Recipe[]>([]);
+  const [inspirationalRecipes, setInspirationalRecipes] = useState<RecipeDetail[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // TODO; para no hacer el get del store... por una cuestion de que si hay una repetida (al probar el refresh rompe)
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setInspirationalRecipes([]);
-      setIsLoading(false);
-    }, 1000);
+    const fetchRecipes = async () => {
+      try {
+        setIsLoading(true);
+        const recipes = await getRandomRecipes(3); // Por ejemplo, traer 4 recetas
+        console.log(recipes)
+        setInspirationalRecipes(recipes);
+      } catch (error) {
+        console.error("Error al obtener recetas inspiracionales:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-    return () => clearTimeout(timer);
+    fetchRecipes();
   }, []);
 
   const handleViewRecipe = (recipeId: number) => { 
     router.push(`/recipe/${recipeId}`);
   };
-
-
 
   if (isLoading) {
     return (
@@ -66,7 +71,7 @@ export default function CardsInspiracion() {
           <div className='flex justify-between items-center px-2 text-red-400'>
             <div className='flex items-center gap-2.5 w-15'>
               <FontAwesomeIcon className='w-4 h-4' icon={faClock} />
-              <p>{recipe.preparationTime}</p>  
+              <p>{recipe.time}</p>  
             </div>
           </div>
         </RecipeCard>
