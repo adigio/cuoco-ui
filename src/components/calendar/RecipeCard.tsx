@@ -28,11 +28,11 @@ export default function RecipeCard({ recipe, onDelete, onAdd, isEmpty = false }:
         return (
             <div
                 onClick={onAdd}
-                className="h-full min-h-[120px] border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-pointer hover:border-color-primary-medium hover:bg-gray-50 transition-colors"
+                className="h-full min-h-[100px] md:min-h-[120px] border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-pointer hover:border-color-primary-medium hover:bg-gray-50 transition-colors"
             >
                 <FontAwesomeIcon
                     icon={faPlus}
-                    className="text-2xl text-gray-400 hover:text-color-primary-medium"
+                    className="text-xl md:text-2xl text-gray-400 hover:text-color-primary-medium"
                 />
             </div>
         );
@@ -46,26 +46,28 @@ export default function RecipeCard({ recipe, onDelete, onAdd, isEmpty = false }:
                         e.stopPropagation();
                         onDelete();
                     }}
-                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors z-10"
+                    className="absolute -top-2 -right-2 w-5 h-5 md:w-6 md:h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors z-10"
                 >
-                    <FontAwesomeIcon icon={faXmark} className="text-sm" />
+                    <FontAwesomeIcon icon={faXmark} className="text-xs md:text-sm" />
                 </button>
             )}
-            <div className="h-full p-3 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+            <div className="h-full p-2 md:p-3 border border-gray-200 rounded-lg hover:shadow-md transition-shadow bg-white">
                 <div className="flex flex-col h-full">
-                    <div className="relative w-full h-16 mb-2">
+                    <div className="relative w-full aspect-[4/3] mb-2">
                         <Image
                             src={!imageError ? imageSrc : '/others/default-recipe.png'}
                             alt={recipe.title || 'Receta sin título'}
                             fill
-                            className="object-cover rounded"
+                            sizes="(max-width: 768px) 45vw, 30vw"
+                            className="object-cover rounded-md"
+                            priority
                             onError={() => {
                                 setImageError(true);
                                 setImageSrc('/others/default-recipe.png');
                             }}
                         />
                     </div>
-                    <h3 className="text-sm font-medium text-gray-800 line-clamp-2">
+                    <h3 className="text-xs md:text-sm font-medium text-gray-800 line-clamp-2 min-h-[2.5em]">
                         {recipe.title || 'Sin título'}
                     </h3>
                 </div>

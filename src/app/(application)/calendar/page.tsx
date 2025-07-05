@@ -192,20 +192,33 @@ export default function CalendarPage() {
             Recetas favoritas - {selectedSlot?.mealType}
           </h2>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto">
-            {selectedSlot && favorites[selectedSlot.mealType]?.map((recipe) => (
-              <div
-                key={recipe.id}
-                onClick={() => handleSelectFavorite(recipe)}
-                className="cursor-pointer"
-              >
-                <RecipeCard
-                  recipe={recipe}
-                  isEmpty={false}
-                />
-              </div>
-            ))}
-          </div>
+          {selectedSlot && favorites[selectedSlot.mealType]?.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4 max-h-[60vh] overflow-y-auto px-2">
+              {favorites[selectedSlot.mealType]?.map((recipe) => (
+                <div
+                  key={recipe.id}
+                  onClick={() => handleSelectFavorite(recipe)}
+                  className="cursor-pointer"
+                >
+                  <RecipeCard
+                    recipe={recipe}
+                    isEmpty={false}
+                  />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-gray-500 mb-2">No tenés recetas favoritas para {selectedSlot?.mealType}.</p>
+              <p className="text-gray-600">
+                Podés ir a{" "}
+                <a href="/home" className="text-red-400 hover:text-red-400 underline">
+                  Home
+                </a>{" "}
+                para generar nuevas recetas y guardarlas como favoritas.
+              </p>
+            </div>
+          )}
         </div>
       </Modal>
 
