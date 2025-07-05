@@ -1,15 +1,22 @@
 import apiClient from "@/lib/axios.config";
-import axios from "axios";
+import { 
+  MEAL_TYPES,
+  MealType
+} from '@/types';
+
+
+const getRandomMealType = (): MealType => MEAL_TYPES[Math.floor(Math.random() * MEAL_TYPES.length)];
 
 export const getFavRecipes = async (page = 1) => {
   const res = await apiClient.get(`/users/recipes`);
   const mappedRecipes = res?.data.map((recipe: any) => {  
     return {
       id: recipe.id,
-    name: recipe.name,
-    subtitle: recipe.subtitle,
-    description: recipe.description,
-    image: recipe.image,
+      name: recipe.name,
+      subtitle: recipe.subtitle,
+      description: recipe.description,
+      image: recipe.image,
+      mealType: getRandomMealType(), // recipe.meal_types?.map((mealType: any) => mealType.description),
     };
   });
 

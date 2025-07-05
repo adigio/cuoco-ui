@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { CalendarRecipe } from '@/types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { getRecipeImageUrl } from '@/utils/imageUtils';
 
 interface RecipeCardProps {
     recipe: CalendarRecipe;
@@ -12,6 +13,17 @@ interface RecipeCardProps {
 }
 
 export default function RecipeCard({ recipe, onDelete, onAdd, isEmpty = false }: RecipeCardProps) {
+    const [imageSrc, setImageSrc] = useState<string>('/others/default-recipe.png');
+    const [imageError, setImageError] = useState(false);
+
+    useEffect(() => {
+        if (recipe && recipe.id) {
+            const url = getRecipeImageUrl(recipe);
+            setImageSrc(url);
+            setImageError(false);
+        }
+    }, [recipe]);
+
     if (isEmpty) {
         return (
             <div
@@ -41,16 +53,18 @@ export default function RecipeCard({ recipe, onDelete, onAdd, isEmpty = false }:
             )}
             <div className="h-full p-3 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
                 <div className="flex flex-col h-full">
-                    {recipe.img && (
-                        <div className="relative w-full h-16 mb-2">
-                            <Image
-                                src={recipe.img || '/images/default-recipe.jpg'}
-                                alt={recipe.title || 'Receta sin título'}
-                                fill
-                                className="object-cover rounded"
-                            />
-                        </div>
-                    )}
+                    <div className="relative w-full h-16 mb-2">
+                        <Image
+                            src={!imageError ? imageSrc : '/others/default-recipe.png'}
+                            alt={recipe.title || 'Receta sin título'}
+                            fill
+                            className="object-cover rounded"
+                            onError={() => {
+                                setImageError(true);
+                                setImageSrc('/others/default-recipe.png');
+                            }}
+                        />
+                    </div>
                     <h3 className="text-sm font-medium text-gray-800 line-clamp-2">
                         {recipe.title || 'Sin título'}
                     </h3>

@@ -7,6 +7,7 @@ import {
   MEAL_TYPES,
   CalendarRecipe,
   MealType,
+  DAYS_DISPLAY,
 } from '@/types';
 import RecipeCard from '@/components/calendar/RecipeCard';
 
@@ -15,7 +16,6 @@ interface WeeklyCalendarProps {
   onAddRecipe: (day: DayOfWeek, mealType: MealType) => void;
   onDeleteRecipe: (day: DayOfWeek, recipeId: number, title: string) => void;
 }
-
 
 export default function WeeklyCalendar({
   schedule,
@@ -47,9 +47,9 @@ export default function WeeklyCalendar({
         {daysFromSchedule.map((day) => (
           <div
             key={day}
-            className="text-center font-semibold text-gray-700 capitalize pb-2"
+            className="text-center font-semibold text-gray-700 pb-2"
           >
-            {day}
+            {DAYS_DISPLAY[day]}
           </div>
         ))}
 
@@ -64,7 +64,7 @@ export default function WeeklyCalendar({
               return (
                 <div key={`${day}-${mealType}`} className="min-h-[120px]">
                   <RecipeCard
-                    recipe={recipe || { id: 0, title: '', img: '', mealType }}
+                    recipe={recipe || { id: 0, title: '', image: '', mealType }}
                     isEmpty={!recipe}
                     onAdd={() => onAddRecipe(day, mealType)}
                     onDelete={recipe ? () => onDeleteRecipe(day, recipe.id, recipe.title) : undefined}
