@@ -1,6 +1,6 @@
 import { apiClient } from '@/lib/axios.config';
 import { LoginResponse, LoginRequest, ApiError, RegisterRequest, RegisterResponse } from '@/types/api/auth.types';
-
+import { UpdateUserRequest } from '@/types/auth/auth.types';
 
 export const authService = {
   async register(user: RegisterRequest): Promise<RegisterResponse> {
@@ -24,6 +24,16 @@ export const authService = {
       const message = error.response?.data?.message || 'Error desconocido';
       throw new Error(message);
     }
+  },
+
+  async updateProfile(userData: UpdateUserRequest): Promise<any> {
+    try {
+      const response = await apiClient.patch('/users', userData);
+      return response.data;
+    } catch (error: any) {
+      const message = error.response?.data?.message || 'Error al actualizar perfil';
+      throw new Error(message);
+    }
   }
 };
-export const { login, register } = authService;
+export const { login, register, updateProfile } = authService;

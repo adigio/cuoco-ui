@@ -7,7 +7,12 @@ export default function PreferencesDisplay({
   onEdit,
   showEditButton = true
 }: PreferencesDisplayProps) {
-  const { cookingLevelOptions, dietOptions } = usePreferencesStore();
+  const { 
+    cookingLevelOptions, 
+    dietOptions, 
+    allergyOptions, 
+    dietaryNeedOptions 
+  } = usePreferencesStore();
   
   if (!preferences) return null;
 
@@ -24,6 +29,24 @@ export default function PreferencesDisplay({
     return option?.description || 'No especificada';
   };
 
+  const getAllergyLabels = (ids?: number[]): string => {
+    if (!ids || ids.length === 0) return 'Ninguna';
+    const labels = ids.map(id => {
+      const option = allergyOptions.find(opt => opt.id === id);
+      return option?.description || `ID: ${id}`;
+    });
+    return labels.join(', ');
+  };
+
+  const getDietaryNeedLabels = (ids?: number[]): string => {
+    if (!ids || ids.length === 0) return 'Ninguna';
+    const labels = ids.map(id => {
+      const option = dietaryNeedOptions.find(opt => opt.id === id);
+      return option?.description || `ID: ${id}`;
+    });
+    return labels.join(', ');
+  };
+
   return (
     <div className="space-y-2 text-base flex gap-4 justify-between items-start">
 
@@ -36,18 +59,14 @@ export default function PreferencesDisplay({
           <span className="font-bold text-gray-700">Nivel de cocina:</span>{" "}
           <span className="text-[#F37B6A]">{getCookingLevelLabel(preferences.cook_level)}</span>
         </p>
-        {preferences.dietaryRestrictions && preferences.dietaryRestrictions.length > 0 && (
-          <p>
-            <span className="font-bold text-gray-700">Restricciones:</span>{" "}
-            <span className="text-[#F37B6A]">{preferences.dietaryRestrictions.join(', ')}</span>
-          </p>
-        )}
-        {preferences.allergies && preferences.allergies.length > 0 && (
-          <p>
-            <span className="font-bold text-gray-700">Alergias:</span>{" "}
-            <span className="text-[#F37B6A]">{preferences.allergies.join(', ')}</span>
-          </p>
-        )}
+        <p>
+          <span className="font-bold text-gray-700">Restricciones:</span>{" "}
+          <span className="text-[#F37B6A]">{getDietaryNeedLabels(preferences.dietaryRestrictions)}</span>
+        </p>
+        <p>
+          <span className="font-bold text-gray-700">Alergias:</span>{" "}
+          <span className="text-[#F37B6A]">{getAllergyLabels(preferences.allergies)}</span>
+        </p>
       </div>
 
 
@@ -61,8 +80,6 @@ export default function PreferencesDisplay({
           </button>
         </div>
       )}
-
-
     </div>
   );
 } 

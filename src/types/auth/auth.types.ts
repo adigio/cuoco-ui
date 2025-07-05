@@ -49,3 +49,12 @@ export interface UserPreferences {
   allergies?: number[];
   favourite_cuisines?: number[];
 }
+
+export interface UpdateUserRequest {
+  name?: string;
+  plan_id?: number;
+  cook_level_id?: number;
+  diet_id?: number;
+  dietary_needs?: number[];
+  allergies?: number[];
+}

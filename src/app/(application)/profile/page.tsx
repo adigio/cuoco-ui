@@ -4,6 +4,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import ContainerShadow from "@/components/shared/containers/ContainerShadow";
 import Button from "@/components/shared/form/Button";
 import { recoverPassword } from "@/services/recover.password";
+import { updateProfile } from "@/services/auth.service";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import PreferencesModal from "@/components/shared/modal/PreferencesModal";
@@ -37,12 +38,19 @@ export default function Profile() {
 
   const handleSavePreferences = async (newPreferences: UserPreferences) => {
     try {
-      //TODO: guardar preferencias (SERVICE)  
+      const userData = {
+        name: user?.name || "string",
+        plan_id: user?.plan?.id || 0,
+        cook_level_id: newPreferences.cook_level || 0,
+        diet_id: newPreferences.diet || 0,
+        dietary_needs: newPreferences.dietaryRestrictions || [],
+        allergies: newPreferences.allergies || []
+      };
+
+      const updatedUser = await updateProfile(userData);
       
-      // Actualizar el estado local
       setPreferences(newPreferences);
       
-      // Actualizar el store
       if (user) {
         updateUser({
           ...user,
@@ -148,7 +156,6 @@ export default function Profile() {
               </div>
             </div>
 
-            {/* Botón HOME opcional */}
             <div className="mt-8">
               <Link
                 href="/home"
