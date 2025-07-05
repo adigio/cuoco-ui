@@ -138,3 +138,17 @@ export const getRandomRecipes = async (size: number) => {
   }
 };
 
+export const getFastRecipe = async (recipeName: string): Promise<RecipeDetail> => {
+  try {
+    const response = await apiClient.get("/recipes", {
+      params: {
+        name: recipeName.trim()
+      }
+    });
+    
+    return mapApiToRecipeDetail(response.data);
+  } catch (error) {
+    throw error;
+  }
+};
+

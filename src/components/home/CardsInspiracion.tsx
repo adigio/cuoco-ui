@@ -69,7 +69,7 @@ export default function CardsInspiracion() {
       {inspirationalRecipes.map((recipe) => (
         <RecipeCard customClass={"mx-auto"} key={recipe.id} recipe={recipe}>
           <div className='flex justify-between items-center px-2 text-red-400'>
-            <div className='flex items-center gap-2.5 w-15'>
+            <div className='flex items-center gap-2.5 w-30'>
               <FontAwesomeIcon className='w-4 h-4' icon={faClock} />
               <p>{recipe.time}</p>  
             </div>

@@ -14,9 +14,7 @@ export default function NavbarHome() {
       const isPremium = useAuthStore((state) => state.user?.premium);
 
     const router = useRouter();
-  // Aquí obtendrías si el usuario es premium (desde tu contexto o store) 
   
-  // Handler para Calendario en desktop y mobile
   const handleCalendarClick = () => {
     if (isPremium) {
       window.location.href = '/calendar';
@@ -69,7 +67,7 @@ export default function NavbarHome() {
           </button>
 
           {/* Desktop menu */}
-          <div className="hidden lg:flex items-center space-x-6 text-black font-bold">
+          <div className="hidden lg:flex items-center space-x-6 text-white font-bold">
             <Link href="/home" className="hover:text-red-200">Generar Recetas</Link>
             <Link href="/favs" className="hover:text-red-200">Favoritos</Link>
 
