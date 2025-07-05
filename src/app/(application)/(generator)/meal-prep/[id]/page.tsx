@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -20,7 +20,7 @@ import { useFavoritesStore } from "@/store/useFavoritesStore";
 import { useNotification } from "@/hooks/useNotification";
 
 export default function MealPrepPage({
-  params
+  params,
 }: {
   params: Promise<{ id: string }>;
 }) {
@@ -29,8 +29,17 @@ export default function MealPrepPage({
   // Desempaquetar params con React.use()
   const { id: mealPrepId } = React.use(params);
 
-  const { isFavoriteMealPrep, addFavoriteMealPrep, removeFavoriteMealPrep } = useFavoritesStore();
-  const { show, message, additionalMessage, type, showSuccess, showError, clearNotification } = useNotification();
+  const { isFavoriteMealPrep, addFavoriteMealPrep, removeFavoriteMealPrep } =
+    useFavoritesStore();
+  const {
+    show,
+    message,
+    additionalMessage,
+    type,
+    showSuccess,
+    showError,
+    clearNotification,
+  } = useNotification();
 
   const [mealPrep, setMealPrep] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -54,7 +63,7 @@ export default function MealPrepPage({
           steps: data.steps,
           recipes: data.recipes,
           ingredients: data.ingredients,
-          observation: data.observation || undefined
+          observation: data.observation || undefined,
         };
 
         setMealPrep(mapped);
@@ -68,6 +77,59 @@ export default function MealPrepPage({
 
     fetchMealPrep();
   }, [mealPrepId]);
+  const handleDownloadPDF = () => {
+    if (!mealPrep) return;
+
+    const doc = new jsPDF();
+
+    // Fondo salmón
+    doc.setFillColor(250, 128, 114); // RGB salmón
+    doc.rect(0, 0, 210, 297, "F"); // A4 completo
+
+    let y = 20;
+    doc.setFontSize(18);
+    doc.setTextColor(83, 37, 219);
+    doc.text(mealPrep.title, 10, y);
+    y += 10;
+
+    doc.setFontSize(14);
+    doc.setTextColor(0, 0, 0);
+    doc.text("Ingredientes", 10, y);
+    y += 8;
+
+    mealPrep.ingredients.forEach((group) => {
+      if (group.section && group.section.trim()) {
+        doc.setFontSize(12);
+        doc.setTextColor(100);
+        doc.text(group.section.toString(), 105, y, { align: "center" });
+        doc.setDrawColor(200);
+        doc.line(10, y + 2, 200, y + 2);
+        y += 8;
+      }
+
+      group.items.forEach((item) => {
+        const qText = (item.quantity || "").toString();
+        const dText = (item.description || "").toString();
+
+        doc.setFontSize(11);
+        doc.setTextColor(0, 0, 0);
+        doc.text(qText, 40, y, { align: "right" });
+        doc.text(dText, 45, y);
+        y += 7;
+
+        if (y > 280) {
+          doc.addPage();
+          doc.setFillColor(250, 128, 114);
+          doc.rect(0, 0, 210, 297, "F");
+          y = 20;
+        }
+      });
+
+      y += 5;
+    });
+
+    doc.save(`ingredientes_${mealPrep.title}.pdf`);
+  };
 
   const handleFavMealPrep = () => {
     if (!mealPrep) return;
@@ -105,8 +167,8 @@ export default function MealPrepPage({
         <p className="text-red-600 text-lg">Meal prep no encontrado</p>
       </div>
     );
-  } 
-  console.log(mealPrep)
+  }
+  console.log(mealPrep);
   const isCurrentlyFavorite = isFavoriteMealPrep(mealPrep.id);
 
   return (
@@ -129,11 +191,34 @@ export default function MealPrepPage({
                   isFavorite={isCurrentlyFavorite}
                 />
               </div>
-              
+
               <MealPrepSteps steps={mealPrep.steps} />
             </section>
 
             <aside className="w-full lg:w-1/4 flex flex-col gap-6">
+              <div className="flex justify-center mt-4">
+                <button
+                  onClick={handleDownloadPDF}
+                  className="bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 px-4 rounded inline-flex items-center gap-2"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4"
+                    />
+                  </svg>
+                  Ingredientes
+                </button>
+              </div>
+
               <PortionSummary recipes={mealPrep.recipes} />
 
               <IngredientsList ingredients={mealPrep.ingredients} />
