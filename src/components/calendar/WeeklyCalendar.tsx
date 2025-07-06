@@ -95,43 +95,48 @@ export default function WeeklyCalendar({
                           <div
                             ref={provided.innerRef}
                             {...provided.droppableProps}
-                            className="min-h-[100px] md:min-h-[120px]"
+                            className="h-[100px] md:h-[120px] relative"
                           >
-                            {recipe ? (
-                              <Draggable
-                                draggableId={`${recipe.id}-${day}-${mealType}`}
-                                index={0}
-                              >
-                                {(providedDraggable) => (
-                                  <div
-                                    ref={providedDraggable.innerRef}
-                                    {...providedDraggable.draggableProps}
-                                    {...providedDraggable.dragHandleProps}
-                                  >
-                                    <RecipeCard
-                                      recipe={recipe}
-                                      isEmpty={false}
-                                      onAdd={() => onAddRecipe(day, mealType)}
-                                      onDelete={() =>
-                                        onDeleteRecipe(day, recipe.id, recipe.title)
-                                      }
-                                    />
-                                  </div>
-                                )}
-                              </Draggable>
-                            ) : (
-                              <RecipeCard
-                                recipe={{
-                                  id: 0,
-                                  title: '',
-                                  image: '',
-                                  mealType,
-                                }}
-                                isEmpty
-                                onAdd={() => onAddRecipe(day, mealType)}
-                              />
-                            )}
-                            {provided.placeholder}
+                            <div className="absolute inset-0">
+                              {recipe ? (
+                                <Draggable
+                                  draggableId={`${recipe.id}-${day}-${mealType}`}
+                                  index={0}
+                                >
+                                  {(providedDraggable) => (
+                                    <div
+                                      ref={providedDraggable.innerRef}
+                                      {...providedDraggable.draggableProps}
+                                      {...providedDraggable.dragHandleProps}
+                                      className="h-full"
+                                    >
+                                      <RecipeCard
+                                        recipe={recipe}
+                                        isEmpty={false}
+                                        onAdd={() => onAddRecipe(day, mealType)}
+                                        onDelete={() =>
+                                          onDeleteRecipe(day, recipe.id, recipe.title)
+                                        }
+                                      />
+                                    </div>
+                                  )}
+                                </Draggable>
+                              ) : (
+                                <RecipeCard
+                                  recipe={{
+                                    id: 0,
+                                    title: '',
+                                    image: '',
+                                    mealType,
+                                  }}
+                                  isEmpty
+                                  onAdd={() => onAddRecipe(day, mealType)}
+                                />
+                              )}
+                            </div>
+                            <div className="absolute inset-0 pointer-events-none">
+                              {provided.placeholder}
+                            </div>
                           </div>
                         )}
                       </Droppable>
