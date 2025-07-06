@@ -25,6 +25,23 @@ export const generateMealPrepRecipes = async (requestData: MealPrepRequest): Pro
   }
   
 };
+export const refreshMealPrep = async (
+  informationRecipe: MealPrepRequest
+) => {
+  try {
+    const response = await apiClient.post("/meal-preps", informationRecipe);
+
+    const mappedData = response.data.map((recipe: any) => ({
+      ...recipe,
+      preparationTime:
+        recipe.preparation_time?.description || recipe.preparationTime,
+    }));
+
+    return mappedData[0];
+  } catch (error) {
+    throw error;
+  }
+};
 export const getMealPrepById = async (id: number) => { 
   try {
     // Simulación de delay para mostrar el loader (solo para desarrollo)

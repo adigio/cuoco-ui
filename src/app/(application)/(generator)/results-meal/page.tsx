@@ -20,7 +20,7 @@ import NotificationModal from "@/components/shared/modal/NotificationModal";
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
 import { RefreshModal } from "@/components/shared/modal/RefreshModal";
 export default function MealPrepResultsPage() {
-  const mealPreps = useMealPrepStore((state) => state.mealPreps);
+  const mealPreps = useMealPrepStore((state) => state.filteredMealPrep);
   const { ingredients } = useIngredientsStore();
   const { isFavoriteMealPrep, addFavoriteMealPrep } = useFavoritesStore();
   const router = useRouter();

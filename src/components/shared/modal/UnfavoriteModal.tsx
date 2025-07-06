@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ConfirmationModal from '@/components/shared/modal/ConfirmationModal';
-import { removeRecipeFromFavorites } from '@/services/favs.service';
+import { removeRecipeFromFavorites,removeMealPrepFromFavorites } from '@/services/favs.service';
 
 interface UnfavoriteModalProps {
   type?: 'recipe' | 'meal-prep';
@@ -25,24 +25,31 @@ export const UnfavoriteModal = ({
 }: UnfavoriteModalProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleConfirmUnfavorite = async () => {
-    setIsLoading(true);
-    try {
+const handleConfirmUnfavorite = async () => {
+  setIsLoading(true);
+  try {
+    if (type === 'recipe') {
       await removeRecipeFromFavorites(recipeId);
-      const itemType = type === 'recipe' ? 'receta' : 'Meal Prep';
-      showSuccess(
-        `${itemType} eliminado de favoritos exitosamente`, 
-        `"${recipeText}" ya no está en tus favoritos`
-      );
-      onUnfavoriteSuccess?.();
-      onClose();
-    } catch (error: any) {
-      const errorMessage = error.message || `Error al eliminar ${type === 'recipe' ? 'la receta' : 'el Meal Prep'} de favoritos`;
-      showError(errorMessage, 'Intenta nuevamente en unos momentos');
-    } finally {
-      setIsLoading(false);
+    } else if (type === 'meal-prep') {
+      await removeMealPrepFromFavorites(recipeId); // o mealPrepId si tenés otro ID
     }
-  };
+
+    const itemType = type === 'recipe' ? 'receta' : 'Meal Prep';
+    showSuccess(
+      `${itemType} eliminado de favoritos exitosamente`,
+      `"${recipeText}" ya no está en tus favoritos`
+    );
+
+    onUnfavoriteSuccess?.();
+    onClose();
+  } catch (error: any) {
+    const errorMessage = error.message || `Error al eliminar ${type === 'recipe' ? 'la receta' : 'el Meal Prep'} de favoritos`;
+    showError(errorMessage, 'Intenta nuevamente en unos momentos');
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   const itemType = type === 'recipe' ? 'recetas' : 'Meal Preps';
 
