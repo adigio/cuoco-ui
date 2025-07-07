@@ -16,7 +16,7 @@ export const getFavRecipes = async (page = 1) => {
       subtitle: recipe.subtitle,
       description: recipe.description,
       image: recipe.image,
-      mealType: getRandomMealType(), // recipe.meal_types?.map((mealType: any) => mealType.description),
+      mealType: recipe.meal_types?.map((mealType: any) => mealType.description),
     };
   });
 

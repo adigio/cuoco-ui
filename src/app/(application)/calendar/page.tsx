@@ -4,17 +4,20 @@ import React, { useEffect, useState } from "react";
 import WeeklyCalendar from "@/components/calendar/WeeklyCalendar";
 import CalendarSkeleton from "@/components/shared/skeleton/CalendarSkeleton";
 import Modal from "@/components/shared/modal/Modal";
-import { DayOfWeek, WeeklySchedule, MealType, CalendarRecipe } from "@/types";
+import { DayOfWeek, WeeklySchedule, MealType, CalendarRecipe, MEAL_TYPE_MAPPING } from "@/types";
 import { calendarService } from "@/services/calendar.service";
 import RecipeCard from "@/components/calendar/RecipeCard";
 import Container from "@/components/shared/containers/Container";
 import Button from "@/components/shared/form/Button";
 import ConfirmationModal from "@/components/shared/modal/ConfirmationModal";
 import { useRecipeGeneratorSession } from "@/hooks/useRecipeGeneratorSession";
+import { useCalendarStore } from "@/store/useCalendarStore";
 
 export default function CalendarPage() {
   // Limpiar ingredientes al estar fuera del flujo del generador
   useRecipeGeneratorSession();
+  
+  const { pendingRecipe, clearPendingRecipe } = useCalendarStore();
   const [schedule, setSchedule] = useState<WeeklySchedule>([]);
   const [originalSchedule, setOriginalSchedule] = useState<WeeklySchedule>([]);
   const [favorites, setFavorites] = useState<Record<string, CalendarRecipe[]>>(
@@ -35,6 +38,9 @@ export default function CalendarPage() {
     recipeId: number;
     title: string;
   } | null>(null);
+
+  // La receta pendiente se maneja directamente en WeeklyCalendar
+  // No necesitamos modal ni selectedSlot para recetas pendientes
 
   useEffect(() => {
     loadInitialData();
@@ -179,6 +185,47 @@ export default function CalendarPage() {
     setHasChanges(false);
   };
 
+  // Manejar cuando se suelta la receta pendiente en un slot
+  const handleDropPendingRecipe = (day: DayOfWeek, mealType: MealType) => {
+    if (!pendingRecipe) return;
+
+    // Convertir los IDs de meal types a strings y verificar si el slot es válido
+    const allowedMealTypes = pendingRecipe.mealTypes.map(id => MEAL_TYPE_MAPPING[id]).filter(Boolean);
+    
+    // Solo permitir drop en slots del mealType correspondiente
+    if (!allowedMealTypes.includes(mealType)) return;
+
+    // Crear la receta para agregar al calendario
+    const recipeToAdd: CalendarRecipe = {
+      id: pendingRecipe.id,
+      title: pendingRecipe.title,
+      image: pendingRecipe.image,
+      mealType: mealType
+    };
+
+    setSchedule((currentSchedule) => {
+      const newSchedule = currentSchedule.map((daySchedule) => {
+        const currentDay = Object.keys(daySchedule)[0] as DayOfWeek;
+        if (currentDay === day) {
+          return {
+            [currentDay]: [
+              ...daySchedule[currentDay].filter(
+                (r) => r.mealType !== mealType
+              ),
+              recipeToAdd,
+            ],
+          };
+        }
+        return daySchedule;
+      });
+      setHasChanges(true);
+      return newSchedule;
+    });
+
+    // Limpiar la receta pendiente después de agregarla
+    clearPendingRecipe();
+  };
+
   if (isLoading) {
     return (
       <Container customClass="mt-30 mb-8">
@@ -192,15 +239,25 @@ export default function CalendarPage() {
 
   return (
     <Container customClass="mt-30 mb-8">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8">
-        Planificación Semanal
-      </h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-gray-800">
+          Planificación Semanal
+        </h1>
+        {pendingRecipe && (
+          <div className="flex items-center gap-2 bg-purple-50 px-4 py-2 rounded-lg">
+            <span className="text-purple-700 text-sm">
+              📅 Agregando: <strong>{pendingRecipe.title}</strong>
+            </span>
+          </div>
+        )}
+      </div>
 
       <WeeklyCalendar
         schedule={schedule}
         onAddRecipe={handleAddRecipe}
         onDeleteRecipe={handleRequestDelete}
         onMoveRecipe={handleMoveRecipe}
+        onDropPendingRecipe={handleDropPendingRecipe}
       />
 
       {/* Barra de acciones flotante cuando hay cambios */}

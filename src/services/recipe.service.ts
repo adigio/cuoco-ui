@@ -36,7 +36,26 @@ const mapApiToRecipeDetail = (apiRecipe: any): RecipeDetail => {
     time: apiRecipe.preparation_time?.description || "",
     servings: 1,
     difficulty: apiRecipe.cook_level?.description || "Media",
-    isFavorite: getFavoriteStatus(),
+    isFavorite: apiRecipe.favorite,
+    // Mapear mealTypes desde la respuesta del API, con fallback a todos los tipos
+    mealTypes: apiRecipe.meal_types 
+      ? apiRecipe.meal_types.map((mt: any) => {
+          if (mt.id) return mt.id;
+          if (mt.meal_type_id) return mt.meal_type_id;
+          
+          if (mt.description) {
+            const descriptionToId: Record<string, number> = {
+              'Desayuno': 1,
+              'Almuerzo': 2,
+              'Merienda': 3,
+              'Cena': 4
+            };
+            return descriptionToId[mt.description] || 1;
+          }
+          
+          return 1;
+        })
+      : [1, 2, 3, 4], // Fallback: permitir en todos los slots (Desayuno, Almuerzo, Merienda, Cena)
     stepBlocks: [
       {
         section: "Paso a paso",

@@ -294,6 +294,10 @@ export default function RecipeDetailPage({ params }: PageProps) {
             <RecipeSidebar
               ingredients={recipe.ingredients}
               missingIngredients={recipe.missingIngredients}
+              recipeId={recipe.id}
+              recipeTitle={recipe.name}
+              isFavorite={recipe.isFavorite}
+              mealTypes={recipe.mealTypes}
             />
           </div>
         </main>

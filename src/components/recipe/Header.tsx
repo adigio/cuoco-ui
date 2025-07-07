@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { RecipeDetail } from "@/types/recipe/recipe.types";
 import TimeAndFavorite from "@/components/shared/TimeAndFavorite";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -16,7 +16,7 @@ export default function RecipeHeader({
   name,
   time,
   servings,
-  isFavorite: initialIsFavorite,
+  isFavorite,
   subtitle,
   difficulty,
 }: Props) {
@@ -25,21 +25,13 @@ export default function RecipeHeader({
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
 
   const {
-    isFavorite: isFavoriteFromStore,
     addFavorite,
     removeFavorite,
   } = useFavoritesStore();
   const { showSuccess, showError } = useNotification();
 
-  const [currentIsFavorite, setCurrentIsFavorite] = useState(initialIsFavorite);
-
-  useEffect(() => {
-    const storeStatus = isFavoriteFromStore(id);
-    setCurrentIsFavorite(storeStatus);
-  }, [id, isFavoriteFromStore]);
-
   const handleFavRecipe = (recipeId: number) => {
-    if (!currentIsFavorite) {
+    if (!isFavorite) {
       setShowFavoriteModal(true);
     } else {
       setShowUnfavoriteModal(true);
@@ -48,19 +40,19 @@ export default function RecipeHeader({
 
   const handleFavoriteSuccess = () => {
     addFavorite(id);
-    setCurrentIsFavorite(true);
   };
 
   const handleUnfavoriteSuccess = () => {
     removeFavorite(id);
-    setCurrentIsFavorite(false);
   };
 
   return (
     <>
       <div className="mb-6 border-b border-color-primary-medium">
         <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-          <h1 className="text-3xl font-bold w-1/2 text-center">{name}</h1>
+          <h1 className="text-3xl font-bold w-1/2 text-center flex items-center gap-2">
+            {name}
+          </h1>
 
           <div className="flex items-center gap-2">
             <span className="flex items-center gap-1 text-color-primary-medium">
@@ -73,7 +65,7 @@ export default function RecipeHeader({
             <TimeAndFavorite
               time={time}
               onToggleFavorite={() => handleFavRecipe(id)}
-              isFavorite={currentIsFavorite}
+              isFavorite={isFavorite}
             />
           </div>
         </div>

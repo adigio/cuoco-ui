@@ -83,6 +83,7 @@ export interface RecipeDetail {
   servings: number;
   difficulty: string;
   isFavorite: boolean;
+  mealTypes?: number[];
   stepBlocks: RecipeDetailSection[];
   ingredients: RecipeDetailIngredientGroup[];
   missingIngredients: RecipeDetailMissingIngredient[];
