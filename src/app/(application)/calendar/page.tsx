@@ -39,9 +39,6 @@ export default function CalendarPage() {
     title: string;
   } | null>(null);
 
-  // La receta pendiente se maneja directamente en WeeklyCalendar
-  // No necesitamos modal ni selectedSlot para recetas pendientes
-
   useEffect(() => {
     loadInitialData();
   }, []);
