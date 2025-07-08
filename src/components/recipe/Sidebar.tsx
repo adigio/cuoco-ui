@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useCalendarStore } from "@/store/useCalendarStore";
 import { getRecipeImageUrl } from "@/utils/imageUtils";
 
+
 interface Props {
   ingredients: RecipeDetailIngredientGroup[];
   missingIngredients: RecipeDetailMissingIngredient[];
@@ -17,6 +18,7 @@ interface Props {
   mealType?: number;
   mealTypes?: number[];
 }
+
 
 export default function RecipeSidebar({ 
   ingredients, 

@@ -12,7 +12,7 @@ export default function NavbarHome() {
   const [isSubModalOpen, setIsSubModalOpen] = useState(false);
     const logout = useAuthStore((state) => state.logout);
       const isPremium = useAuthStore((state) => state.user?.premium);
-
+    const active = useAuthStore((state)=>state.user?.name);
     const router = useRouter();
   
   const handleCalendarClick = () => {
@@ -139,12 +139,12 @@ export default function NavbarHome() {
 
           <Link
             href="/profile"
-           className="block text-center font-bold text-red-400 hover:text-red-600 mb-4"
+            className="block text-center font-bold text-red-400 hover:text-red-600 mb-4"
             onClick={() => setIsMenuOpen(false)}
           >
             Perfil
           </Link>
-           <button
+          <button
                 onClick={handleLogout}
                   className="block mx-auto font-bold text-red-400 hover:text-red-600 mb-4 relative"
                 title="Cerrar sesión"

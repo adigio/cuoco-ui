@@ -20,6 +20,7 @@ import { useFavoritesStore } from "@/store/useFavoritesStore";
 import { useNotification } from "@/hooks/useNotification";
 import jsPDF from "jspdf";
 
+
 export default function MealPrepPage({
   params,
 }: {
@@ -293,12 +294,14 @@ const handleDownloadPDF = () => {
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold text-[#333]">Paso a paso</h2>
 
+
                 <TimeAndFavorite
                   minutes={mealPrep.estimatedCookingTime}
                   onToggleFavorite={handleFavMealPrep}
                   isFavorite={isCurrentlyFavorite}
                 />
               </div>
+              <h3 className="mx-4 mb-2 text-xl font-bold text-[#333]">Paso a paso</h3>
 
               <MealPrepSteps steps={mealPrep.steps} />
             </section>

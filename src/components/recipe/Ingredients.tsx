@@ -17,6 +17,7 @@ export default function RecipeIngredients({ ingredients }: Props) {
             </div>
           )}
           <div className="flex flex-col items-center space-y-3">
+
             {group.items.map((item, i) => (
               <div key={i} className="flex items-center justify-center min-w-[200px]">
                 {item.quantity && (

@@ -106,6 +106,7 @@ export const handlers = [
     const page = Number(url.searchParams.get("page") || 1);
     const limit = Number(url.searchParams.get("limit") || 2);  
 
+
     // Suponiendo que mockRecipes es un array plano
     const allRecipes = mockRecipes;
     const start = (page - 1) * limit;

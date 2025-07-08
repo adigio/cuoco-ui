@@ -289,14 +289,15 @@ export default function CalendarPage() {
           <h2 className="text-2xl font-semibold mb-4">
             Recetas favoritas - {selectedSlot?.mealType}
           </h2>
-
           {selectedSlot && favorites[selectedSlot.mealType]?.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4 max-h-[60vh] overflow-y-auto px-2">
               {favorites[selectedSlot.mealType]?.map((recipe) => (
+
                 <div
                   key={recipe.id}
                   onClick={() => handleSelectFavorite(recipe)}
                   className="cursor-pointer"
+
                 >
                   <RecipeCard recipe={recipe} isEmpty={false} />
                 </div>

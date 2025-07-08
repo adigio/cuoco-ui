@@ -23,6 +23,7 @@ const MealPrepSteps: React.FC<MealPrepStepsProps> = ({ steps }) => {
           <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
            
               <li >{step.description}</li> 
+
           </ul>
         </li>
       ))}

@@ -252,7 +252,6 @@ export default function RecipeFilters() {
           options={timeOptions}
           label="⏱️ Tiempo"
         />
-
         <Select
           name="difficulty"
           value={filters.difficulty}
