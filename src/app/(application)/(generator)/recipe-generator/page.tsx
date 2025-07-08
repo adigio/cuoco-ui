@@ -20,7 +20,7 @@ export default function RecipeGeneratorPage() {
   const [showAlertModal, setShowAlertModal] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSubModalOpen, setIsSubModalOpen] = useState(false);
-
+ 
   //sesion del generador de recetas
   useRecipeGeneratorSession();
 
