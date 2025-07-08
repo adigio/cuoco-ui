@@ -51,7 +51,7 @@ export default function Header() {
           {/* Botón */}
           <div className="mt-7 md:mb-0 mb-5 md:mt-5 flex flex-col sm:flex-row gap-3">
             <button
-              onClick={() => router.push("/recipe-generator")}
+              onClick={() => router.push("/signup")}
               className="w-full sm:w-auto background-color-primary hover:bg-red-600 text-white text-lg font-semibold py-3 px-14 rounded-lg shadow-lg transition"
             >
               Comenzar!

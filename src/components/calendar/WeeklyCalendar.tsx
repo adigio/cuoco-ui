@@ -10,7 +10,7 @@ import {
   DAYS_DISPLAY,
   REVERSE_MEAL_TYPE_MAPPING,
 } from '@/types';
-import RecipeCard from '@/components/calendar/RecipeCard';
+import RecipeCard from '@/components/calendar/RecipeCard'; 
 import {
   DragDropContext,
   Droppable,
@@ -18,7 +18,7 @@ import {
   DropResult,
 } from '@hello-pangea/dnd';
 import { useCalendarStore } from '@/store/useCalendarStore';
-import { getRecipeById } from '@/services/recipe.service';
+import { getRecipeById } from '@/services/recipe.service'; 
 
 interface WeeklyCalendarProps {
   schedule: WeeklySchedule;

@@ -1,5 +1,5 @@
 "use client";
-
+ 
 import React, { useEffect, useState } from "react";
 import WeeklyCalendar from "@/components/calendar/WeeklyCalendar";
 import CalendarSkeleton from "@/components/shared/skeleton/CalendarSkeleton";
@@ -12,6 +12,7 @@ import Button from "@/components/shared/form/Button";
 import ConfirmationModal from "@/components/shared/modal/ConfirmationModal";
 import { useRecipeGeneratorSession } from "@/hooks/useRecipeGeneratorSession";
 import { useCalendarStore } from "@/store/useCalendarStore";
+ 
 
 export default function CalendarPage() {
   // Limpiar ingredientes al estar fuera del flujo del generador
@@ -235,7 +236,7 @@ export default function CalendarPage() {
   }
 
   return (
-    <Container customClass="mt-30 mb-8">
+    <Container customClass="mt-30 mb-8"> 
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-gray-800">
           Planificación Semanal
@@ -246,7 +247,7 @@ export default function CalendarPage() {
               📅 Agregando: <strong>{pendingRecipe.title}</strong>
             </span>
           </div>
-        )}
+        )} 
       </div>
 
       <WeeklyCalendar
@@ -288,16 +289,16 @@ export default function CalendarPage() {
         <div className="p-6">
           <h2 className="text-2xl font-semibold mb-4">
             Recetas favoritas - {selectedSlot?.mealType}
-          </h2>
+          </h2> 
 
           {selectedSlot && favorites[selectedSlot.mealType]?.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4 max-h-[60vh] overflow-y-auto px-2">
               {favorites[selectedSlot.mealType]?.map((recipe) => (
+ 
                 <div
                   key={recipe.id}
                   onClick={() => handleSelectFavorite(recipe)}
-                  className="cursor-pointer"
-                >
+                  className="cursor-pointer" >
                   <RecipeCard recipe={recipe} isEmpty={false} />
                 </div>
               ))}
@@ -317,6 +318,7 @@ export default function CalendarPage() {
                 </a>{" "}
                 para generar nuevas recetas y guardarlas como favoritas.
               </p>
+ 
             </div>
           )}
         </div>

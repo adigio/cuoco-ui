@@ -2,11 +2,13 @@ import React from "react";
 import { RecipeDetailIngredientGroup, RecipeDetailMissingIngredient } from "@/types/recipe/recipe.types";
 import RecipeIngredients from "./Ingredients";
 import RecipeMissingIngredients from "./MissingIngredients";
+ 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarPlus } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/navigation';
 import { useCalendarStore } from "@/store/useCalendarStore";
 import { getRecipeImageUrl } from "@/utils/imageUtils";
+ 
 
 interface Props {
   ingredients: RecipeDetailIngredientGroup[];
@@ -17,7 +19,7 @@ interface Props {
   mealType?: number;
   mealTypes?: number[];
 }
-
+ 
 export default function RecipeSidebar({ 
   ingredients, 
   missingIngredients,
@@ -44,11 +46,13 @@ export default function RecipeSidebar({
     
     router.push('/calendar');
   };
+ 
 
   return (
     <aside className="w-full lg:w-1/4 flex flex-col gap-6">
       <RecipeIngredients ingredients={ingredients} />
       <RecipeMissingIngredients missing={missingIngredients} />
+ 
       
       {isFavorite ? (
         <button
@@ -61,6 +65,7 @@ export default function RecipeSidebar({
       ) : (
         <div className="w-full text-center text-gray-400 text-sm py-3">
           Solo puedes planificar recetas favoritas
+ 
         </div>
       )}
     </aside>

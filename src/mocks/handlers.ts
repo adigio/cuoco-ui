@@ -102,8 +102,9 @@ export const handlers = [
   }),
   http.get("/api/fav/recipes", ({ request }) => {
     const url = new URL(request.url);
-    const page = Number(url.searchParams.get("page") || 1);
+    const page = Number(url.searchParams.get("page") || 1); 
     const limit = Number(url.searchParams.get("limit") || 2);  
+ 
 
     // Suponiendo que mockRecipes es un array plano
     const allRecipes = mockRecipes;

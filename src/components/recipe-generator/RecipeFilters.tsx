@@ -251,8 +251,7 @@ export default function RecipeFilters() {
           onChange={handleChange}
           options={timeOptions}
           label="⏱️ Tiempo"
-        />
-
+        /> 
         <Select
           name="difficulty"
           value={filters.difficulty}
@@ -311,7 +310,7 @@ export default function RecipeFilters() {
                 />
                 {option.label}
               </label>
-            ))}
+            ))} 
           </div>
         </div>
 

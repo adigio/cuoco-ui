@@ -10,13 +10,14 @@ export default function RecipeIngredients({ ingredients }: Props) {
   return (
     <ContainerCardDetail title="Ingredientes">
       {ingredients.map((group, idx) => (
-        <div key={idx} className="my-4">
+        <div key={idx} className="my-4"> 
           {group.section && group.section.trim() && (
             <div className="font-semibold text-sm mb-2 border-b border-gray-200 text-center">
               <h3>{group.section}</h3>
             </div>
           )}
           <div className="flex flex-col items-center space-y-3">
+ 
             {group.items.map((item, i) => (
               <div key={i} className="flex items-center justify-center min-w-[200px]">
                 {item.quantity && (

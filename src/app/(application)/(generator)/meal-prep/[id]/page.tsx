@@ -12,7 +12,7 @@ import ObservationInfo from "@/components/meal-prep/ObservationInfo";
 import IngredientsList from "@/components/meal-prep/IngredientList";
 import PortionSummary from "@/components/meal-prep/PortionSummary";
 import TimeAndFavorite from "@/components/shared/TimeAndFavorite";
-import { FavoriteModal } from "@/components/shared/modal/FavoriteModal";
+import { FavoriteModal } from "@/components/shared/modal/FavoriteModal"; 
 import { UnfavoriteModal } from "@/components/shared/modal/UnfavoriteModal";
 import SubscriptionModal from "@/components/shared/modal/SubscriptionModal";
 import NotificationModal from "@/components/shared/modal/NotificationModal";
@@ -21,6 +21,7 @@ import { useNotification } from "@/hooks/useNotification";
 import { Step } from "@/types";
 import jsPDF from "jspdf";
 import { Ingredient, Recipe } from "@/types";
+ 
 
 export default function MealPrepPage({
   params,
@@ -292,8 +293,9 @@ mealPrep.steps.forEach((step: Step, index: number) => {
 
           <div className="flex flex-col lg:flex-row gap-8">
             <section className="w-full lg:w-3/4">
-              <div className="flex justify-between items-center mb-6">
+              <div className="flex justify-between items-center mb-6"> 
                 <h2 className="text-2xl font-bold text-[#333]">Paso a paso</h2>
+ 
 
                 <TimeAndFavorite
                   minutes={mealPrep.estimatedCookingTime}
@@ -301,6 +303,7 @@ mealPrep.steps.forEach((step: Step, index: number) => {
                   isFavorite={isCurrentlyFavorite}
                 />
               </div>
+              <h3 className="mx-4 mb-2 text-xl font-bold text-[#333]">Paso a paso</h3>
 
               <MealPrepSteps steps={mealPrep.steps} />
             </section>
@@ -357,6 +360,7 @@ mealPrep.steps.forEach((step: Step, index: number) => {
               <PortionSummary recipes={mealPrep.recipes} />
 
               <IngredientsList ingredients={mealPrep.ingredients} />
+ 
               {mealPrep.observation && (
                 <ObservationInfo observation={mealPrep.observation} />
               )}
@@ -370,7 +374,7 @@ mealPrep.steps.forEach((step: Step, index: number) => {
             >
               Atrás
             </button>
-          </div>
+          </div> 
         </ContainerShadow>
       </main>
 
@@ -380,6 +384,7 @@ mealPrep.steps.forEach((step: Step, index: number) => {
         recipeText={mealPrep.title}
         isOpen={showFavoriteModal}
         onClose={() => setShowFavoriteModal(false)}
+ 
         onUpgrade={() => {
           setShowFavoriteModal(false);
           setShowSubscriptionModal(true);
@@ -411,7 +416,7 @@ mealPrep.steps.forEach((step: Step, index: number) => {
         onClose={clearNotification}
         message={message}
         additionalMessage={additionalMessage}
-        type={type}
+        type={type} 
       />
     </>
   );

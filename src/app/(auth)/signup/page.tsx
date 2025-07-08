@@ -1,8 +1,8 @@
-'use client'
+"use client";
 
 import {
   EnvelopeIcon,
-  HandThumbUpIcon,
+  HandThumbUpIcon, 
   LockClosedIcon
 } from '@heroicons/react/24/outline'
 import { useState } from 'react'
@@ -13,13 +13,13 @@ import RegisterStepBox from '@/components/auth/RegisterStepBox'
 import Modal from '@/components/shared/modal/Modal'
 import NotificationModal from '@/components/shared/modal/NotificationModal'
 import { useNotification } from '@/hooks/useNotification'
-import { RegistrationProvider } from '@/context/RegistrationProvider'
+import { RegistrationProvider } from '@/context/RegistrationProvider' 
 
-type StepKey = 'email' | 'prefs' | 'password';
+type StepKey = "email" | "prefs" | "password";
 
-const stepOrder: StepKey[] = ['email', 'prefs', 'password'];
+const stepOrder: StepKey[] = ["email", "prefs", "password"];
 
-export default function SignupPage() {
+export default function SignupPage() { 
   const [currentStep, setCurrentStep] = useState<StepKey | null>(null)
   const [completedSteps, setCompletedSteps] = useState<StepKey[]>([])
   const [registerFinished, setRegisterFinished] = useState<boolean>(false)
@@ -32,24 +32,28 @@ export default function SignupPage() {
     type, 
     show, 
     clearNotification 
-  } = notificationHook
+  } = notificationHook 
 
   const handleComplete = (step: StepKey) => {
-    setCompletedSteps(prev => {
-      const updated = [...prev, step]
-      if (updated.includes('email') && updated.includes('prefs') && updated.includes('password')) {
-        setRegisterFinished(true)
+    setCompletedSteps((prev) => {
+      const updated = [...prev, step];
+      if (
+        updated.includes("email") &&
+        updated.includes("prefs") &&
+        updated.includes("password")
+      ) {
+        setRegisterFinished(true);
       }
-      return updated
-    })
-    setCurrentStep(null)
-  }
+      return updated;
+    });
+    setCurrentStep(null);
+  };
 
   const handleBack = (fromStep: StepKey) => {
     const currentIndex = stepOrder.indexOf(fromStep);
     if (currentIndex > 0) {
       const previousStep = stepOrder[currentIndex - 1];
-      setCompletedSteps(prev => prev.filter(step => step !== previousStep));
+      setCompletedSteps((prev) => prev.filter((step) => step !== previousStep));
       setCurrentStep(previousStep);
     }
   };
@@ -68,92 +72,94 @@ export default function SignupPage() {
           />
           </Link>
         </div>
-        <div className="bg-white/90 rounded-3xl p-6 w-full md:max-w-md space-y-4 shadow-xl mx-4 md:mx-0">
-          {registerFinished ? (
-            <div className="text-center space-y-4">
-              <h2 className="text-2xl font-bold text-gray-800">¡Registro completo!</h2>
-              <p className="text-gray-600">Ya podés empezar a usar la app.</p>
-              <Link
-                href="/home"
-                className="inline-block bg-[#f37b6a] text-white px-6 py-2 rounded hover:bg-[#e36455] transition"
-              >
-                Ir al Home
-              </Link>
-            </div>
-          ) : (
-            <h2 className="text-center text-xl font-bold text-gray-800">
-              Registrate y encontrá recetas fáciles, ricas y para todos los días.
+        {registerFinished ? (
+          <div className="text-center space-y-4">
+            <h2 className="text-2xl font-bold text-gray-800">
+              ¡Registro completo!
             </h2>
-          )}
-
-
+            <p className="text-gray-600">Ya podés empezar a usar la app</p>
+            <Link
+              href="/home"
+              className="inline-block bg-[#f37b6a] text-white px-6 py-2 rounded hover:bg-[#e36455] transition"
+            >
+              Ir al Home
+            </Link>
+          </div>
+        ) : (
+          <h2 className="text-center text-xl font-bold text-gray-800">
+            Registrate y encontrá recetas fáciles, ricas y para todos los días.
+          </h2>
+        )}
+        <div className="bg-white/90 rounded-3xl p-6 w-full md:max-w-md space-y-4 shadow-xl mx-4 md:mx-0">
           <RegisterStepBox
-            icon={EnvelopeIcon}
+            icon={EnvelopeIcon} 
             title="Agregá tu e-mail y nombre"
             description="Recibirás información de tu cuenta."
+ 
             buttonText="Agregar"
-            onClick={() => setCurrentStep('email')}
-            completed={completedSteps.includes('email')}
+            onClick={() => setCurrentStep("email")}
+            completed={completedSteps.includes("email")}
             color="#F5807B"
           />
 
-          {completedSteps.includes('email') && (
+          {completedSteps.includes("email") && (
             <RegisterStepBox
               icon={HandThumbUpIcon}
               title="Elegí tus preferencias"
-              description="Personalizá tus recetas según tus gustos y necesidades."
+              description="Personalizá tus recetas según tus gustos y necesidades"
               buttonText="Elegí"
-              onClick={() => setCurrentStep('prefs')}
-              disabled={!completedSteps.includes('email')}
-              completed={completedSteps.includes('prefs')}
+              onClick={() => setCurrentStep("prefs")}
+              disabled={!completedSteps.includes("email")}
+              completed={completedSteps.includes("prefs")}
               color="#75C24B"
             />
           )}
 
-          {completedSteps.includes('prefs') && (
+          {completedSteps.includes("prefs") && (
             <RegisterStepBox
               icon={LockClosedIcon}
               title="Creá tu contraseña"
-              description="Mantendrás tu cuenta protegida."
+              description="Mantendrás tu cuenta protegida"
               buttonText="Crear"
-              onClick={() => setCurrentStep('password')}
-              disabled={!completedSteps.includes('prefs')}
-              completed={completedSteps.includes('password')}
+              onClick={() => setCurrentStep("password")}
+              disabled={!completedSteps.includes("prefs")}
+              completed={completedSteps.includes("password")}
               color="#B362D8"
             />
           )}
         </div>
 
-        <Modal 
-          isOpen={currentStep === 'email'} 
+        <Modal
+          isOpen={currentStep === "email"}
           onClose={() => setCurrentStep(null)}
           showCloseButton={true}
         >
-          <RegisterStepper 
-            key="email" 
-            step={1} 
-            onComplete={() => handleComplete('email')} 
+          <RegisterStepper
+            key="email"
+            step={1}
+            onComplete={() => handleComplete("email")}
           />
         </Modal>
 
-        <Modal 
-          isOpen={currentStep === 'prefs'} 
+        <Modal
+          isOpen={currentStep === "prefs"}
           onClose={() => setCurrentStep(null)}
           showCloseButton
         >
-          <RegisterStepper 
-            key="prefs" 
-            step={2} 
-            onComplete={() => handleComplete('prefs')} 
-            onBack={() => handleBack('prefs')}
+          <RegisterStepper
+            key="prefs"
+            step={2}
+            onComplete={() => handleComplete("prefs")}
+            onBack={() => handleBack("prefs")}
           />
         </Modal>
 
-        <Modal 
-          isOpen={currentStep === 'password'} 
+        <Modal
+          isOpen={currentStep === "password"}
           onClose={() => setCurrentStep(null)}
           showCloseButton
         >
+ 
           <RegisterStepper 
             key="password" 
             step={3} 
@@ -175,5 +181,5 @@ export default function SignupPage() {
               </div>
       </div>
     </RegistrationProvider>
-  )
+  ) 
 }

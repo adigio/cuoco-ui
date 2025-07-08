@@ -19,10 +19,11 @@ const MealPrepSteps: React.FC<MealPrepStepsProps> = ({ steps }) => {
           <div className="absolute w-4 h-4 bg-[#f27f6c] rounded-full -left-2.5 border-2 border-white"></div>
           <h3 className="text-lg font-semibold text-[#f27f6c] mb-1">
             ⏱ {step.time}&apos; – {step.title}
-          </h3>
+          </h3> 
           <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
            
               <li >{step.description}</li> 
+ 
           </ul>
         </li>
       ))}

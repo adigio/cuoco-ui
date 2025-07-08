@@ -15,7 +15,7 @@ export default function HeroHome() {
   const isPremium = useAuthStore((state) => state.user?.premium);
   const setMode = useIngredientsStore((state) => state.setMode);
   const router = useRouter();
-
+ 
   const handleClick = (mode: "meal-prep" | "cook-now") => {
     setMode(mode);
     router.push("/recipe-generator");

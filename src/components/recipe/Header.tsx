@@ -49,10 +49,11 @@ export default function RecipeHeader({
   return (
     <>
       <div className="mb-6 border-b border-color-primary-medium">
-        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-2"> 
           <h1 className="text-3xl font-bold w-1/2 text-center flex items-center gap-2">
             {name}
           </h1>
+ 
 
           <div className="flex items-center gap-2">
             <span className="flex items-center gap-1 text-color-primary-medium">
