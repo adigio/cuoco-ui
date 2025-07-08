@@ -4,9 +4,8 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { analyzeImagesWithAPI } from "@/services/vision.service";
 // Contexto
-import { useIngredientsStore } from "@/store/useIngredientsStore"; 
+import { useIngredientsStore } from "@/store/useIngredientsStore";
 import { useRecipeGeneratorSession } from "@/hooks/useRecipeGeneratorSession";
- 
 // Componentes
 import RecipeImageUploader from "@/components/recipe-generator/ImageUploader";
 import AlertModal from "@/components/shared/modal/AlertModal";
@@ -21,20 +20,15 @@ export default function RecipeGeneratorPage() {
   const [showAlertModal, setShowAlertModal] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSubModalOpen, setIsSubModalOpen] = useState(false);
- 
+
   //sesion del generador de recetas
   useRecipeGeneratorSession();
 
-  // Tomamos del store si el usuario es premium 
+  // Tomamos del store si el usuario es premium
   const { ingredients, addMultipleIngredients } = useIngredientsStore();
   const isPremium = useAuthStore((state) => state.user?.premium);
-  const router = useRouter(); 
-
-  const isPremium = useAuthStore((state) => state.user?.premium);
   const router = useRouter();
-  useEffect(() => {
-    clearIngredients();
-  }, []);
+
   const handleContinue = async () => {
     // Si un user no premium intenta con más de 2 imágenes:
     if (!isPremium && images.length > 2) {
