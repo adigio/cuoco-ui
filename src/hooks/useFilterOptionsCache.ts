@@ -1,6 +1,6 @@
-import { useEffect, useMemo } from 'react';
-import { usePreferencesStore } from '@/store/usePreferencesStore';
-import { useAuthStore } from '@/store/useAuthStore';
+import { useEffect, useMemo, useCallback } from "react";
+import { usePreferencesStore } from "@/store/usePreferencesStore";
+import { useAuthStore } from "@/store/useAuthStore";
 import {
   getCookingLevels,
   getAllergy,
@@ -9,103 +9,137 @@ import {
   getUnitTypes,
   getPreparationTimes,
   getMealTypes,
-} from '@/services/getter.service';
+} from "@/services/getter.service";
 
 const CACHE_TTL = 24 * 60 * 60 * 1000;
 
 export const useFilterOptionsCache = () => {
-  const store = usePreferencesStore();
+  const {
+    isFetching,
+    isLoaded,
+    loadedWithAuth,
+    lastFetchTimestamp,
+    cookingLevelOptions,
+    allergyOptions,
+    dietOptions,
+    dietaryNeedOptions,
+    unitOptions,
+    preparationTimeOptions,
+    mealTypeOptions,
+    setIsFetching,
+    setIsLoaded,
+    setLastFetchTimestamp,
+    setLoadedWithAuth,
+    setCookingLevelOptions,
+    setAllergyOptions,
+    setDietOptions,
+    setDietaryNeedOptions,
+    setUnitOptions,
+    setPreparationTimeOptions,
+    setMealTypeOptions,
+  } = usePreferencesStore();
+
   const { isAuthenticated } = useAuthStore();
 
+  // useEffect 1 - Reset si entra autenticado
   useEffect(() => {
-    if (isAuthenticated && store.isLoaded && !store.loadedWithAuth) {
-      store.setIsLoaded(false);
-      store.setLastFetchTimestamp(null);
-      store.setLoadedWithAuth(false);
+    if (isAuthenticated && isLoaded && !loadedWithAuth) {
+      setIsLoaded(false);
+      setLastFetchTimestamp(null);
+      setLoadedWithAuth(false);
     }
-  }, [isAuthenticated, store]);
+  }, [
+    isAuthenticated,
+    isLoaded,
+    loadedWithAuth,
+    setIsLoaded,
+    setLastFetchTimestamp,
+    setLoadedWithAuth,
+  ]);
 
-  const shouldFetchData = () => {
-    if (store.isFetching) {
-      return false;
-    }
-    
-    if (!store.isLoaded || 
-        store.cookingLevelOptions.length === 0 ||
-        store.allergyOptions.length === 0 ||
-        store.dietOptions.length === 0) {
-      return true;
-    }
+  const shouldFetchData = useCallback(() => {
+    if (isFetching) return false;
 
-    if (store.loadedWithAuth !== isAuthenticated) {
-      return true;
-    }
+    if (
+      !isLoaded ||
+      cookingLevelOptions.length === 0 ||
+      allergyOptions.length === 0 ||
+      dietOptions.length === 0
+    ) return true;
 
-    if (isAuthenticated && (
-        store.unitOptions.length === 0 ||
-        store.preparationTimeOptions.length === 0 ||
-        store.mealTypeOptions.length === 0
-    )) {
-      return true;
-    }
-    
-    if (store.lastFetchTimestamp) {
-      const timeElapsed = Date.now() - store.lastFetchTimestamp;
+    if (loadedWithAuth !== isAuthenticated) return true;
+
+    if (
+      isAuthenticated &&
+      (
+        unitOptions.length === 0 ||
+        preparationTimeOptions.length === 0 ||
+        mealTypeOptions.length === 0
+      )
+    ) return true;
+
+    if (lastFetchTimestamp) {
+      const timeElapsed = Date.now() - lastFetchTimestamp;
       return timeElapsed > CACHE_TTL;
     }
-    
-    return true;
-  };
 
+    return true;
+  }, [
+    isAuthenticated,
+    isFetching,
+    isLoaded,
+    cookingLevelOptions.length,
+    allergyOptions.length,
+    dietOptions.length,
+    loadedWithAuth,
+    unitOptions.length,
+    preparationTimeOptions.length,
+    mealTypeOptions.length,
+    lastFetchTimestamp,
+  ]);
+
+  // useEffect 2 - Fetch
   useEffect(() => {
-    if (!shouldFetchData()) {
-      return;
-    }
-    
+    if (!shouldFetchData()) return;
+
     const fetchAllFilterOptions = async () => {
       try {
-        store.setIsFetching(true);
-        
+        setIsFetching(true);
+
         const cookingLevels = await getCookingLevels();
         const allergies = await getAllergy();
         const diets = await getDiet();
         const dietaryNeeds = await getDietaryNeed();
-        
+
         let units: any[] = [];
+        let preparationTimes: any[] = [];
+        let mealTypes: any[] = [];
+
         if (isAuthenticated) {
           units = await getUnitTypes();
-        }
-        
-        let preparationTimes: any[] = [];
-        if (isAuthenticated) {
           preparationTimes = await getPreparationTimes();
-        }
-        
-        let mealTypes: any[] = [];
-        if (isAuthenticated) {
           mealTypes = await getMealTypes();
         }
 
-        store.setCookingLevelOptions(cookingLevels || []);
-        store.setAllergyOptions(allergies || []);
-        store.setDietOptions(diets || []);
-        store.setDietaryNeedOptions(dietaryNeeds || []);
-        store.setUnitOptions(units || []);
-        store.setPreparationTimeOptions(preparationTimes || []);
-        store.setMealTypeOptions(mealTypes || []);
-        store.setIsLoaded(true);
-        store.setLastFetchTimestamp(Date.now());
-        store.setLoadedWithAuth(isAuthenticated);
-        
+        setCookingLevelOptions(cookingLevels || []);
+        setAllergyOptions(allergies || []);
+        setDietOptions(diets || []);
+        setDietaryNeedOptions(dietaryNeeds || []);
+        setUnitOptions(units || []);
+        setPreparationTimeOptions(preparationTimes || []);
+        setMealTypeOptions(mealTypes || []);
+        setIsLoaded(true);
+        setLastFetchTimestamp(Date.now());
+        setLoadedWithAuth(isAuthenticated);
       } catch (error) {
-        console.error('Error loading filter options:', error);
+        console.error("Error loading filter options:", error);
       } finally {
-        store.setIsFetching(false);
+        setIsFetching(false);
       }
     };
 
     fetchAllFilterOptions();
-  }, [isAuthenticated,shouldFetchData]);
+  }, [isAuthenticated, shouldFetchData]);
 
   const mapToSelectOptions = (items: any[]) =>
     Array.from(new Map(items.map((i) => [i.description, i])).values()).map(
@@ -117,83 +151,88 @@ export const useFilterOptionsCache = () => {
     );
 
   const mapUnitOptions = (items: any[]) =>
-    Array.from(new Map(items.map((i) => [i.symbol || i.label || i.description, i])).values()).map(
-      (item) => ({
-        key: item.key || item.id,
-        value: item.value || item.id,
-        label: item.label || item.symbol || item.description,
-        symbol: item.symbol,
-      })
-    );
+    Array.from(
+      new Map(
+        items.map((i) => [i.symbol || i.label || i.description, i])
+      ).values()
+    ).map((item) => ({
+      key: item.key || item.id,
+      value: item.value || item.id,
+      label: item.label || item.symbol || item.description,
+      symbol: item.symbol,
+    }));
 
-  const difficultyOptions = useMemo(() => 
-    mapToSelectOptions(store.cookingLevelOptions), 
-    [store.cookingLevelOptions]
-  );
-  
-  const allergyOptions = useMemo(() => 
-    mapToSelectOptions(store.allergyOptions), 
-    [store.allergyOptions]
-  );
-  
-  const dietOptions = useMemo(() => 
-    mapToSelectOptions(store.dietOptions), 
-    [store.dietOptions]
-  );
-  
-  const needOptions = useMemo(() => 
-    mapToSelectOptions(store.dietaryNeedOptions), 
-    [store.dietaryNeedOptions]
-  );
-  
-  const timeOptions = useMemo(() => 
-    mapToSelectOptions(store.preparationTimeOptions), 
-    [store.preparationTimeOptions]
-  );
-  
-  const mealOptions = useMemo(() => 
-    mapToSelectOptions(store.mealTypeOptions), 
-    [store.mealTypeOptions]
-  );
-  
-  const unitOptions = useMemo(() => 
-    mapUnitOptions(store.unitOptions), 
-    [store.unitOptions]
+  const difficultyOptions = useMemo(
+    () => mapToSelectOptions(cookingLevelOptions),
+    [cookingLevelOptions]
   );
 
-  const returnData = useMemo(() => ({
-    isLoaded: store.isLoaded,
-    difficultyOptions,
-    allergyOptions,
-    dietOptions,
-    needOptions,
-    timeOptions,
-    mealOptions,
-    unitOptions,
-    cookingLevelOptions: store.cookingLevelOptions,
-    originalAllergyOptions: store.allergyOptions,
-    originalDietOptions: store.dietOptions,
-    originalDietaryNeedOptions: store.dietaryNeedOptions,
-    originalUnitOptions: store.unitOptions,
-    originalPreparationTimeOptions: store.preparationTimeOptions,
-    originalMealTypeOptions: store.mealTypeOptions,
-  }), [
-    store.isLoaded,
-    difficultyOptions,
-    allergyOptions,
-    dietOptions,
-    needOptions,
-    timeOptions,
-    mealOptions,
-    unitOptions,
-    store.cookingLevelOptions,
-    store.allergyOptions,
-    store.dietOptions,
-    store.dietaryNeedOptions,
-    store.unitOptions,
-    store.preparationTimeOptions,
-    store.mealTypeOptions,
-  ]);
+  const allergyOptionsMapped = useMemo(
+    () => mapToSelectOptions(allergyOptions),
+    [allergyOptions]
+  );
+
+  const dietOptionsMapped = useMemo(
+    () => mapToSelectOptions(dietOptions),
+    [dietOptions]
+  );
+
+  const needOptions = useMemo(
+    () => mapToSelectOptions(dietaryNeedOptions),
+    [dietaryNeedOptions]
+  );
+
+  const timeOptions = useMemo(
+    () => mapToSelectOptions(preparationTimeOptions),
+    [preparationTimeOptions]
+  );
+
+  const mealOptions = useMemo(
+    () => mapToSelectOptions(mealTypeOptions),
+    [mealTypeOptions]
+  );
+
+  const unitOptionsMapped = useMemo(
+    () => mapUnitOptions(unitOptions),
+    [unitOptions]
+  );
+
+  const returnData = useMemo(
+    () => ({
+      isLoaded,
+      difficultyOptions,
+      allergyOptions: allergyOptionsMapped,
+      dietOptions: dietOptionsMapped,
+      needOptions,
+      timeOptions,
+      mealOptions,
+      unitOptions: unitOptionsMapped,
+      cookingLevelOptions,
+      originalAllergyOptions: allergyOptions,
+      originalDietOptions: dietOptions,
+      originalDietaryNeedOptions: dietaryNeedOptions,
+      originalUnitOptions: unitOptions,
+      originalPreparationTimeOptions: preparationTimeOptions,
+      originalMealTypeOptions: mealTypeOptions,
+    }),
+    [
+      isLoaded,
+      difficultyOptions,
+      allergyOptionsMapped,
+      dietOptionsMapped,
+      needOptions,
+      timeOptions,
+      mealOptions,
+      unitOptionsMapped,
+      cookingLevelOptions,
+      allergyOptions,
+      dietOptions,
+      dietaryNeedOptions,
+      unitOptions,
+      preparationTimeOptions,
+      mealTypeOptions,
+    ]
+  );
 
   return returnData;
-}; 
+};

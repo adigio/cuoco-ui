@@ -53,6 +53,10 @@ export interface RecipeDetailStep {
   description: string;
   image?: string;
 }
+export interface Step {
+  title: string;
+  description: string;
+}
 
 export interface RecipeDetailSection {
   section: string;

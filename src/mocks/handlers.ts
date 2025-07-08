@@ -3,8 +3,7 @@ import { mockDetailsRecipes, mockRecipes } from "@/mocks/recipes";
 import { mealPreps } from "@/mocks/mealprep";
 import { User } from "@/types/auth/auth.types";
 import { http, HttpResponse } from "msw";
-import { MealPrepGenerationRequest } from "@/types";
-import { mockCategorizedFavorites, mockSchedule } from "@/mocks/calendar";
+import { MealPrepGenerationRequest } from "@/types"; 
 
 //Define como se responde a las APIs mockeadas
 
@@ -152,18 +151,18 @@ export const handlers = [
 
 
   /* calendario */
-  http.get('/api/calendar/weekly', () => {
-    return HttpResponse.json(mockSchedule);
-  }),
+//   http.get('/api/calendar/weekly', () => {
+//     return HttpResponse.json(mockSchedule);
+//   }),
 
-  http.get('/api/calendar/favorites/categorized', () => {
-    return HttpResponse.json(mockCategorizedFavorites);
-  }),
+//   http.get('/api/calendar/favorites/categorized', () => {
+//     return HttpResponse.json(mockCategorizedFavorites);
+//   }),
 
 
-  http.put('/api/calendar/update', async ({ request }) => {
-    const body = (await request.json()) as { day: string; recipeId: number; mealType: string };
-    const { day, recipeId, mealType } = body;
-    return HttpResponse.json(mockSchedule);
-  }),
-];
+//   http.put('/api/calendar/update', async ({ request }) => {
+//     const body = (await request.json()) as { day: string; recipeId: number; mealType: string };
+//     const { day, recipeId, mealType } = body;
+//     return HttpResponse.json(mockSchedule);
+//   }),
+ ];

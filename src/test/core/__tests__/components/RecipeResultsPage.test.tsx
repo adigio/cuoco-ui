@@ -11,13 +11,19 @@ jest.mock("@/store/useIngredientsStore");
 
 jest.mock("@/components/shared/BackgroundLayers", () => {
   const React = require("react");
-  return () => <div data-testid="background-layers" />;
+  const MockBackgroundLayers = () => <div data-testid="background-layers" />;
+  MockBackgroundLayers.displayName = "MockBackgroundLayers";
+  return MockBackgroundLayers;
 });
+
 
 jest.mock("@/components/shared/containers/Container", () => {
   const React = require("react");
-  return (props: any) => <div data-testid="container">{props.children}</div>;
+  const MockContainer = (props: any) => <div data-testid="container">{props.children}</div>;
+  MockContainer.displayName = "MockContainer";
+  return MockContainer;
 });
+
 
 jest.mock("@/components/shared/skeleton/RecipeCardSkeleton", () => {
   const React = require("react");
@@ -64,9 +70,12 @@ jest.mock("@/components/shared/modal/RefreshModal", () => {
 
 jest.mock("@/components/shared/modal/SubscriptionModal", () => {
   const React = require("react");
-  return (props: any) =>
+  const MockSubscriptionModal = (props: any) =>
     props.isOpen ? <div data-testid="subscription-modal" /> : null;
+  MockSubscriptionModal.displayName = "MockSubscriptionModal";
+  return MockSubscriptionModal;
 });
+
 
 // Imports reales
 import React from "react";

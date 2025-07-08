@@ -15,19 +15,25 @@ jest.mock("next/navigation", () => ({
 // Mock del store
 jest.mock("@/store/useIngredientsStore");
 
-// Mock modales
-jest.mock("@/components/shared/modal/AlertModal", () => (props: any) =>
-  props.show ? <div data-testid="alert-modal">{props.children}</div> : null
-);
+// Mock modales con displayName
+jest.mock("@/components/shared/modal/AlertModal", () => {
+  const AlertModal = (props: any) =>
+    props.show ? <div data-testid="alert-modal">{props.children}</div> : null;
+  AlertModal.displayName = "MockAlertModal";
+  return AlertModal;
+});
 
-jest.mock("@/components/shared/modal/ConfirmationModal", () => (props: any) =>
-  props.isOpen ? (
-    <div data-testid="confirm-modal">
-      <button onClick={props.onConfirm}>OK</button>
-      <button onClick={props.onCancel}>Cancel</button>
-    </div>
-  ) : null
-);
+jest.mock("@/components/shared/modal/ConfirmationModal", () => {
+  const ConfirmationModal = (props: any) =>
+    props.isOpen ? (
+      <div data-testid="confirm-modal">
+        <button onClick={props.onConfirm}>OK</button>
+        <button onClick={props.onCancel}>Cancel</button>
+      </div>
+    ) : null;
+  ConfirmationModal.displayName = "MockConfirmationModal";
+  return ConfirmationModal;
+});
 
 describe("ReviewPage", () => {
   const mockedUseIngredients = jest.mocked(ingredientsStoreModule.useIngredientsStore);
@@ -116,17 +122,16 @@ describe("ReviewPage", () => {
     expect(pushMock).toHaveBeenCalledWith("/filters");
   });
 
- it("redirige a /meal-prep-filters si mode es meal-prep", () => {
-  const store = {
-    ...baseStore,
-    ingredients: [
-      { name: "tomate", origin: "manual", confirmed: true, quantity: 0, unit: "" },
-    ],
-    mode: "meal-prep",
-  };
-  renderWithStore(store);
-  fireEvent.click(screen.getByRole("button", { name: /Ir a filtros/i }));
-  expect(pushMock).toHaveBeenCalledWith("/meal-prep-filters");
-});
-
+  it("redirige a /meal-prep-filters si mode es meal-prep", () => {
+    const store = {
+      ...baseStore,
+      ingredients: [
+        { name: "tomate", origin: "manual", confirmed: true, quantity: 0, unit: "" },
+      ],
+      mode: "meal-prep",
+    };
+    renderWithStore(store);
+    fireEvent.click(screen.getByRole("button", { name: /Ir a filtros/i }));
+    expect(pushMock).toHaveBeenCalledWith("/meal-prep-filters");
+  });
 });
