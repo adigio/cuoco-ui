@@ -73,33 +73,45 @@ export default function RecipeFilters() {
     mealOptions
   } = useFilterOptionsCache();
 
-  useEffect(() => {
-    if (!optionsLoaded) return;
+ useEffect(() => {
+  if (!optionsLoaded) return;
 
-    if (allergyOptions.length && finalAllergies.length) {
-      const matched = allergyOptions.filter((opt) => finalAllergies.includes(opt.key)).map((opt) => opt.value.toString());
-      setSelectedAllergies(matched);
-      setFilters(prev => ({ ...prev, allergies_ids: finalAllergies }));
-    }
+  if (allergyOptions.length && finalAllergies.length) {
+    const matched = allergyOptions.filter((opt) => finalAllergies.includes(opt.key)).map((opt) => opt.value.toString());
+    setSelectedAllergies(matched);
+    setFilters(prev => ({ ...prev, allergies_ids: finalAllergies }));
+  }
 
-    if (needOptions.length && finalNeeds.length) {
-      const matched = needOptions.filter((opt) => finalNeeds.includes(opt.key)).map((opt) => opt.value.toString());
-      setSelectedNeeds(matched);
-      setFilters(prev => ({ ...prev, dietary_needs_ids: finalNeeds }));
-    }
+  if (needOptions.length && finalNeeds.length) {
+    const matched = needOptions.filter((opt) => finalNeeds.includes(opt.key)).map((opt) => opt.value.toString());
+    setSelectedNeeds(matched);
+    setFilters(prev => ({ ...prev, dietary_needs_ids: finalNeeds }));
+  }
 
-    if (dietOptions.length && finalDiet) {
-      const matched = dietOptions.find((opt) => opt.key === finalDiet);
-      if (matched) setFilters(prev => ({ ...prev, diet: matched.value.toString() }));
-    }
+  if (dietOptions.length && finalDiet) {
+    const matched = dietOptions.find((opt) => opt.key === finalDiet);
+    if (matched) setFilters(prev => ({ ...prev, diet: matched.value.toString() }));
+  }
 
-    if (difficultyOptions.length && finalCookingLevel) {
-      const matched = difficultyOptions.find((opt) => opt.key === finalCookingLevel);
-      if (matched) setFilters(prev => ({ ...prev, difficulty: matched.value.toString() }));
-    }
+  if (difficultyOptions.length && finalCookingLevel) {
+    const matched = difficultyOptions.find((opt) => opt.key === finalCookingLevel);
+    if (matched) setFilters(prev => ({ ...prev, difficulty: matched.value.toString() }));
+  }
 
-    setFilters(prev => ({ ...prev, types: [] }));
-  }, [optionsLoaded]);
+  setFilters(prev => ({ ...prev, types: [] }));
+}, [
+  optionsLoaded,
+  allergyOptions,
+  finalAllergies,
+  needOptions,
+  finalNeeds,
+  dietOptions,
+  finalDiet,
+  difficultyOptions,
+  finalCookingLevel,
+  setFilters,
+]);
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });

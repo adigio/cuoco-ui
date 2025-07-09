@@ -49,8 +49,7 @@ export const useIngredientsStore = create<IngredientsStore>((set, get) => ({
   addIngredient: (
     name,
     quantity,
-    unit,
-    symbol,
+    unit: { id: number; description: string; symbol?: string }, 
     optional = false,
     source = 'manual',
     confirmed = true
@@ -67,15 +66,14 @@ export const useIngredientsStore = create<IngredientsStore>((set, get) => ({
       return false;
     }
 
-    const newIngredient: Ingredient = {
-      name: name.trim(),
-      quantity,
-      unit: unit,
-      symbol,
-      optional,
-      source,
-      confirmed,
-    };
+   const newIngredient: Ingredient = {
+  name,
+  quantity,
+  unit, 
+  optional,
+  source,
+  confirmed,
+};
 
     set((state) => ({
       ingredients: [...state.ingredients, newIngredient],

@@ -114,7 +114,6 @@ export default function MealPrepPage({
   if (loading) {
     return <ChefLoader text="Cargando meal prep..." />;
   }
- console.log(mealPrep)
   if (!mealPrep) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -122,7 +121,6 @@ export default function MealPrepPage({
       </div>
     );
   }
-  console.log(mealPrep);
   const isCurrentlyFavorite = isFavoriteMealPrep(mealPrep.id);
 
   return (

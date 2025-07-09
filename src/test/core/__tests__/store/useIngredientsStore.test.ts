@@ -1,4 +1,4 @@
-import { act } from "react-dom/test-utils";
+import { act } from 'react';
 import { useIngredientsStore } from "@/store/useIngredientsStore"; // ajusta la ruta si es distinta
 import { Ingredient } from "@/types";
 
@@ -106,7 +106,7 @@ describe("useIngredientsStore - gestión de ingredientes y sesión de generació
       await act(async () => {
         result = await useIngredientsStore
           .getState()
-          .addIngredient("Tomate", 2, "kg", "kg");
+          .addIngredient("Tomate", 2, kgUnit, true);
       });
       expect(result).toBe(true);
       expect(useIngredientsStore.getState().ingredients.length).toBe(1);
@@ -114,16 +114,16 @@ describe("useIngredientsStore - gestión de ingredientes y sesión de generació
     });
 
     it("No agrega ingrediente sin nombre o con nombre vacío, retorna false", () => {
-      const res1 = useIngredientsStore.getState().addIngredient("", 1, "kg", "kg");
-      const res2 = useIngredientsStore.getState().addIngredient("   ", 1, "kg", "kg");
+      const res1 = useIngredientsStore.getState().addIngredient("", 1, kgUnit, true);
+      const res2 = useIngredientsStore.getState().addIngredient("   ", 1, kgUnit, true);
       expect(res1).toBe(false);
       expect(res2).toBe(false);
       expect(useIngredientsStore.getState().ingredients.length).toBe(0);
     });
 
     it("No agrega ingrediente si ya existe (case insensitive), retorna false", () => {
-      useIngredientsStore.getState().addIngredient("Tomate", 1, "kg", "kg");
-      const result = useIngredientsStore.getState().addIngredient("tomate", 2, "kg", "kg");
+      useIngredientsStore.getState().addIngredient("Tomate", 1, kgUnit, true);
+      const result = useIngredientsStore.getState().addIngredient("tomate", 2, kgUnit, true);
       expect(result).toBe(false);
       expect(useIngredientsStore.getState().ingredients.length).toBe(1);
     });

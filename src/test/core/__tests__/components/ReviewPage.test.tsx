@@ -89,7 +89,11 @@ describe("ReviewPage", () => {
       expect(baseStore.updateIngredient).toHaveBeenCalledWith(1, {
         name: "papa",
         quantity: 0,
-        unit: "",
+        unit: {
+          description : "",
+          id :0,
+          symbol : ""
+        },
       });
     });
   });

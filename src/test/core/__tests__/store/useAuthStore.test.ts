@@ -6,7 +6,7 @@ jest.mock('@/services/getter.service', () => ({
   getDietaryNeed: jest.fn().mockResolvedValue([]),
 }));
 
-import { act } from 'react-dom/test-utils';
+import { act } from 'react';
 import { useAuthStore } from '@/store/useAuthStore';
 import { tokenService } from '@/lib/cookies';
 import { jwtService } from '@/lib/jwt';

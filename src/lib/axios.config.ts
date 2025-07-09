@@ -13,7 +13,6 @@ export const apiClient = axios.create({
 apiClient.interceptors.request.use(
     (config) => {
         const token = tokenService.getToken();
-        console.log('Interceptor - URL:', config.url, 'Token presente:', !!token);
 
         if (token) {
             // Verificar si el token no está expirado

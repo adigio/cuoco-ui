@@ -34,8 +34,7 @@ export interface IngredientsStore {
   addIngredient: (
     name: string,
     quantity: number,
-    unit: string,
-    symbol?:string,
+     unit: { id: number; description: string; symbol?: string },
     optional?: boolean,
     source?: string,
     confirmed?: boolean

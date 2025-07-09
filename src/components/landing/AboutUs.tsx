@@ -14,11 +14,11 @@ export default function AboutUs() {
         {/* Imagen de comida */}
         <div className="w-full md:w-1/2">
           <Image
-            src="/aboutUs.png"
-            alt="Comida en sartén"
+            src="/aboutUs.jpeg"
+            alt="Cuoco-team"
             width={500}
             height={500}
-            className="rounded-[40px] w-full h-auto object-cover"
+            className="rounded-[40px] w-full h-[680px] object-cover object-center"
           />
         </div>
 

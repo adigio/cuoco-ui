@@ -1,13 +1,11 @@
-// src/test/core/__tests__/components/RecipeIngredientInput.test.tsx
+import React from "react";
+import { render, screen, fireEvent } from "@testing-library/react";
+import RecipeIngredientInput from "@/components/recipe-generator/IngredientInput";
+import * as ingredientsStoreModule from "@/store/useIngredientsStore";
+import * as filterOptionsCacheModule from "@/hooks/useFilterOptionsCache";
 
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import RecipeIngredientInput from '@/components/recipe-generator/IngredientInput';
-import * as ingredientsStoreModule from '@/store/useIngredientsStore';
-import * as filterOptionsCacheModule from '@/hooks/useFilterOptionsCache';
-
-jest.mock('@/store/useIngredientsStore');
-jest.mock('@/hooks/useFilterOptionsCache');
+jest.mock("@/store/useIngredientsStore");
+jest.mock("@/hooks/useFilterOptionsCache");
 
 describe("Componente RecipeIngredientInput", () => {
   let addIngredientMock: jest.Mock;
@@ -17,32 +15,36 @@ describe("Componente RecipeIngredientInput", () => {
 
     addIngredientMock = jest.fn().mockReturnValue(true);
 
-    jest.spyOn(ingredientsStoreModule, "useIngredientsStore").mockImplementation((selector) =>
-      selector({
-        addIngredient: addIngredientMock,
-      } as any)
-    );
+    jest
+      .spyOn(ingredientsStoreModule, "useIngredientsStore")
+      .mockImplementation((selector) =>
+        selector({
+          addIngredient: addIngredientMock,
+        } as any)
+      );
 
-    jest.spyOn(filterOptionsCacheModule, "useFilterOptionsCache").mockReturnValue({
-      isLoaded: true,
-      difficultyOptions: [],
-      allergyOptions: [],
-      dietOptions: [],
-      needOptions: [],
-      timeOptions: [],
-      mealOptions: [],
-      unitOptions: [
-        { key: 1, value: 1, label: "unidad", symbol: "u" },
-        { key: 2, value: 2, label: "gramos", symbol: "g" },
-      ],
-      cookingLevelOptions: [],
-      originalAllergyOptions: [],
-      originalDietOptions: [],
-      originalDietaryNeedOptions: [],
-      originalUnitOptions: [],
-      originalPreparationTimeOptions: [],
-      originalMealTypeOptions: [],
-    });
+    jest
+      .spyOn(filterOptionsCacheModule, "useFilterOptionsCache")
+      .mockReturnValue({
+        isLoaded: true,
+        difficultyOptions: [],
+        allergyOptions: [],
+        dietOptions: [],
+        needOptions: [],
+        timeOptions: [],
+        mealOptions: [],
+        unitOptions: [
+          { key: 1, value: 1, label: "unidad", symbol: "u" },
+          { key: 2, value: 2, label: "gramos", symbol: "g" },
+        ],
+        cookingLevelOptions: [],
+        originalAllergyOptions: [],
+        originalDietOptions: [],
+        originalDietaryNeedOptions: [],
+        originalUnitOptions: [],
+        originalPreparationTimeOptions: [],
+        originalMealTypeOptions: [],
+      });
   });
 
   it("agrega un ingrediente al hacer clic en el botón + y limpia los inputs si fue exitoso", () => {
@@ -58,7 +60,14 @@ describe("Componente RecipeIngredientInput", () => {
     fireEvent.change(select, { target: { value: "1" } });
     fireEvent.click(addButton);
 
-    expect(addIngredientMock).toHaveBeenCalledWith("Leche", 2, "1", "u", false, "manual", true);
+    expect(addIngredientMock).toHaveBeenCalledWith(
+      "Leche",
+      2,
+      { id: 1, symbol: "u", description: "unidad" },
+      false,
+      "manual",
+      true
+    );
     expect(input.value).toBe("");
     expect(quantityInput.value).toBe("");
     expect(select.value).toBe("1");
@@ -75,7 +84,14 @@ describe("Componente RecipeIngredientInput", () => {
     fireEvent.change(quantityInput, { target: { value: "3" } });
     fireEvent.keyDown(input, { key: "Enter", code: "Enter" });
 
-    expect(addIngredientMock).toHaveBeenCalledWith("Huevos", 3, "1", "u", false, "manual", true);
+    expect(addIngredientMock).toHaveBeenCalledWith(
+      "Huevos",
+      3,
+      { id: 1, symbol: "u", description: "unidad" },
+      false,
+      "manual",
+      true
+    );
     expect(input.value).toBe("");
     expect(quantityInput.value).toBe("");
     expect(select.value).toBe("1");
@@ -94,7 +110,14 @@ describe("Componente RecipeIngredientInput", () => {
     fireEvent.change(quantityInput, { target: { value: "5" } });
     fireEvent.click(addButton);
 
-    expect(addIngredientMock).toHaveBeenCalledWith("Harina", 5, "1", "u", false, "manual", true);
+    expect(addIngredientMock).toHaveBeenCalledWith(
+      "Harina",
+      5,
+      { id: 1, symbol: "u", description: "unidad" },
+      false,
+      "manual",
+      true
+    );
     expect(input.value).toBe("Harina");
     expect(quantityInput.value).toBe("5");
   });
@@ -111,4 +134,3 @@ describe("Componente RecipeIngredientInput", () => {
     expect(input.value).toBe("");
   });
 });
-
