@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { analyzeImagesWithAPI } from "@/services/vision.service";
 // Contexto
 import { useIngredientsStore } from "@/store/useIngredientsStore";
+import { useRecipeGeneratorSession } from "@/hooks/useRecipeGeneratorSession";
 // Componentes
 import RecipeImageUploader from "@/components/recipe-generator/ImageUploader";
 import AlertModal from "@/components/shared/modal/AlertModal";
@@ -20,20 +21,14 @@ export default function RecipeGeneratorPage() {
   const [error, setError] = useState<string | null>(null);
   const [isSubModalOpen, setIsSubModalOpen] = useState(false);
 
-  // Tomamos del store si el usuario es premium
-  const {
-    ingredients,
-    addIngredient,
-    addMultipleIngredients,
-    mode,
-    clearIngredients,
-  } = useIngredientsStore();
+  //sesion del generador de recetas
+  useRecipeGeneratorSession();
 
+  // Tomamos del store si el usuario es premium
+  const { ingredients, addMultipleIngredients } = useIngredientsStore();
   const isPremium = useAuthStore((state) => state.user?.premium);
   const router = useRouter();
-  useEffect(() => {
-    clearIngredients();
-  }, []);
+
   const handleContinue = async () => {
     // Si un user no premium intenta con más de 2 imágenes:
     if (!isPremium && images.length > 2) {
@@ -58,8 +53,7 @@ export default function RecipeGeneratorPage() {
         if (!detectados || detectados.length === 0) {
           setError("No se detectaron ingredientes en las imágenes");
           return;
-        }
-
+        }  
         const cantidadAgregada = addMultipleIngredients(detectados);
         if (cantidadAgregada === 0) {
           setError("No se pudieron agregar nuevos ingredientes");
@@ -95,7 +89,6 @@ export default function RecipeGeneratorPage() {
             images={images}
             setImages={setImages}
             ingredients={ingredients}
-            addIngredient={addIngredient}
           />
 
           {error && (

@@ -1,5 +1,5 @@
 // Tipos para el proceso de registro
-export type StepKey = 'email' | 'prefs' | 'password';
+export type StepKey = "email" | "prefs" | "password";
 
 export interface RegisterState {
   currentStep: StepKey | null;
@@ -13,15 +13,7 @@ export interface RegisterFormData {
   password: string;
   confirmPassword: string;
   preferences?: UserPreferences;
-}
-
-export interface UserPreferences {
-  dietaryRestrictions?: string[];
-  cookingLevel?: 'Bajo' | 'Medio' | 'Alto';
-  favoriteCuisines?: string[];
-  allergies?: string[];
-  diet?: 'Omnívoro' | 'Vegetariano' | 'Vegano' | 'Otro';
-}
+} 
 
 // Tipos para el proceso de inicio de sesión
 export interface LoginFormData {
@@ -34,7 +26,35 @@ export interface LoginFormData {
 export interface User {
   email: string;
   name?: string;
-  premium?: boolean;
+  premium?: boolean; 
   token?: string;
   preferences?: UserPreferences;
-} 
+  plan?: {
+    id: number;
+    description: string;
+  };
+}
+
+export interface PreferenceItem {
+  id: number;
+  description: string;
+  symbol?:string;
+}
+
+export interface UserPreferences {
+  cook_level?: number;
+  diet?: number;
+  cookingLevel?: string;
+  dietaryRestrictions?: number[];
+  allergies?: number[];
+  favourite_cuisines?: number[];
+}
+
+export interface UpdateUserRequest {
+  name?: string;
+  plan_id?: number;
+  cook_level_id?: number;
+  diet_id?: number;
+  dietary_needs?: number[];
+  allergies?: number[];
+}

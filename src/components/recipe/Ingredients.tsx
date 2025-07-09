@@ -10,17 +10,25 @@ export default function RecipeIngredients({ ingredients }: Props) {
   return (
     <ContainerCardDetail title="Ingredientes">
       {ingredients.map((group, idx) => (
-        <div key={idx} className="my-4">
-          <ul className="list-none  list-inside">
+        <div key={idx} className="my-4"> 
+          {group.section && group.section.trim() && (
+            <div className="font-semibold text-sm mb-2 border-b border-gray-200 text-center">
+              <h3>{group.section}</h3>
+            </div>
+          )}
+          <div className="flex flex-col items-center space-y-3">
+ 
             {group.items.map((item, i) => (
-              <li key={i} className="text-sm my-1">
+              <div key={i} className="flex items-center justify-center min-w-[200px]">
                 {item.quantity && (
-                  <span className="font-semibold">{item.quantity} </span>
+                  <span className="font-semibold min-w-[80px] text-right mr-4">
+                    {item.quantity}
+                  </span>
                 )}
-                {item.description}
-              </li>
+                <span className="text-gray-700 text-left flex-1">{item.description}</span>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       ))}
     </ContainerCardDetail>

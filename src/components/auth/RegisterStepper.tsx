@@ -1,74 +1,118 @@
-'use client'
+"use client";
 
-import { useState, SetStateAction } from 'react'
-import Input from '@/components/shared/form/Input'
-import Checkbox from '@/components/shared/form/Checkbox'
-import { useAuthStore } from '@/store/useAuthStore';
-import axios from 'axios';
-import PreferencesContainer from '../shared/preferences/PreferencesContainer';
+import Input from "@/components/shared/form/Input";
+import Checkbox from "@/components/shared/form/Checkbox";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useRouter } from "next/navigation";
+import PreferencesContainer from "../shared/preferences/PreferencesContainer";
+import { RegisterStepperProps } from "@/types/components/register-steppers.types";
+import { useRegisterStore } from "@/store/useRegisterStore";
+import { useState } from "react";
+import { register } from "@/services/auth.service";
+import { useRegistrationNotification } from "@/context/RegistrationProvider";
+export default function RegisterStepper({
+  step,
+  onComplete,
+  onBack,
+  onError,
+}: RegisterStepperProps) {
+  const router = useRouter();
+  const {
+    name,
+    setName,
+    email,
+    setEmail,
+    password,
+    setPassword,
+    confirmPass,
+    setConfirmPass,
+    cookingLevel,
+    diet,
+    foodNeeds,
+    termsAccepted,
+    setTermsAccepted,
+    allergies,
+    reset, // TODO: para limpiar luego del registro completo
+  } = useRegisterStore();
 
-interface RegisterStepperProps {
-  step: number;
-  onComplete: () => void;
-  onBack?: () => void;
-}
-
-export default function RegisterStepper({ step, onComplete, onBack }: RegisterStepperProps) {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPass, setConfirmPass] = useState('')
-  const [cookingLevel, setCookingLevel] = useState<'Bajo' | 'Medio' | 'Alto'>('Medio')
-  const [diet, setDiet] = useState<'Omnívoro' | 'Vegetariano' | 'Vegano' | 'Otro'>('Omnívoro')
-  const [foodNeeds, setFoodNeeds] = useState<string[]>([])
-  const [allergies, setAllergies] = useState<string[]>([])
-  const [termsAccepted, setTermsAccepted] = useState(false)
-
-  const login = useAuthStore(state => state.login);
-
+  const login = useAuthStore((state) => state.login); 
+  const { 
+    showSuccess, 
+    showError, 
+  } = useRegistrationNotification();
   const handlePasswordStepComplete = async () => {
     try {
       const userData = {
+        name,
         email,
         password,
-        preferences: {
-          cookingLevel,
-          diet,
-          dietaryRestrictions: foodNeeds,
-          allergies,
-          favoriteCuisines: []
-        }
+        plan_id: 2,
+        cook_level_id: cookingLevel,
+        diet_id: diet,
+        dietary_needs: foodNeeds,
+        allergies,
       };
-  
-      const { data } = await axios.post('/api/register', userData);
+
+      const response = await register(userData);
+
+      showSuccess(
+        "¡Tu cuenta ha sido creada exitosamente!", 
+        "Serás redirigido al login automáticamente..."
+      );
       
-      login({
-        name: data.user.name,
-        email: data.user.email,
-        premium: data.user.premium,
-        token: data.user.token,
-        preferences: {
-          cookingLevel: data.user.preferences.cookingLevel,
-          diet: data.user.preferences.diet,
-          dietaryRestrictions: data.user.preferences.dietaryRestrictions,
-          allergies: data.user.preferences.allergies,
-          favoriteCuisines: []
-        }
-      });
+      // Limpiar el estado del registro
+      reset();
       
-      onComplete();
-    } catch (error) {
-      console.error('Error en el registro:', error);
+      setTimeout(() => {
+        router.push("/signin");
+      }, 5000); 
+      
+    } catch (error: any) {
+      
+      const mainMessage = "Error al crear la cuenta";
+      let backendMessage = "Verifica los datos e intenta nuevamente";
+      
+      if (error.response?.data?.errors) {
+        const errorMessages = error.response.data.errors.map((err: any) => err.message).join(', ');
+        backendMessage = errorMessages;
+      } else if (error.message) {
+        backendMessage = error.message;
+      }
+      
+      // Cerrar el modal del stepper primero para que se vea el error
+      if (onError) {
+        onError();
+      }
+
+      setTimeout(() => {
+        showError(mainMessage, backendMessage);
+      }, 200);
     }
   };
 
-  const centeredWrapperClass = "flex flex-col justify-center items-center min-h-[40vh] px-4"
+  const centeredWrapperClass =
+    "flex flex-col justify-center items-center min-h-[40vh] px-4";
 
   // STEP 1: E-mail
   if (step === 1) {
     return (
       <div className={centeredWrapperClass}>
         <div className="space-y-4 text-left w-full max-w-md">
-          <h3 className="text-2xl font-bold text-gray-800">Ingresá tu e-mail</h3>
+          <h4 className="text-2xl font-bold text-gray-800">Nombre</h4>
+          <Input
+            type="text"
+            name="name"
+            value={name}
+            onChange={(e) => { 
+              setName(e.target.value);
+            }}
+            placeholder="nombre"
+            required
+            inputClassName="rounded-xl p-3 text-gray-800"
+          />
+          <h4 className="text-2xl font-bold text-gray-800">
+            Ingresá tu e-mail
+          </h4>
           <p className="text-gray-500">Asegurate de tener acceso a él.</p>
           <Input
             type="email"
@@ -91,7 +135,7 @@ export default function RegisterStepper({ step, onComplete, onBack }: RegisterSt
           />
           <button
             onClick={() => {
-              if (email.includes('@') && termsAccepted) onComplete()
+              if (email.includes("@") && termsAccepted) onComplete();
             }}
             className="w-full bg-[#F5807B] hover:bg-[#F5807B] text-white font-semibold py-2 rounded transition"
           >
@@ -99,7 +143,7 @@ export default function RegisterStepper({ step, onComplete, onBack }: RegisterSt
           </button>
         </div>
       </div>
-    )
+    );
   }
 
   // STEP 2: Preferencias
@@ -109,25 +153,13 @@ export default function RegisterStepper({ step, onComplete, onBack }: RegisterSt
         <div className="w-full max-w-md">
           <PreferencesContainer
             initialPreferences={{
-              cookingLevel,
+              cook_level: cookingLevel,
               diet,
               dietaryRestrictions: foodNeeds,
               allergies,
-              favoriteCuisines: []
+              favourite_cuisines: [],
             }}
-            onComplete={(preferences) => {
-              if (preferences.cookingLevel) {
-                setCookingLevel(preferences.cookingLevel as SetStateAction<'Bajo' | 'Medio' | 'Alto'>);
-              }
-              if (preferences.diet) {
-                setDiet(preferences.diet as SetStateAction<'Omnívoro' | 'Vegetariano' | 'Vegano' | 'Otro'>);
-              }
-              if (preferences.dietaryRestrictions) {
-                setFoodNeeds(preferences.dietaryRestrictions);
-              }
-              if (preferences.allergies) {
-                setAllergies(preferences.allergies);
-              }
+            onComplete={() => {
               onComplete();
             }}
             showBackButton={true}
@@ -136,17 +168,22 @@ export default function RegisterStepper({ step, onComplete, onBack }: RegisterSt
           />
         </div>
       </div>
-    )
+    );
   }
 
   // STEP 3: Contraseña
   if (step === 3) {
-    const valid = password.length >= 8 && /[0-9]/.test(password) && !/1234|abcd/i.test(password)
+    const valid =
+      password.length >= 8 &&
+      /[0-9]/.test(password) &&
+      !/1234|abcd/i.test(password);
 
     return (
       <div className={centeredWrapperClass}>
         <div className="space-y-4 text-left w-full max-w-md">
-          <h3 className="text-2xl font-bold text-gray-800">Creá tu contraseña</h3>
+          <h3 className="text-2xl font-bold text-gray-800">
+            Creá tu contraseña
+          </h3>
           <p className="text-sm text-gray-500">Mantené tu cuenta protegida.</p>
           <Input
             type="password"
@@ -164,15 +201,15 @@ export default function RegisterStepper({ step, onComplete, onBack }: RegisterSt
               checked={valid}
               onChange={() => {}}
               label="Mínimo 8 caracteres con letras y números"
-              disabled={true}
+              disabled={!valid}
             />
             <Checkbox
               id="sequence-check"
               name="sequence-check"
-              checked={!/1234|abcd/i.test(password)}
+              checked={valid}
               onChange={() => {}}
               label="Sin secuencias como 1234 o ABCD"
-              disabled={true}
+              disabled={!valid}
             />
           </div>
           <Input
@@ -195,7 +232,8 @@ export default function RegisterStepper({ step, onComplete, onBack }: RegisterSt
             )}
             <button
               onClick={() => {
-                if (password === confirmPass && valid) handlePasswordStepComplete()
+                if (password === confirmPass && valid)
+                  handlePasswordStepComplete();
               }}
               className="flex-1 bg-[#B362D8] hover:opacity-80 text-white font-semibold py-2 rounded transition"
             >
@@ -204,8 +242,8 @@ export default function RegisterStepper({ step, onComplete, onBack }: RegisterSt
           </div>
         </div>
       </div>
-    )
+    );
   }
 
-  return null
+  return null;
 }

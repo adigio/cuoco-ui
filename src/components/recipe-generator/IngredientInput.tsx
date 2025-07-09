@@ -1,32 +1,63 @@
 "use client";
 
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { useIngredientsStore } from "@/store/useIngredientsStore";
+import { useFilterOptionsCache } from "@/hooks/useFilterOptionsCache";
 
 export default function RecipeIngredientInput() {
-  const [inputValue, setInputValue] = useState<string>("");
-  const addIngredient = useIngredientsStore(state => state.addIngredient);
+  const [name, setName] = useState<string>("");
+  const [quantity, setQuantity] = useState<string>("");
+  const [unit, setUnit] = useState<string>("");
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
   
+  const { unitOptions, isLoaded } = useFilterOptionsCache();
+
+  useEffect(() => {
+
+    if (isLoaded && unitOptions.length > 0 && !isInitialized) {
+      setUnit(String(unitOptions[0].key));
+      setIsInitialized(true);
+    }
+  }, [isLoaded, unitOptions.length, isInitialized,unitOptions]); // Usamos length en lugar del array completo
+
+
+  const addIngredient = useIngredientsStore((state) => state.addIngredient);
+
   const addIngrdient = (name: string, origin = "manual", confirm = true) => {
-    const agregado = addIngredient(name, origin, confirm);
-    if (agregado) setInputValue("");
-  };
-
-  const handleAddClick = () => {
-    addIngrdient(inputValue);
-  };
-  
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value);
-
-  const handleIngredientKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault(); // evita submit en formularios
-      addIngrdient(inputValue);
+    if (!name.trim()) {
+      return;
+    }
+    
+    const selectedUnit = unitOptions.find((u) => u.key === Number(unit)); 
+    if (!selectedUnit) {
+      return;
+    }
+    
+    const agregado = addIngredient(
+      name,
+      Number(quantity) || 0,
+      String(selectedUnit.key),
+      selectedUnit.symbol || selectedUnit.label,
+      false,
+      origin,
+      confirm
+    );
+    
+    if (agregado) {
+      setName("");
+      setQuantity("");
+      // Resetear a la primera unidad disponible
+      if (unitOptions.length > 0) {
+        setUnit(String(unitOptions[0].key));
+      }
     }
   };
 
-  const handleClearInput = () => {
-    setInputValue("");
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addIngrdient(name);
+    }
   };
 
   return (
@@ -34,30 +65,53 @@ export default function RecipeIngredientInput() {
       <h2 className="text-lg font-medium">
         También podés escribir o decir qué tenés
       </h2>
-      <div className="flex gap-2 mt-2 items-center">
-        <div className="relative flex-1">
-          <input
-            type="text"
-            placeholder="Ej: Leche, Huevos..."
-            value={inputValue}
-            onChange={handleInputChange}
-            onKeyDown={handleIngredientKeyPress}
-            className="border rounded px-4 py-2 w-full"
-          />
-          {inputValue && (
-            <button
-              onClick={handleClearInput}
-              className="absolute top-1/2 right-2 -translate-y-1/2 bg-gray-200 text-gray-500 h-4 w-4 flex items-center justify-center text-xs rounded-full transition-colors"
-              title="Eliminar"
-            >
-              x
-            </button>
-          )}
-        </div>
 
+      <div className="flex gap-2 mt-2 items-center flex-wrap">
+        {/* Ingrediente */}
+        <input
+          type="text"
+          placeholder="Ej: Leche, Huevos..."
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          onKeyDown={handleKeyPress}
+          className="border rounded px-4 py-2 w-60"
+        />
+
+        {/* Cantidad */}
+        <input
+          type="text"
+          placeholder="Cantidad"
+          value={quantity}
+          onChange={(e) => setQuantity(e.target.value)}
+          className="border rounded px-4 py-2 w-24"
+        />
+
+        {/* Unidad */}
+        <select
+          value={unit}
+          onChange={(e) => {
+            setUnit(e.target.value);
+          }}
+          className="border rounded px-2 py-2"
+          disabled={!isLoaded || unitOptions.length === 0}
+        >
+          {!isLoaded ? (
+            <option value="">Cargando...</option>
+          ) : unitOptions.length === 0 ? (
+            <option value="">Sin opciones</option>
+          ) : (
+            unitOptions.map((u) => (
+              <option key={u.key} value={u.key}>
+                {u.label}
+              </option>
+            ))
+          )}
+        </select>
+
+        {/* Botón Agregar */}
         <button
-          onClick={handleAddClick}
-          className="bg-purple-300 text-white px-4 py-2 rounded-full text-xl flex-shrink-0"
+          onClick={() => addIngrdient(name)}
+          className="bg-purple-300 text-white px-4 py-2 rounded-full text-xl"
           title="Agregar ingrediente"
         >
           +

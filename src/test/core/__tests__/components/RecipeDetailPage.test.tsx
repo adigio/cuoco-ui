@@ -10,7 +10,10 @@ jest.mock("react", () => {
 });
 
 // 1) Mocks de next/navigation y servicios
-jest.mock("next/navigation", () => ({ useRouter: jest.fn() }));
+jest.mock("next/navigation", () => ({
+  useRouter: jest.fn(),
+  usePathname: jest.fn().mockReturnValue("/recipe/123"),
+}));
 jest.mock("@/services/recipe.service");
 
 // 2) Mocks de componentes hijos con displayName
@@ -92,17 +95,13 @@ describe("RecipeDetailPage", () => {
     mockedGet.mockReturnValue(new Promise(() => {}) as any);
 
     await act(async () => {
-      render(
-        // casteamos params a any para evitar el error TS2353
-        <RecipeDetailPage params={{ id: "123" } as any} />
-      );
+      render(<RecipeDetailPage params={{ id: "123" } as any} />);
     });
 
     expect(screen.getByTestId("detail-skeleton")).toBeInTheDocument();
   });
 
   it("muestra mensaje de error cuando no encuentra receta", async () => {
-    // devolvemos undefined para simular “no encontrada”
     mockedGet.mockResolvedValueOnce(undefined as any);
 
     await act(async () => {
@@ -132,7 +131,6 @@ describe("RecipeDetailPage", () => {
       render(<RecipeDetailPage params={{ id: "789" } as any} />);
     });
 
-    // Verificamos que los mocks se hayan renderizado
     expect(screen.getByTestId("background-layers")).toBeInTheDocument();
     expect(screen.getByTestId("container-shadow")).toBeInTheDocument();
     expect(screen.getByTestId("recipe-header")).toHaveTextContent("Mi Receta");

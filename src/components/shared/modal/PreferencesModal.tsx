@@ -26,6 +26,7 @@ export default function PreferencesModal({
         showBackButton={true}
         title="Editar preferencias"
         submitButtonText="Guardar cambios"
+        isEditMode={true}
       />
     </Modal>
   );

@@ -4,7 +4,10 @@ import TimeAndFavorite from "@/components/shared/TimeAndFavorite";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FavoriteModal } from "@/components/shared/modal/FavoriteModal";
+import { UnfavoriteModal } from "@/components/shared/modal/UnfavoriteModal";
 import SubscriptionModal from "@/components/shared/modal/SubscriptionModal";
+import { useFavoritesStore } from "@/store/useFavoritesStore";
+import { useNotification } from "@/hooks/useNotification";
 
 type Props = RecipeDetail;
 
@@ -15,30 +18,53 @@ export default function RecipeHeader({
   servings,
   isFavorite,
   subtitle,
-  difficulty
+  difficulty,
 }: Props) {
   const [showFavoriteModal, setShowFavoriteModal] = useState(false);
+  const [showUnfavoriteModal, setShowUnfavoriteModal] = useState(false);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
+
+  const {
+    addFavorite,
+    removeFavorite,
+  } = useFavoritesStore();
+  const { showSuccess, showError } = useNotification();
 
   const handleFavRecipe = (recipeId: number) => {
     if (!isFavorite) {
       setShowFavoriteModal(true);
+    } else {
+      setShowUnfavoriteModal(true);
     }
+  };
+
+  const handleFavoriteSuccess = () => {
+    addFavorite(id);
+  };
+
+  const handleUnfavoriteSuccess = () => {
+    removeFavorite(id);
   };
 
   return (
     <>
       <div className="mb-6 border-b border-color-primary-medium">
-        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-          <h1 className="text-3xl font-bold w-3/4">{name}</h1>
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-2"> 
+          <h1 className="text-3xl font-bold w-1/2 text-center flex items-center gap-2">
+            {name}
+          </h1>
+ 
 
           <div className="flex items-center gap-2">
             <span className="flex items-center gap-1 text-color-primary-medium">
-              <FontAwesomeIcon icon={faUser} className="text-color-primary-medium" />
+              <FontAwesomeIcon
+                icon={faUser}
+                className="text-color-primary-medium"
+              />
               {servings}
             </span>
             <TimeAndFavorite
-              minutes={time}
+              time={time}
               onToggleFavorite={() => handleFavRecipe(id)}
               isFavorite={isFavorite}
             />
@@ -55,6 +81,19 @@ export default function RecipeHeader({
           setShowFavoriteModal(false);
           setShowSubscriptionModal(true);
         }}
+        onFavoriteSuccess={handleFavoriteSuccess}
+        showSuccess={showSuccess}
+        showError={showError}
+      />
+
+      <UnfavoriteModal
+        recipeId={id}
+        recipeText={name}
+        isOpen={showUnfavoriteModal}
+        onClose={() => setShowUnfavoriteModal(false)}
+        onUnfavoriteSuccess={handleUnfavoriteSuccess}
+        showSuccess={showSuccess}
+        showError={showError}
       />
 
       <SubscriptionModal
@@ -64,4 +103,4 @@ export default function RecipeHeader({
       />
     </>
   );
-} 
+}

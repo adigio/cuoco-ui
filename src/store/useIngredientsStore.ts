@@ -3,14 +3,59 @@
 import { Ingredient, IngredientsStore } from '@/types';
 import { create } from 'zustand';
 
-
 export const useIngredientsStore = create<IngredientsStore>((set, get) => ({
   ingredients: [],
-   mode: null,
+  mode: null,
+  generatorSessionActive: false,
+
   setMode: (mode) => set({ mode }),
-  addIngredient: (name, origin = 'manual', confirm = true) => {
+
+  startGeneratorSession: () => {
+    set({ generatorSessionActive: true });
+  },
+
+  endGeneratorSession: () => {
+    set({ 
+      generatorSessionActive: false,
+      ingredients: [],
+      mode: null 
+    });
+  },
+
+  clearIngredientsIfNeeded: (currentPath: string) => {
+    const generatorPaths = [
+      '/recipe-generator',
+      '/review', 
+      '/filters',
+      '/results',
+      '/recipe/'
+    ];
+    
+    const isInGeneratorFlow = generatorPaths.some(path => currentPath.includes(path));
+    const { generatorSessionActive } = get();
+
+    if (!isInGeneratorFlow && generatorSessionActive) {
+      set({ 
+        ingredients: [],
+        generatorSessionActive: false,
+        mode: null 
+      });
+    }
+    else if (isInGeneratorFlow && !generatorSessionActive) {
+      set({ generatorSessionActive: true });
+    }
+  },
+
+  addIngredient: (
+    name,
+    quantity,
+    unit,
+    symbol,
+    optional = false,
+    source = 'manual',
+    confirmed = true
+  ) => {
     if (!name || name.trim() === '') {
-      console.error('El nombre del ingrediente no puede estar vacío');
       return false;
     }
 
@@ -19,15 +64,21 @@ export const useIngredientsStore = create<IngredientsStore>((set, get) => ({
     );
 
     if (exists) {
-      console.warn(`El ingrediente "${name}" ya existe en la lista`);
       return false;
     }
 
+    const newIngredient: Ingredient = {
+      name: name.trim(),
+      quantity,
+      unit: unit,
+      symbol,
+      optional,
+      source,
+      confirmed,
+    };
+
     set((state) => ({
-      ingredients: [
-        ...state.ingredients,
-        { name: name.trim(), origin, confirm },
-      ],
+      ingredients: [...state.ingredients, newIngredient],
     }));
 
     return true;
@@ -49,10 +100,10 @@ export const useIngredientsStore = create<IngredientsStore>((set, get) => ({
 
   confirmIngredient: (idx) => {
     const { updateIngredient } = get();
-    updateIngredient(idx, { confirm: true });
+    updateIngredient(idx, { confirmed: true });
   },
 
-  addMultipleIngredients: (newIngredients) => {
+  addMultipleIngredients: (newIngredients) => { 
     const lowerNames = get().ingredients.map((ing) =>
       ing.name.toLowerCase()
     );

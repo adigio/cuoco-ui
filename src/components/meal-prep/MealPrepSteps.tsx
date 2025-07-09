@@ -3,8 +3,8 @@ import React from "react";
 
 interface Step {
   title: string;
-  estimatedTime: number;
-  instructions: string[];
+  time: number;
+  description: string[];
 }
 
 interface MealPrepStepsProps {
@@ -18,12 +18,12 @@ const MealPrepSteps: React.FC<MealPrepStepsProps> = ({ steps }) => {
         <li key={index} className="ml-4">
           <div className="absolute w-4 h-4 bg-[#f27f6c] rounded-full -left-2.5 border-2 border-white"></div>
           <h3 className="text-lg font-semibold text-[#f27f6c] mb-1">
-            ⏱ {step.estimatedTime}&apos; – {step.title}
-          </h3>
-          <ul className="list-none list-inside text-sm text-gray-700 space-y-1">
-            {step.instructions.map((inst, idx) => (
-              <li key={idx}>{inst}</li>
-            ))}
+            ⏱ {step.time}&apos; – {step.title}
+          </h3> 
+          <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
+           
+              <li >{step.description}</li> 
+ 
           </ul>
         </li>
       ))}

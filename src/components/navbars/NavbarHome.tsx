@@ -14,9 +14,7 @@ export default function NavbarHome() {
       const isPremium = useAuthStore((state) => state.user?.premium);
     const active = useAuthStore((state)=>state.user?.name);
     const router = useRouter();
-  // Aquí obtendrías si el usuario es premium (desde tu contexto o store) 
   
-  // Handler para Calendario en desktop y mobile
   const handleCalendarClick = () => {
     if (isPremium) {
       window.location.href = '/calendar';

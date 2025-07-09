@@ -5,7 +5,14 @@ export interface RecipeImageUploaderProps {
   images: File[];
   setImages: React.Dispatch<React.SetStateAction<File[]>>;
   ingredients: Ingredient[];
-  addIngredient: (name: string, origin?: string, confirm?: boolean) => boolean;
+  addIngredient?: (
+  name: string,
+  quantity: number,
+  unit: string,
+  optional?: boolean,
+  source?: string,
+  confirmed?: boolean
+) => boolean;
 }
 
 export interface RecipeIngredientListProps {

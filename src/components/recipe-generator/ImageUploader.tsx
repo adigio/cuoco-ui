@@ -7,8 +7,7 @@ import RecipeIngredientList from '@/components/recipe-generator/IngredientList';
 import ContainerShadow from '@/components/shared/containers/ContainerShadow';
 import { RecipeImageUploaderProps } from '@/types/components/recipe-generator.types';
 import { useAuthStore } from '@/store/useAuthStore';
-import { useIngredientsStore } from '@/store/useIngredientsStore';
-import { Ingredient } from '@/types/ingredient/ingredient.types';
+import { useIngredientsStore } from '@/store/useIngredientsStore'; 
 import SubscriptionModal from '../shared/modal/SubscriptionModal';
 
 // Componente para manejar imágenes locales
@@ -36,7 +35,7 @@ function LocalImage({ file, alt, className }: { file: File; alt: string; classNa
   );
 }
 
-export default function RecipeImageUploader({ images, setImages, ingredients, addIngredient }: RecipeImageUploaderProps) {
+export default function RecipeImageUploader({ images, setImages, ingredients }: RecipeImageUploaderProps) {
   const removeIngredient = useIngredientsStore((state) => state.removeIngredient);
   const isPremium = useAuthStore((state) => state.user?.premium);
 

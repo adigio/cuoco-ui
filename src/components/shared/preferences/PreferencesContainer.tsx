@@ -1,46 +1,80 @@
-import React, { useState } from 'react';
-import { UserPreferences } from '@/types/auth/auth.types';
+import React, { useEffect, useState } from 'react';
 import PreferencesSteps from './PreferencesSteps';
-import { PreferencesContainerProps, CookingLevel, DietType } from '@/types/components/preferences.types';
+import { PreferencesContainerProps } from '@/types/components/preferences.types';
 import { BRAND_COLORS } from '@/constants/colors';
+import { useRegisterStore } from '@/store/useRegisterStore';
+import { useFilterOptionsCache } from '@/hooks/useFilterOptionsCache';
+import ChefLoader from '@/components/shared/loaders/ChefLoader';
 
 export default function PreferencesContainer({
   initialPreferences,
   onComplete,
   showBackButton = true,
   title = "¿Cómo es tu alimentación?",
-  submitButtonText = "Guardar preferencias"
+  submitButtonText = "Guardar preferencias",
+  isEditMode = false
 }: PreferencesContainerProps) {
   const [currentStep, setCurrentStep] = useState(1);
-  const [level, setLevel] = useState<CookingLevel>(initialPreferences?.cookingLevel || '');
-  const [diet, setDiet] = useState<DietType>(initialPreferences?.diet || '');
-  const [foodNeeds, setFoodNeeds] = useState<string[]>(initialPreferences?.dietaryRestrictions || []);
-  const [allergies, setAllergies] = useState<string[]>(initialPreferences?.allergies || []);
+  
+  const { 
+    cookingLevel,
+    diet,
+    foodNeeds,
+    allergies,
+    setCookingLevel, 
+    setDiet, 
+    setFoodNeeds, 
+    setAllergies 
+  } = useRegisterStore();
+
+  // Usar el hook de cache en lugar de hacer llamadas directas
+  const {
+    isLoaded,
+    cookingLevelOptions,
+    originalAllergyOptions: allergyOptions,
+    originalDietOptions: dietOptions,
+    originalDietaryNeedOptions: dietaryNeedOptions,
+  } = useFilterOptionsCache();
+
+  useEffect(() => {
+    if (isEditMode && initialPreferences) {
+      // Solo en modo edición inicializamos con los valores del usuario
+      setCookingLevel(initialPreferences.cook_level || 0);
+      setDiet(initialPreferences.diet || 0);
+      setFoodNeeds(initialPreferences.dietaryRestrictions || []);
+      setAllergies(initialPreferences.allergies || []);
+    }
+    // En modo registro, useRegisterStore mantiene sus valores por defecto
+  }, [isEditMode, initialPreferences, setCookingLevel, setDiet, setFoodNeeds, setAllergies]);
 
   const handleComplete = () => {
-    const preferences: UserPreferences = {
-      cookingLevel: level || 'Medio',
-      diet: diet || 'Omnívoro',
+    // Crear objeto de preferencias con los valores actuales del registerStore
+    const preferences = {
+      cook_level: cookingLevel,
+      diet: diet,
       dietaryRestrictions: foodNeeds,
       allergies: allergies,
-      favoriteCuisines: []
     };
     onComplete(preferences);
   };
 
+  if (!isLoaded) {
+    return (
+      <div className="w-full max-w-md">
+        <ChefLoader text="Cargando preferencias..." />
+      </div>
+    );
+  }
+
   return (
     <div className="w-full max-w-md">
       <PreferencesSteps
+        cookingLevelOptions={cookingLevelOptions}
+        allergyOptions={allergyOptions}
+        dietOptions={dietOptions}
+        dietaryNeedOptions={dietaryNeedOptions}
         currentStep={currentStep}
         setCurrentStep={setCurrentStep}
-        level={level}
-        setLevel={setLevel}
-        diet={diet}
-        setDiet={setDiet}
-        foodNeeds={foodNeeds}
-        setFoodNeeds={setFoodNeeds}
-        allergies={allergies}
-        setAllergies={setAllergies}
         onComplete={handleComplete}
         showBackButton={showBackButton}
         title={title}
@@ -49,17 +83,16 @@ export default function PreferencesContainer({
 
       <div className="flex items-center mt-6 gap-4">
         {showBackButton && currentStep > 1 && (
-          <button 
-            className="bg-gray-200 text-gray-800 px-6 py-2 rounded hover:bg-gray-300 transition" 
+          <button
+            className="bg-gray-200 text-gray-800 px-6 py-2 rounded hover:bg-gray-300 transition"
             onClick={() => setCurrentStep(currentStep - 1)}
           >
             Atrás
           </button>
         )}
-        
         {currentStep < 3 ? (
-          <button 
-            className="bg-[#f37b6a] text-white px-6 py-2 rounded hover:bg-[#e36455] transition ml-auto" 
+          <button
+            className="bg-[#f37b6a] text-white px-6 py-2 rounded hover:bg-[#e36455] transition ml-auto"
             onClick={() => setCurrentStep(currentStep + 1)}
           >
             Siguiente
@@ -76,10 +109,10 @@ export default function PreferencesContainer({
 
       <div className="flex justify-center mt-4 gap-2">
         {[1, 2, 3].map((n) => (
-          <span 
-            key={n} 
+          <span
+            key={n}
             className="w-2 h-2 rounded-full"
-            style={{ 
+            style={{
               backgroundColor: n === currentStep ? BRAND_COLORS.primary : '#D1D5DB'
             }}
           />

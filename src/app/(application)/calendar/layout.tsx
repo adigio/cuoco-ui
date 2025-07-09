@@ -1,12 +1,7 @@
 // app/recipe-generator/layout.jsx
 'use client';
-
-import Container from '@/components/shared/containers/Container';
-
-interface LayoutProps {
-  children: React.ReactNode;
-}
-
+import { LayoutProps } from '@/types/layout';
+import Container from '@/components/shared/containers/Container'; 
 export default function CalendarLayout({ children }: LayoutProps) {
   return (
     <Container>

@@ -7,10 +7,23 @@ import Button from "@/components/shared/form/Button";
 import ChefLoader from "@/components/shared/loaders/ChefLoader";
 import Input from "@/components/shared/form/Input";
 import { useAuthStore } from "@/store/useAuthStore";
-import { login } from '@/services/auth.service';
+import { login } from "@/services/auth.service";
+import NotificationModal from "@/components/shared/modal/NotificationModal";
+import { useNotification } from "@/hooks/useNotification";
 
 export default function SignIn() {
   const router = useRouter();
+  
+  const { 
+    message, 
+    additionalMessage, 
+    type, 
+    show, 
+    showSuccess, 
+    showError, 
+    clearNotification 
+  } = useNotification();
+
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -29,25 +42,33 @@ export default function SignIn() {
     e.preventDefault();
 
     try {
-      setLoading(true);
-      console.log("Form submitted:", formData);
+      setLoading(true); 
 
       const response = await login(formData.email, formData.password);
-      console.log("Login exitoso:", response);
-      useAuthStore.getState().login(response.user);
+ 
+      useAuthStore.getState().login(response.data.user);
       
-      // redirige después del login exitoso
-      router.push("/home");
+      showSuccess(
+        "¡Bienvenido de vuelta!", 
+        "Redirigiendo a tu dashboard..."
+      );
+      
+      setTimeout(() => {
+        router.push("/home");
+      }, 2000);
+      
     } catch (error: any) {
-      console.error("Error durante login:", error.message);
-      alert(error.message); // mostrar error al usuario
+      const mainMessage = "Error al iniciar sesión";
+      const backendMsg = error?.message || "Verifica tus credenciales e intenta nuevamente";
+      
+      // Mostrar error con mensaje del backend
+      showError(mainMessage, backendMsg);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-
     <div className="relative min-h-screen w-full overflow-hidden">
       {loading && (
         <div className="signin-loader-wrapper">
@@ -114,7 +135,7 @@ export default function SignIn() {
               fullWidth
               onClick={() => console.log("Google login")}
               size={"sm"}
-              disabled={loading}
+              disabled={true}
             >
               Iniciar sesión con Google
             </Button>
@@ -124,13 +145,20 @@ export default function SignIn() {
               fullWidth
               size={"sm"}
               onClick={() => console.log("Facebook login")}
-              disabled={loading}
+              disabled={true}
             >
               Iniciar sesión con Facebook
             </Button>
           </div>
         </div>
       </div>
+      <NotificationModal
+        show={show}
+        onClose={clearNotification}
+        message={message}
+        additionalMessage={additionalMessage}
+        type={type}
+      />
     </div>
   );
 }
