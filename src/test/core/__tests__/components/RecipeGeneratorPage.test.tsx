@@ -40,7 +40,7 @@ const mockedUseAuthStore = jest.mocked(useAuthStore);
 const mockedUseRouter = jest.mocked(useRouter);
 const mockedAnalyzeImages = jest.mocked(visionService.analyzeImagesWithAPI);
 
-describe("RecipeGeneratorPage", () => {
+describe("Página RecipeGeneratorPage (/recipe-generator)", () => {
   const pushMock = jest.fn();
 
   beforeAll(() => {
@@ -60,8 +60,8 @@ describe("RecipeGeneratorPage", () => {
         addIngredient: jest.fn(),
         addMultipleIngredients: jest.fn().mockReturnValue(1),
         removeIngredient: jest.fn(),
-        clearIngredientsIfNeeded: jest.fn(), // <-- agregado
-        startGeneratorSession: jest.fn(), // <-- agregado
+        clearIngredientsIfNeeded: jest.fn(),
+        startGeneratorSession: jest.fn(),
         mode: "basic",
       };
       return typeof selector === "function" ? selector(storeStub) : storeStub;
@@ -77,7 +77,7 @@ describe("RecipeGeneratorPage", () => {
     jest.restoreAllMocks();
   });
 
-  it("renderiza título y botón Continuar", () => {
+  it("debe renderizar el título principal y el botón 'Continuar'", () => {
     render(<RecipeGeneratorPage />);
     expect(
       screen.getByText(/Subí una foto de tu heladera o alacena/i)
@@ -87,9 +87,10 @@ describe("RecipeGeneratorPage", () => {
     ).toBeInTheDocument();
   });
 
-  it("abre AlertModal si no hay imágenes ni ingredientes", async () => {
+  it("debe mostrar una alerta si no hay imágenes ni ingredientes al hacer clic en 'Continuar'", async () => {
     render(<RecipeGeneratorPage />);
     fireEvent.click(screen.getByRole("button", { name: /Continuar/i }));
+
     expect(
       await screen.findByText(
         /Debes agregar al menos una imagen o un ingrediente para continuar/i
@@ -97,7 +98,7 @@ describe("RecipeGeneratorPage", () => {
     ).toBeInTheDocument();
   });
 
-  it("redirige directamente si ya hay ingredientes", async () => {
+  it("debe redirigir automáticamente a '/review' si ya hay ingredientes en el store", async () => {
     const storeWithIng = {
       ingredients: ["lechuga"],
       addIngredient: jest.fn(),
@@ -121,7 +122,7 @@ describe("RecipeGeneratorPage", () => {
     expect(mockedAnalyzeImages).not.toHaveBeenCalled();
   });
 
-  it("activa suscripción si es free y sube >2 imágenes", async () => {
+  it("debe mostrar la ventana de suscripción si el usuario es free y sube más de 2 imágenes", async () => {
     const authFree = { user: { premium: false }, isAuthenticated: true };
     mockedUseAuthStore.mockImplementation((selector?: any) =>
       typeof selector === "function" ? selector(authFree) : authFree
@@ -142,7 +143,7 @@ describe("RecipeGeneratorPage", () => {
     expect(await screen.findByText(/Contratar/i)).toBeInTheDocument();
   });
 
-  it("procesa imágenes y redirige si detecta ingredientes", async () => {
+  it("debe analizar imágenes y redirigir a '/review' si se detectan ingredientes válidos", async () => {
     const fakeResult = [
       {
         name: "pepino",
@@ -169,3 +170,4 @@ describe("RecipeGeneratorPage", () => {
     });
   });
 });
+

@@ -111,7 +111,7 @@ export default function RecipeIngredientInput() {
         {/* Botón Agregar */}
         <button
           onClick={() => addIngrdient(name)}
-          className="bg-purple-300 text-white px-4 py-2 rounded-full text-xl"
+          className="bg-purple-500 text-white px-4 py-2 rounded-full text-xl"
           title="Agregar ingrediente"
         >
           +

@@ -1,12 +1,16 @@
 export interface Ingredient {
   name: string;
   quantity: number;
-  unit: string;
-  symbol?: string;
+  unit: {
+    id: number;
+    description: string;
+    symbol?: string;
+  };
   optional: boolean;
   source: string;
   confirmed: boolean;
 }
+
 export interface IngredientRequest {
   name :string;
   quantity:number;

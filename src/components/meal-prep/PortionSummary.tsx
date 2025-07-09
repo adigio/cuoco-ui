@@ -8,7 +8,7 @@ interface PortionSummaryProps {
 }
 
 const PortionSummary: React.FC<PortionSummaryProps> = ({ recipes }) => (
-  <ContainerCardDetail title="Recetas incluidas">
+  <ContainerCardDetail title="Recetas incluidas" >
     <h3 className="text-md font-bold mb-2"></h3>
     <ul className="list-disc list-inside text-sm text-gray-700">
       {recipes.map((r, i) => (

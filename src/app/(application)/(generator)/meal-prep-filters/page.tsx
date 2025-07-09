@@ -233,150 +233,119 @@ export default function MealPrepFilters() {
     return <ChefLoader text="Cargando filtros..." />;
   }
 
-  return (
-    <div className="flex flex-col bg-[#fefefe] p-6">
-      <h2 className="text-xl font-semibold text-gray-800 mb-4">
-        Ingredientes seleccionados
-      </h2>
-      <RecipeIngredientList ingredients={ingredients} enabledDelete={false} />
-      <hr className="my-6" />
-      <h2 className="text-3xl font-semibold mb-4 text-center">Filtros Meal Prep</h2>
+return (
+  <div className="flex flex-col bg-[#fefefe] p-6">
+    <h2 className="text-xl font-semibold text-gray-800 mb-4">Ingredientes seleccionados</h2>
+    <RecipeIngredientList ingredients={ingredients} enabledDelete={false} />
+    <hr className="my-6" />
 
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          {error}
-        </div>
-      )}
+    <h2 className="text-3xl font-semibold mb-6 text-center">🧪 Filtros Meal Prep</h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <Select
-          name="time"
-          value={filters.time}
-          onChange={handleChange}
-          options={timeOptions}
-          label="⏱️ Tiempo"
-        />
-
-        <Select
-          name="difficulty"
-          value={filters.difficulty}
-          onChange={handleChange}
-          options={difficultyOptions}
-          label="💪 Dificultad"
-        />
-
-        <Select
-          name="diet"
-          value={filters.diet}
-          onChange={handleChange}
-          options={dietOptions}
-          label="🥦 Dieta"
-        />
-
-        <Input
-          type="number"
-          name="people"
-          value={filters.people}
-          onChange={handleChange}
-          label="👥 Cantidad de personas"
-          min="1"
-        />
+    {error && (
+      <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+        {error}
       </div>
+    )}
 
-      <div className="grid grid-cols-1 gap-4 mb-6">
-        <Checkbox
-          id="freeze"
-          name="freeze"
-          checked={filters.freeze}
-          onChange={handleFreezeChange}
-          label="🧊 Tengo freezer disponible"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <h3 className="text-lg font-medium mb-2 text-gray-800">
-            🍽️ Tipo de comida
-          </h3>
-          <CheckboxGroup
-            title=""
-            options={mealOptions}
-            selectedValues={filters.types}
-            onChange={handleTiposChange}
-          />
-        </div>
-
-        <div className="col-span-2">
-          <h3 className="text-lg font-medium mb-2 text-gray-800">
-            🚫 Alergias
-          </h3>
-          <div className="flex flex-wrap gap-4 text-base">
-            {allergyOptions.map((option) => (
-              <label key={option.key} className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={selectedAllergies.includes(option.value)}
-                  onChange={() => {
-                    const newValues = selectedAllergies.includes(option.value)
-                      ? selectedAllergies.filter(v => v !== option.value)
-                      : [...selectedAllergies, option.value];
-                    handleAllergiesChange(newValues);
-                  }}
-                />
-                {option.label}
-              </label>
-            ))}
-          </div>
-        </div>
-
-        <div className="col-span-2">
-          <h3 className="text-lg font-medium mb-2 text-gray-800">
-            🧬 Necesidades Alimenticias
-          </h3>
-          <div className="flex flex-wrap gap-4 text-base">
-            {needOptions.map((option) => (
-              <label key={option.key} className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={selectedNeeds.includes(option.value)}
-                  onChange={() => {
-                    const newValues = selectedNeeds.includes(option.value)
-                      ? selectedNeeds.filter(v => v !== option.value)
-                      : [...selectedNeeds, option.value];
-                    handleNeedsChange(newValues);
-                  }}
-                />
-                {option.label}
-              </label>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="flex justify-between mt-8">
-        <button
-          onClick={() => router.push("/review")}
-          className="bg-gray-200 text-gray-800 px-6 py-2 rounded hover:bg-gray-300 transition"
-          disabled={loading}
-        >
-          Volver
-        </button>
-
-        <button
-          onClick={handleFinish}
-          disabled={loading}
-          className={`
-            ${
-              loading
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-[#f37b6a] hover:bg-[#e36455] cursor-pointer"
-            } 
-            text-white px-6 py-2 rounded transition
-          `}
-        >
-          {loading ? "Generando..." : "Generar Meal Preps"}
-        </button>
+    {/* Filtros principales agrupados horizontalmente */}
+    <div className="bg-white shadow-md rounded-xl p-4 space-y-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Select name="time" value={filters.time} onChange={handleChange} options={timeOptions} label="⏱️ Tiempo" />
+        <Select name="diet" value={filters.diet} onChange={handleChange} options={dietOptions} label="🥦 Dieta" />
+        <Select name="difficulty" value={filters.difficulty} onChange={handleChange} options={difficultyOptions} label="💪 Dificultad" />
+        <Input type="number" name="people" value={filters.people} onChange={handleChange} label="👥 Cantidad de personas" min="1" />
       </div>
     </div>
-  );
+
+    {/* Checkbox freezer */}
+    <div className="bg-white shadow-md rounded-xl p-4 mb-6">
+      <Checkbox
+        id="freeze"
+        name="freeze"
+        checked={filters.freeze}
+        onChange={handleFreezeChange}
+        label="🧊 Tengo freezer disponible"
+      />
+    </div>
+
+    {/* Tipo de comida */}
+    <div className="bg-white shadow-md rounded-xl p-4 mb-6">
+      <h3 className="text-lg font-semibold mb-2">🍽️ Tipo de comida</h3>
+      <CheckboxGroup
+        title=""
+        options={mealOptions}
+        selectedValues={filters.types}
+        onChange={handleTiposChange}
+      />
+    </div>
+
+    {/* Alergias */}
+    <div className="bg-white shadow-md rounded-xl p-4 mb-6">
+      <h3 className="text-lg font-semibold mb-2">🚫 Alergias</h3>
+      <div className="flex flex-wrap gap-4 text-base">
+        {allergyOptions.map((option) => (
+          <label key={option.key} className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={selectedAllergies.includes(option.value)}
+              onChange={() => {
+                const newValues = selectedAllergies.includes(option.value)
+                  ? selectedAllergies.filter(v => v !== option.value)
+                  : [...selectedAllergies, option.value];
+                handleAllergiesChange(newValues);
+              }}
+            />
+            {option.label}
+          </label>
+        ))}
+      </div>
+    </div>
+
+    {/* Necesidades alimenticias */}
+    <div className="bg-white shadow-md rounded-xl p-4">
+      <h3 className="text-lg font-semibold mb-2">🧬 Necesidades Alimenticias</h3>
+      <div className="flex flex-wrap gap-4 text-base">
+        {needOptions.map((option) => (
+          <label key={option.key} className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={selectedNeeds.includes(option.value)}
+              onChange={() => {
+                const newValues = selectedNeeds.includes(option.value)
+                  ? selectedNeeds.filter(v => v !== option.value)
+                  : [...selectedNeeds, option.value];
+                handleNeedsChange(newValues);
+              }}
+            />
+            {option.label}
+          </label>
+        ))}
+      </div>
+    </div>
+
+    {/* Botones */}
+    <div className="flex flex-col md:flex-row justify-between items-center gap-4 mt-8">
+      <button
+        onClick={() => router.push("/review")}
+        className="bg-gray-200 text-gray-800 px-6 py-2 rounded hover:bg-gray-300 transition w-full md:w-auto"
+        disabled={loading}
+      >
+        Volver
+      </button>
+
+      <button
+        onClick={handleFinish}
+        disabled={loading}
+        className={`
+          w-full md:w-auto text-white px-6 py-2 rounded transition
+          ${loading
+            ? "bg-gray-400 cursor-not-allowed"
+            : "bg-[#f37b6a] hover:bg-[#e36455] cursor-pointer"}
+        `}
+      >
+        {loading ? "Generando..." : "  Generar Meal Preps"}
+      </button>
+    </div>
+  </div>
+);
 }

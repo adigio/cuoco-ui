@@ -77,8 +77,8 @@ export default function SignIn() {
       )}
 
       <div className="min-h-screen bg-[url('/auth/signin-mobile.png')] md:bg-[url('/auth/signin.png')] bg-cover bg-no-repeat bg-center flex items-center justify-center md:justify-end px-4 md:px-16">
-        <div className="bg-white/90 rounded-3xl p-6 w-full md:max-w-md space-y-4 shadow-xl mx-4 md:mx-0">
-          <h2 className="text-2xl font-semibold mb-6 text-center">
+        <div className="bg-white/90 rounded-3xl p-6 w-full md:max-w-md min-h-[550px] space-y-4 shadow-xl mx-4 md:mx-0 flex flex-col justify-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-center">
             Bienvenido de nuevo
           </h2>
 
@@ -130,7 +130,7 @@ export default function SignIn() {
           </p>
 
           <div className="mt-6 flex flex-col gap-3">
-            <Button
+            {/* <Button
               variant="google"
               fullWidth
               onClick={() => console.log("Google login")}
@@ -148,7 +148,7 @@ export default function SignIn() {
               disabled={true}
             >
               Iniciar sesión con Facebook
-            </Button>
+            </Button> */}
           </div>
         </div>
       </div>

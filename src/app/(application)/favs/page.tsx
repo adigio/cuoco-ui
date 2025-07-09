@@ -75,7 +75,11 @@ export default function Favs() {
     fetchFavorites();
   }, []);
 
-  const handleRemove = (id: number, name: string, type: "recipe" | "meal-prep") => {
+  const handleRemove = (
+    id: number,
+    name: string,
+    type: "recipe" | "meal-prep"
+  ) => {
     setSelectedToRemove({ id, name, type });
     setShowUnfavoriteModal(true);
   };
@@ -112,7 +116,9 @@ export default function Favs() {
     );
   });
 
-  const mealPrepsTotalPages = Math.ceil(filteredMealPreps.length / mealPrepsPageSize);
+  const mealPrepsTotalPages = Math.ceil(
+    filteredMealPreps.length / mealPrepsPageSize
+  );
   const paginatedMealPreps = filteredMealPreps.slice(
     (mealPrepsPage - 1) * mealPrepsPageSize,
     mealPrepsPage * mealPrepsPageSize
@@ -153,12 +159,13 @@ export default function Favs() {
                   {paginatedRecipes.map((recipe) => (
                     <div key={recipe.id} className="relative">
                       <RecipeCard recipe={recipe}>
-                        <div className="w-full flex justify-end items-end">
+                        <div className="relative w-full h-full">
+                          {/* Botón de eliminar favorito, fijo en la esquina inferior derecha */}
                           <button
                             onClick={() =>
                               handleRemove(recipe.id, recipe.name, "recipe")
                             }
-                            className="w-10 text-3xl bg-red-900 hover:bg-red-900 text-white p-1 px-3 rounded-full shadow-md transition-colors"
+                            className="absolute bottom-3 right-3 w-10 h-10 flex items-center justify-center text-white background-color-primary hover:bg-red-800 rounded-full shadow-md transition"
                             title="Eliminar de favoritos"
                           >
                             <FontAwesomeIcon
@@ -187,7 +194,7 @@ export default function Favs() {
         </section>
 
         {/* Meal preps favoritos */}
-        <section>
+       <section className="mb-20">
           <button
             onClick={() => setShowMealPreps(!showMealPreps)}
             className="text-2xl font-semibold mb-2 flex justify-between w-full items-center"
@@ -216,17 +223,17 @@ export default function Favs() {
                   {paginatedMealPreps.map((mp) => (
                     <div key={mp.id} className="relative">
                       <MealPrepCard mealPrep={mp}>
-                        <div className="w-full flex justify-end items-end">
+                        <div className="relative w-full h-full">
                           <button
                             onClick={() =>
                               handleRemove(mp.id, mp.title, "meal-prep")
                             }
-                            className="w-10 text-3xl bg-red-900 hover:bg-red-900 text-white p-1 px-3 rounded-full shadow-md transition-colors"
+                            className="absolute bottom-3 right-3 w-10 h-10 flex items-center justify-center text-white background-color-primary hover:bg-red-800 rounded-full shadow-md transition"
                             title="Eliminar de favoritos"
                           >
                             <FontAwesomeIcon
                               icon={faHeartCircleXmark}
-                              className="w-5 h-5"
+                              className="w-5 h-5 transition-transform duration-200 ease-in-out hover:scale-110"
                             />
                           </button>
                         </div>
