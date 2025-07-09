@@ -18,7 +18,6 @@ export default function CardsInspiracion() {
       try {
         setIsLoading(true);
         const recipes = await getRandomRecipes(3); // Por ejemplo, traer 4 recetas
-        console.log(recipes)
         setInspirationalRecipes(recipes);
       } catch (error) {
         console.error("Error al obtener recetas inspiracionales:", error);

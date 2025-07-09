@@ -79,7 +79,7 @@ export default function LandingPage() {
       <Header />
 
       {/* Roadmap de fondo solo en desktop */}
-      <section className="relative w-full bg-white py-24 px-4 md:px-8 overflow-visible">
+      <section className="relative w-full bg-white py-24 px-4 md:px-8 overflow-visible ">
         <div className="relative z-10 max-w-7xl mx-auto flex flex-col">
           {LandingSections.map((section, index) => (
             <StepSection

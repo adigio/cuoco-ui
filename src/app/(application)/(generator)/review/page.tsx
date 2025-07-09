@@ -35,7 +35,11 @@ export default function ReviewPage() {
   const [editIndex, setEditIndex] = useState(0);
   const [newName, setNewName] = useState("");
   const [newQuantity, setNewQuantity] = useState("");
-  const [newUnit, setNewUnit] = useState("");
+  const [newUnit, setNewUnit] = useState<{
+    id: number;
+    description: string;
+    symbol?: string;
+  }>();
 
   const openEditModal = (idx: number) => {
     const ing = ingredients[idx];
@@ -51,7 +55,7 @@ export default function ReviewPage() {
       updateIngredient(editIndex, {
         name: newName.trim(),
         quantity: Number(newQuantity),
-        unit: newUnit.trim(),
+        unit: newUnit || { id: 0, description: "", symbol: "" },
       });
       setIsEditModalOpen(false);
     }
@@ -86,8 +90,7 @@ export default function ReviewPage() {
     }
     setIsDeleteModalOpen(false);
     setDeleteTarget(null);
-  };
-
+  }; 
   const [showAlertModal, setShowAlertModal] = useState(false);
 
   const handleFinish = () => {
@@ -149,7 +152,9 @@ export default function ReviewPage() {
                           {item.name}
                         </td>
                         <td className="px-4 py-2">{item.quantity || "-"}</td>
-                        <td className="px-4 py-2">{item.symbol || "-"}</td>
+                        <td className="px-4 py-2">
+                          {item.unit?.description || "-"}
+                        </td>
                         <td className="px-4 py-2 text-gray-600 capitalize">
                           {item.source === "manual" && "Manual (texto)"}
                           {item.source === "voz" && "Por voz"}
@@ -176,9 +181,7 @@ export default function ReviewPage() {
                           </button>
 
                           <button
-                            onClick={() =>
-                              handleRequestDelete(idx, item.name)
-                            }
+                            onClick={() => handleRequestDelete(idx, item.name)}
                             className="px-3 py-1 rounded-full text-xs bg-red-200 text-red-800 hover:bg-red-300 transition"
                           >
                             Eliminar
@@ -237,11 +240,17 @@ export default function ReviewPage() {
             />
             <input
               type="text"
-              value={newUnit}
-              onChange={(e) => setNewUnit(e.target.value)}
-              className="w-full px-4 py-2 border text-color-primary rounded mb-4"
+              value={newUnit?.description || ""}
+              onChange={(e) =>
+                setNewUnit((prev) => ({
+                  id: prev?.id ?? 0,
+                  symbol: prev?.symbol,
+                  description: e.target.value,
+                }))
+              }
               placeholder="Unidad"
             />
+
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setIsEditModalOpen(false)}

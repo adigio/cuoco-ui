@@ -38,22 +38,24 @@ import React from "react";
 import { render, screen, within } from "@testing-library/react";
 import FiltrosPage from "@/app/(application)/(generator)/filters/page";
 
-describe("FiltrosPage", () => {
-  it("renderiza BackgroundLayers, la línea divisoria y RecipeFilters dentro de ContainerShadow", () => {
+describe("Página de Filtros de Recetas (/filters)", () => {
+  it("debe renderizar BackgroundLayers, un separador horizontal y el componente RecipeFilters dentro de ContainerShadow", () => {
     const { container } = render(<FiltrosPage />);
 
-    // 1) BackgroundLayers
+    // 1) Verifica que BackgroundLayers esté presente
     expect(screen.getByTestId("background-layers")).toBeInTheDocument();
 
-    // 2) División: buscamos el <div> con la clase `border-b-4`
+    // 2) Verifica que el separador horizontal (div con clase border-b-4) esté presente
     const divider = container.querySelector("div.border-b-4");
     expect(divider).toBeInTheDocument();
 
-    // 3) ContainerShadow
+    // 3) Verifica que ContainerShadow esté presente
     const containerShadow = screen.getByTestId("container-shadow");
     expect(containerShadow).toBeInTheDocument();
 
-    // 4) RecipeFilters dentro de ContainerShadow
-    expect(within(containerShadow).getByTestId("recipe-filters")).toBeInTheDocument();
+    // 4) Verifica que RecipeFilters se renderice dentro de ContainerShadow
+    expect(
+      within(containerShadow).getByTestId("recipe-filters")
+    ).toBeInTheDocument();
   });
 });

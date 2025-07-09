@@ -9,44 +9,47 @@ export default function RecipeIngredientInput() {
   const [quantity, setQuantity] = useState<string>("");
   const [unit, setUnit] = useState<string>("");
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
-  
+
   const { unitOptions, isLoaded } = useFilterOptionsCache();
 
   useEffect(() => {
-
     if (isLoaded && unitOptions.length > 0 && !isInitialized) {
       setUnit(String(unitOptions[0].key));
       setIsInitialized(true);
     }
-  }, [isLoaded, unitOptions.length, isInitialized,unitOptions]); // Usamos length en lugar del array completo
-
+  }, [isLoaded, unitOptions.length, isInitialized, unitOptions]);
 
   const addIngredient = useIngredientsStore((state) => state.addIngredient);
 
   const addIngrdient = (name: string, origin = "manual", confirm = true) => {
-    if (!name.trim()) {
+    // Validar que los tres campos estén completos
+    if (!name.trim() || !quantity.trim() || !unit.trim()) {
       return;
     }
-    
-    const selectedUnit = unitOptions.find((u) => u.key === Number(unit)); 
+
+    const selectedUnit = unitOptions.find((u) => String(u.key) === String(unit));
     if (!selectedUnit) {
       return;
     }
-    
+
+    const newUnit = {
+      id: selectedUnit.value,
+      description: selectedUnit.label,
+      symbol: selectedUnit.symbol,
+    };
+
     const agregado = addIngredient(
       name,
       Number(quantity) || 0,
-      String(selectedUnit.key),
-      selectedUnit.symbol || selectedUnit.label,
+      newUnit,
       false,
       origin,
       confirm
     );
-    
+
     if (agregado) {
       setName("");
       setQuantity("");
-      // Resetear a la primera unidad disponible
       if (unitOptions.length > 0) {
         setUnit(String(unitOptions[0].key));
       }
@@ -111,7 +114,7 @@ export default function RecipeIngredientInput() {
         {/* Botón Agregar */}
         <button
           onClick={() => addIngrdient(name)}
-          className="bg-purple-300 text-white px-4 py-2 rounded-full text-xl"
+          className="bg-purple-500 text-white px-4 py-2 rounded-full text-xl"
           title="Agregar ingrediente"
         >
           +

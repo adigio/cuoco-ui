@@ -40,8 +40,7 @@ export const analyzeImagesWithAPI = async (
           allIngredients.push({
             name: String(ingredient.name || "").trim(),
             quantity: Number(ingredient.quantity) || 0,
-            unit: String(ingredient.unit?.id || "").trim(),
-            symbol: String(ingredient.unit?.description || "").trim(),
+            unit: ingredient.unit || { id: 0, description: "", symbol: "" }, 
             optional: false,
             source: "imagen",
             confirmed: Boolean(ingredient.confirmed),

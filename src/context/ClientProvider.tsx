@@ -26,7 +26,6 @@ export default function ClientProvider({ children }: Props) {
 
   useEffect(() => {
     // 🚨 MSW COMPLETAMENTE DESHABILITADO para evitar interferencia con API real
-    console.log("[MSW] ❌ MSW deshabilitado - usando API real");
     setMswReady(true); // Saltar MSW completamente
   }, []);
 

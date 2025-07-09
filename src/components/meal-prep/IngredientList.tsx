@@ -14,13 +14,16 @@ interface IngredientsListProps {
 
 const IngredientsList: React.FC<IngredientsListProps> = ({ ingredients }) => (
   <ContainerCardDetail title="Ingredientes necesarios">
-    <ul className="list-disc list-inside text-sm text-gray-700">
+    <div className="flex flex-col items-center space-y-3 mt-4">
       {ingredients.map((ingredient, i) => (
-        <li key={i}>
-          {ingredient.name}: {ingredient.quantity} {ingredient.unit.symbol}
-        </li>
+        <div key={i} className="flex items-center justify-center min-w-[200px]">
+          <span className="font-semibold min-w-[80px] text-right mr-4">
+            {ingredient.quantity} {ingredient.unit.symbol}
+          </span>
+          <span className="text-gray-700 text-left flex-1">{ingredient.name}</span>
+        </div>
       ))}
-    </ul>
+    </div>
   </ContainerCardDetail>
 );
 

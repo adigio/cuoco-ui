@@ -27,7 +27,6 @@ export default function RecipeIngredientList({
     setDeleteTarget({ idx, name });
     setIsDeleteModalOpen(true);
   };
-
   // Confirma el borrado y llama al callback
   const handleConfirmDelete = () => {
     if (deleteTarget && onRemove) {
@@ -48,7 +47,7 @@ export default function RecipeIngredientList({
               key={idx}
               className="bg-gray-200 text-sm px-3 py-1 rounded-full flex items-center gap-2"
             >
-              {`${item.name} ${item.quantity ?? ""} ${item.symbol ?? ""}`.trim()}
+              {`${item.name} ${item.quantity ?? ""} ${item.unit.description ?? ""}`.trim()}
               {enabledDelete && onRemove && (
                 <button
                   onClick={() => handleRequestDelete(idx, item.name)}

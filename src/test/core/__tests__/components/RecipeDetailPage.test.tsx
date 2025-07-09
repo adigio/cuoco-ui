@@ -81,18 +81,16 @@ import { useRouter } from "next/navigation";
 const mockedGet = jest.mocked(recipeServiceModule.getRecipeById);
 const mockedRouter = useRouter as jest.MockedFunction<typeof useRouter>;
 
-describe("RecipeDetailPage", () => {
+describe("Componente RecipeDetailPage (/recipe/[id])", () => {
   const fakePush = jest.fn();
 
   beforeEach(() => {
     jest.clearAllMocks();
-    // mock del router
     mockedRouter.mockReturnValue({ push: fakePush } as any);
   });
 
-  it("muestra skeleton mientras carga", async () => {
-    // una promesa que nunca resuelve
-    mockedGet.mockReturnValue(new Promise(() => {}) as any);
+  it("debe mostrar el skeleton de carga mientras se espera la respuesta del servicio", async () => {
+    mockedGet.mockReturnValue(new Promise(() => {}) as any); // promesa que nunca resuelve
 
     await act(async () => {
       render(<RecipeDetailPage params={{ id: "123" } as any} />);
@@ -101,7 +99,7 @@ describe("RecipeDetailPage", () => {
     expect(screen.getByTestId("detail-skeleton")).toBeInTheDocument();
   });
 
-  it("muestra mensaje de error cuando no encuentra receta", async () => {
+  it("debe mostrar un mensaje de error cuando no se encuentra la receta (respuesta undefined)", async () => {
     mockedGet.mockResolvedValueOnce(undefined as any);
 
     await act(async () => {
@@ -113,7 +111,7 @@ describe("RecipeDetailPage", () => {
     ).toBeInTheDocument();
   });
 
-  it("renderiza correctamente la receta cuando la obtiene", async () => {
+  it("debe renderizar todos los componentes correctamente cuando la receta es válida", async () => {
     const fakeRecipe = {
       id: "789",
       title: "Mi Receta",

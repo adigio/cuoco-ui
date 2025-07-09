@@ -25,7 +25,9 @@ export default function Header() {
         />
       </div>
       <div className="absolute inset-0 flex items-start md:items-center">
-        <div className="text-left px-4 md:pl-20 pb-[30%] md:pb-0 sm:pt-0 w-full md:w-[45%] lg:w-[45%]">
+        <div className="text-left px-4 md:pl-28 pt-0 -mt-10 md:-mt-32 w-full md:w-[45%] lg:w-[45%]">
+
+ 
           {/* Logo */}
           <div className="mb-4 hidden md:block relative w-[360px] h-[360px]">
             <Image

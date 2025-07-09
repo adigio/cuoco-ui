@@ -4,7 +4,6 @@ import { apiClient } from '@/lib/axios.config';
 export async function getCookingLevels(): Promise<PreferenceItem[]> {
   try {
     const response = await apiClient.get('cook-levels');
-    console.log(response);
     return response.data;
   } catch (error: any) {
     const message = error.response?.data?.message || 'Error al obtener niveles de cocina';

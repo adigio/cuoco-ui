@@ -99,47 +99,62 @@ export const useFilterOptionsCache = () => {
   ]);
 
   // useEffect 2 - Fetch
-  useEffect(() => {
-    if (!shouldFetchData()) return;
+useEffect(() => {
+  if (!shouldFetchData()) return;
 
-    const fetchAllFilterOptions = async () => {
-      try {
-        setIsFetching(true);
+  const fetchAllFilterOptions = async () => {
+    try {
+      setIsFetching(true);
 
-        const cookingLevels = await getCookingLevels();
-        const allergies = await getAllergy();
-        const diets = await getDiet();
-        const dietaryNeeds = await getDietaryNeed();
+      const cookingLevels = await getCookingLevels();
+      const allergies = await getAllergy();
+      const diets = await getDiet();
+      const dietaryNeeds = await getDietaryNeed();
 
-        let units: any[] = [];
-        let preparationTimes: any[] = [];
-        let mealTypes: any[] = [];
+      let units: any[] = [];
+      let preparationTimes: any[] = [];
+      let mealTypes: any[] = [];
 
-        if (isAuthenticated) {
-          units = await getUnitTypes();
-          preparationTimes = await getPreparationTimes();
-          mealTypes = await getMealTypes();
-        }
-
-        setCookingLevelOptions(cookingLevels || []);
-        setAllergyOptions(allergies || []);
-        setDietOptions(diets || []);
-        setDietaryNeedOptions(dietaryNeeds || []);
-        setUnitOptions(units || []);
-        setPreparationTimeOptions(preparationTimes || []);
-        setMealTypeOptions(mealTypes || []);
-        setIsLoaded(true);
-        setLastFetchTimestamp(Date.now());
-        setLoadedWithAuth(isAuthenticated);
-      } catch (error) {
-        console.error("Error loading filter options:", error);
-      } finally {
-        setIsFetching(false);
+      if (isAuthenticated) {
+        units = await getUnitTypes();
+        preparationTimes = await getPreparationTimes();
+        mealTypes = await getMealTypes();
       }
-    };
 
-    fetchAllFilterOptions();
-  }, [isAuthenticated, shouldFetchData]);
+      setCookingLevelOptions(cookingLevels || []);
+      setAllergyOptions(allergies || []);
+      setDietOptions(diets || []);
+      setDietaryNeedOptions(dietaryNeeds || []);
+      setUnitOptions(units || []);
+      setPreparationTimeOptions(preparationTimes || []);
+      setMealTypeOptions(mealTypes || []);
+      setIsLoaded(true);
+      setLastFetchTimestamp(Date.now());
+      setLoadedWithAuth(isAuthenticated);
+    } catch (error) {
+      console.error("Error loading filter options:", error);
+    } finally {
+      setIsFetching(false);
+    }
+  };
+
+  fetchAllFilterOptions();
+}, [
+  isAuthenticated,
+  shouldFetchData,
+  setAllergyOptions,
+  setCookingLevelOptions,
+  setDietOptions,
+  setDietaryNeedOptions,
+  setIsFetching,
+  setIsLoaded,
+  setLastFetchTimestamp,
+  setLoadedWithAuth,
+  setMealTypeOptions,
+  setPreparationTimeOptions,
+  setUnitOptions
+]);
+
 
   const mapToSelectOptions = (items: any[]) =>
     Array.from(new Map(items.map((i) => [i.description, i])).values()).map(
