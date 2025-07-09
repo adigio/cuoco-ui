@@ -41,7 +41,7 @@ export default function HeroHome() {
     <div className="relative w-full h-[80vh] bg-white pt-24 overflow-hidden">
       {/* Imagen de fondo */}
       <Image
-        src="/HeroImageHome.png"
+        src="/hero.png"
         alt="Vegetales decorativos"
         layout="fill"
         objectFit="cover"
