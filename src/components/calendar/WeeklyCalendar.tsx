@@ -18,7 +18,7 @@ import {
   DropResult,
 } from '@hello-pangea/dnd';
 import { useCalendarStore } from '@/store/useCalendarStore';
-import { getRecipeById } from '@/services/recipe.service'; 
+ 
 
 interface WeeklyCalendarProps {
   schedule: WeeklySchedule;
@@ -41,10 +41,7 @@ export default function WeeklyCalendar({
   onDropPendingRecipe,
 }: WeeklyCalendarProps) {
   const pendingRecipe = useCalendarStore(state => state.pendingRecipe);
-  const [draggingRecipe, setDraggingRecipe] = useState<{
-    recipe: CalendarRecipe;
-    mealTypes: number[];
-  } | null>(null);
+  const [draggingRecipe, setDraggingRecipe] = useState<CalendarRecipe | null>(null);
 
   const getRecipeForDayAndMeal = (
     day: DayOfWeek,
@@ -60,51 +57,40 @@ export default function WeeklyCalendar({
     (s) => Object.keys(s)[0] as DayOfWeek
   );
 
-  const getRecipeMealTypes = async (recipeId: number): Promise<number[]> => {
-    try {
-      const recipeDetail = await getRecipeById(recipeId.toString());
-      return recipeDetail.mealTypes || [1, 2, 3, 4];
-    } catch (error) {
-      return [1, 2, 3, 4]; 
-    }
-  };
-
-
   const canDropRecipe = (mealType: MealType): boolean => {
+    const slotTypeId = REVERSE_MEAL_TYPE_MAPPING[mealType];
+    
     if (pendingRecipe) {
-      const slotTypeId = REVERSE_MEAL_TYPE_MAPPING[mealType];
       return pendingRecipe.mealTypes.includes(slotTypeId);
     }
     
-    // Si hay una receta siendo arrastrada desde el calendario
     if (draggingRecipe) {
-      const slotTypeId = REVERSE_MEAL_TYPE_MAPPING[mealType];
-      return draggingRecipe.mealTypes.includes(slotTypeId);
+      if (draggingRecipe.allowedMealTypes) {
+        return draggingRecipe.allowedMealTypes.includes(slotTypeId);
+      } else {
+        return true;
+      }
     }
     
     return true;
   };
 
-  const handleDragStart = async (start: any) => {
+  const handleDragStart = (start: any) => {
     const sourceId = start.source.droppableId;
     
-    // Si es una receta pendiente, no necesitamos hacer nada (ya tiene mealTypes)
     if (sourceId === 'pending-recipe') {
       return;
     }
 
-    // Si es una receta existente en el calendario, obtener sus mealTypes
     const [sourceDay, mealType] = sourceId.split('-') as [DayOfWeek, MealType];
     const recipe = getRecipeForDayAndMeal(sourceDay, mealType);
     
     if (recipe) {
-      const mealTypes = await getRecipeMealTypes(recipe.id);
-      setDraggingRecipe({ recipe, mealTypes });
+      setDraggingRecipe(recipe);
     }
   };
 
   const handleDragEnd = (result: DropResult) => {
-    // Limpiar estado de receta siendo arrastrada
     setDraggingRecipe(null);
 
     if (!result.destination) return;
@@ -112,24 +98,20 @@ export default function WeeklyCalendar({
     const sourceId = result.source.droppableId;
     const destinationId = result.destination.droppableId;
 
-    // Si es la receta pendiente que se está arrastrando
     if (sourceId === 'pending-recipe') {
       const [destDay, destMealType] = destinationId.split('-') as [DayOfWeek, MealType];
       
-      // Solo permitir drop en slots del mealType indicados
       if (canDropRecipe(destMealType)) {
         onDropPendingRecipe(destDay, destMealType);
       }
       return;
     }
 
-    // Si es una receta existente en el calendario
     const [sourceDay, mealType] = sourceId.split('-') as [DayOfWeek, MealType];
     const [destDay, destMealType] = destinationId.split('-') as [DayOfWeek, MealType];
 
     const recipe = getRecipeForDayAndMeal(sourceDay, mealType);
     if (recipe && draggingRecipe) {
-      // Validar que el drop sea en un slot válido
       if (canDropRecipe(destMealType)) {
         onMoveRecipe(sourceDay, destDay, destMealType, recipe);
       }
@@ -139,11 +121,10 @@ export default function WeeklyCalendar({
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
       <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-        {/* Receta flotante draggable */}
         {pendingRecipe && (
           <div className="mb-6 p-4 bg-purple-50 border-2 border-purple-200 border-dashed rounded-lg">
             <p className="text-purple-700 text-sm mb-3 text-center">
-              🍽️ Arrastra la receta a un slot válido
+              Arrastra la receta a un slot válido
             </p>
             <Droppable droppableId="pending-recipe" direction="horizontal">
               {(provided) => (
@@ -163,7 +144,7 @@ export default function WeeklyCalendar({
                         }`}
                         style={{
                           ...providedDraggable.draggableProps.style,
-                          zIndex: snapshot.isDragging ? 9999 : 'auto',
+                          zIndex: snapshot.isDragging ? 999999 : 'auto',
                         }}
                       >
                         <RecipeCard
@@ -243,7 +224,7 @@ export default function WeeklyCalendar({
                                         className="h-full"
                                         style={{
                                           ...providedDraggable.draggableProps.style,
-                                          zIndex: snapshot.isDragging ? 9999 : 'auto',
+                                          zIndex: snapshot.isDragging ? 999999 : 'auto',
                                         }}
                                       >
                                         <RecipeCard

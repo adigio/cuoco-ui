@@ -16,7 +16,6 @@ import apiClient from '@/lib/axios.config';
 
 const getCurrentDayInSpanish = (): DayOfWeek => {
     const currentDay = new Date().getDay();
-    // Ajustar porque JS usa 0 para domingo y nosotros usamos 7
     const adjustedDay = currentDay === 0 ? 7 : currentDay;
     return DAYS[adjustedDay - 1];
 };
@@ -46,7 +45,36 @@ const normalizeDay = (day: string): DayOfWeek => {
     return normalizations[day] || day as DayOfWeek;
 };
 
-const mapResponseCalendar = (backendSchedule: BackendWeeklySchedule): WeeklySchedule => {
+const normalizeMealType = (mealType: string): MealType => {
+    const cleaned = mealType.toLowerCase();
+    switch(cleaned) {
+        case 'desayuno': return 'Desayuno';
+        case 'almuerzo': return 'Almuerzo';
+        case 'merienda': return 'Merienda';
+        case 'cena': return 'Cena';
+        default: return mealType as MealType;
+    }
+};
+
+const createRecipeMealTypesIndex = async (): Promise<Map<number, number[]>> => {
+    try {
+        const response = await apiClient.get('/users/recipes');
+        const index = new Map<number, number[]>();
+        
+        response.data.forEach((recipe: any) => {
+            if (recipe.meal_types && Array.isArray(recipe.meal_types)) {
+                const mealTypeIds = recipe.meal_types.map((mt: any) => mt.id);
+                index.set(recipe.id, mealTypeIds);
+            }
+        });
+        
+        return index;
+    } catch (error) {
+        return new Map();
+    }
+};
+
+const mapResponseCalendar = (backendSchedule: BackendWeeklySchedule, recipeMealTypesIndex: Map<number, number[]>): WeeklySchedule => {
     const scheduleMap = new Map<DayOfWeek, CalendarRecipe[]>();
     
     DAYS.forEach(day => {
@@ -57,12 +85,17 @@ const mapResponseCalendar = (backendSchedule: BackendWeeklySchedule): WeeklySche
         backendSchedule.forEach(daySchedule => {
             const dayName = normalizeDay(daySchedule.day.description);
             
-            const mappedRecipes = daySchedule.recipes.map(({ recipe, meal_type }) => ({
-                id: recipe.id,
-                title: recipe.name,
-                image: recipe.image,
-                mealType: normalizeDay(meal_type.description) as MealType
-            }));
+            const mappedRecipes = daySchedule.recipes.map(({ recipe, meal_type }) => {
+                const allowedMealTypes = recipeMealTypesIndex.get(recipe.id) || [];
+                
+                return {
+                    id: recipe.id,
+                    title: recipe.name,
+                    image: recipe.image,
+                    mealType: normalizeMealType(meal_type.description),
+                    allowedMealTypes
+                };
+            });
 
             scheduleMap.set(dayName, mappedRecipes);
         });
@@ -109,8 +142,9 @@ export const transformToSavePayload = (schedule: WeeklySchedule): SaveWeeklySche
 
 export const calendarService = {
     getWeeklySchedule: async (): Promise<WeeklySchedule> => {
+        const recipeMealTypesIndex = await createRecipeMealTypesIndex();
         const response = await apiClient.get<BackendWeeklySchedule>('/users/calendar');
-        return mapResponseCalendar(response.data);
+        return mapResponseCalendar(response.data, recipeMealTypesIndex);
     },
 
     getFavoritesByCategory: async (): Promise<Record<string, CalendarRecipe[]>> => {
@@ -124,25 +158,33 @@ export const calendarService = {
         const response = await apiClient.get('/users/recipes');
 
         response.data.forEach((recipe: any) => {
-            // Asumimos que el backend envía el tipo de comida
-            const mappedRecipe: CalendarRecipe = {
-                id: recipe.id,
-                title: recipe.name,
-                image: recipe.image,
-                mealType: recipe.meal_type?.description || MEAL_TYPES[0]
-            };
-
-            if (mappedRecipe.mealType) {
-                categorizedRecipes[mappedRecipe.mealType].push(mappedRecipe);
+            if (recipe.meal_types && Array.isArray(recipe.meal_types)) {
+                const allowedMealTypes = recipe.meal_types.map((mt: any) => mt.id);
+                
+                recipe.meal_types.forEach((mealType: any) => {
+                    const normalizedMealType = normalizeMealType(mealType.description);
+                    
+                    if (categorizedRecipes[normalizedMealType]) {
+                        const mappedRecipe: CalendarRecipe = {
+                            id: recipe.id,
+                            title: recipe.name,
+                            image: recipe.image,
+                            mealType: normalizedMealType,
+                            allowedMealTypes
+                        };
+                        categorizedRecipes[normalizedMealType].push(mappedRecipe);
+                    }
+                });
             }
         });
-
+        
         return categorizedRecipes;
     },
 
     updateWeeklySchedule: async (schedule: WeeklySchedule): Promise<WeeklySchedule> => {
+        const recipeMealTypesIndex = await createRecipeMealTypesIndex();
         const transformedSchedule = transformToSavePayload(schedule);
         const response = await apiClient.post('/users/calendar', transformedSchedule);
-        return mapResponseCalendar(response.data);
+        return mapResponseCalendar(response.data, recipeMealTypesIndex);
     }
 };

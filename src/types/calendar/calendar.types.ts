@@ -8,6 +8,7 @@ export interface CalendarRecipe {
   title: string;
   image: string;
   mealType?: MealType;
+  allowedMealTypes?: number[]; // IDs de los meal types permitidos para esta receta
 }
 
 export interface DaySchedule {

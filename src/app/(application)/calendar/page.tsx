@@ -56,7 +56,6 @@ export default function CalendarPage() {
       setOriginalSchedule(weeklySchedule);
       setFavorites(categorizedFavorites);
     } catch (error) {
-      console.error("Error cargando datos:", error);
     } finally {
       setTimeout(() => {
         setIsLoading(false);
@@ -114,7 +113,11 @@ export default function CalendarPage() {
               ...daySchedule[currentDay].filter(
                 (r) => r.mealType !== selectedSlot.mealType
               ),
-              { ...recipe, mealType: selectedSlot.mealType },
+              { 
+                ...recipe, 
+                mealType: selectedSlot.mealType,
+                allowedMealTypes: recipe.allowedMealTypes || []
+              },
             ],
           };
         }
@@ -171,7 +174,6 @@ export default function CalendarPage() {
       setOriginalSchedule(updatedSchedule);
       setHasChanges(false);
     } catch (error) {
-      console.error("Error al guardar cambios:", error);
       // TODO  hacer toast
     } finally {
       setIsSaving(false);
@@ -187,10 +189,8 @@ export default function CalendarPage() {
   const handleDropPendingRecipe = (day: DayOfWeek, mealType: MealType) => {
     if (!pendingRecipe) return;
 
-    // Convertir los IDs de meal types a strings y verificar si el slot es válido
     const allowedMealTypes = pendingRecipe.mealTypes.map(id => MEAL_TYPE_MAPPING[id]).filter(Boolean);
     
-    // Solo permitir drop en slots del mealType correspondiente
     if (!allowedMealTypes.includes(mealType)) return;
 
     // Crear la receta para agregar al calendario
@@ -198,7 +198,8 @@ export default function CalendarPage() {
       id: pendingRecipe.id,
       title: pendingRecipe.title,
       image: pendingRecipe.image,
-      mealType: mealType
+      mealType: mealType,
+      allowedMealTypes: pendingRecipe.mealTypes // Preservar los meal types permitidos
     };
 
     setSchedule((currentSchedule) => {
