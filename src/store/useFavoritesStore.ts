@@ -1,20 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-
-type FavoritesState = {
-  favoriteRecipeIds: number[];
-  favoriteMealPrepIds: number[];
-  addFavoriteRecipe: (recipeId: number) => void;
-  removeFavoriteRecipe: (recipeId: number) => void;
-  addFavoriteMealPrep: (mealPrepId: number) => void;
-  removeFavoriteMealPrep: (mealPrepId: number) => void;
-  isFavoriteRecipe: (recipeId: number) => boolean;
-  isFavoriteMealPrep: (mealPrepId: number) => boolean;
-  clearFavorites: () => void;
-  addFavorite: (recipeId: number) => void;
-  removeFavorite: (recipeId: number) => void;
-  isFavorite: (recipeId: number) => boolean;
-};
+import { FavoritesState } from '@/types';
 
 export const useFavoritesStore = create<FavoritesState>()(
   persist(

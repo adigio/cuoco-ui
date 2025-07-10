@@ -6,3 +6,4 @@ export * from './components/layout.types';
 export * from './components/modal.types';
 export * from './components/preferences.types';
 export * from './calendar/calendar.types';
+export * from './store/store.types';

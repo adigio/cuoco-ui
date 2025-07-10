@@ -2,17 +2,7 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-
-export interface MealPrepFilters {
-    time: string;
-    difficulty: string;
-    types: string[];
-    diet: string;
-    people: number;
-    allergies_ids: number[];
-    dietary_needs_ids: number[];
-    freeze: boolean;
-}
+import { MealPrepFilters, MealPrepFiltersState } from '@/types';
 
 const initialMealPrepFilters: MealPrepFilters = {
     time: "",
@@ -23,12 +13,6 @@ const initialMealPrepFilters: MealPrepFilters = {
     allergies_ids: [],
     dietary_needs_ids: [],
     freeze: false,
-};
-
-type MealPrepFiltersState = {
-    filters: MealPrepFilters;
-    setFilters: (filters: MealPrepFilters | ((prev: MealPrepFilters) => MealPrepFilters)) => void;
-    clearFilters: () => void;
 };
 
 export const useMealPrepFiltersStore = create<MealPrepFiltersState>()(
