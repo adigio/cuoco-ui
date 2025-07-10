@@ -73,7 +73,6 @@ export default function MealPrepPage({
 
         setMealPrep(mapped);
       } catch (err) {
-        console.error("Error al traer el meal prep", err);
         setMealPrep(null);
       } finally {
         setLoading(false);

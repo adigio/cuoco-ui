@@ -108,7 +108,6 @@ export default function MealPrepResultsPage() {
               <div className="flex gap-4 justify-center px-4 pb-12 flex-wrap">
                 {mealPreps.map((mealPrep) => {
                   const isFavorite = isFavoriteMealPrep(mealPrep.id);
-                  console.log(mealPrep);
                   return (
                     <MealPrepCard key={mealPrep.id} mealPrep={mealPrep}>
                       <div className="flex justify-between items-center px-2 text-red-400">

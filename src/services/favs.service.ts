@@ -48,7 +48,6 @@ export const addRecipeToFavorites = async (recipeId: number) => {
       case 503:
         throw new Error("Servicio no disponible temporalmente");
       default:
-        console.error("Error al agregar receta a favoritos:", error);
         throw new Error("Error al agregar la receta a favoritos");
     }
   }
@@ -68,7 +67,6 @@ export const removeRecipeFromFavorites = async (recipeId: number) => {
       case 503:
         throw new Error("Servicio no disponible temporalmente");
       default:
-        console.error("Error al eliminar receta de favoritos:", error);
         throw new Error("Error al eliminar la receta de favoritos");
     }
   }
@@ -89,7 +87,6 @@ export const addMealPrepToFavorites = async (mealPrepId: number) => {
       case 503:
         throw new Error("Servicio no disponible temporalmente");
       default:
-        console.error("Error al agregar meal prep a favoritos:", error);
         throw new Error("Error al agregar el meal prep a favoritos");
     }
   }
@@ -108,7 +105,6 @@ export const removeMealPrepFromFavorites = async (mealPrepId: number) => {
       case 503:
         throw new Error("Servicio no disponible temporalmente");
       default:
-        console.error("Error al eliminar meal prep de favoritos:", error);
         throw new Error("Error al eliminar el meal prep de favoritos");
     }
   }

@@ -22,7 +22,6 @@ apiClient.interceptors.request.use(
                 // Token expirado, remover y no agregar header
                 console.warn('Token expirado, removiendo...');
                 tokenService.removeToken();
-                // TODO: logout ()  ?
             }
         } else { 
         }

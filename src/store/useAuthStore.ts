@@ -64,7 +64,6 @@ export const useAuthStore = create<AuthState>()(
             preferencesStore.setDietaryNeedOptions(dietaryNeeds);
             preferencesStore.setIsLoaded(true);
           }).catch(error => {
-            console.error('Error cargando opciones de preferencias:', error);
           });
         }
         
@@ -74,7 +73,6 @@ export const useAuthStore = create<AuthState>()(
         }
 
         tokenService.setToken(token);
-        // TODO: decodificar para obtener info adicional si es necesario  
         const decodedToken = jwtService.decode(token); 
         
         set({ 

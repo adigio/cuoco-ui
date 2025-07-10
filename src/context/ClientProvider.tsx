@@ -16,11 +16,6 @@ export default function ClientProvider({ children }: Props) {
     if (typeof window !== 'undefined') {
       const { useAuthStore } = require('@/store/useAuthStore');
       const authStore = useAuthStore.getState();
-      console.log('🔍 Estado inicial de autenticación:', {
-        isAuthenticated: authStore.isAuthenticated,
-        hasUser: !!authStore.user,
-        hasToken: !!authStore.token,
-      });
     }
   }, []);
 

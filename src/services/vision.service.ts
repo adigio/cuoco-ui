@@ -26,7 +26,6 @@ export const analyzeImagesWithAPI = async (
 
     // Validar que la respuesta tenga la estructura esperada
     if (!response.data || !Array.isArray(response.data)) {
-      console.error("La respuesta de la API no tiene el formato esperado");
       return [];
     }
 

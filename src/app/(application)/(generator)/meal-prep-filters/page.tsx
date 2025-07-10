@@ -219,7 +219,6 @@ export default function MealPrepFilters() {
         setLoading(false);
       }
     } catch (error) {
-      console.error("Error al generar meal preps:", error);
       setError("Ocurrió un error al generar los meal preps. Por favor, intenta de nuevo.");
       setLoading(false);
     }

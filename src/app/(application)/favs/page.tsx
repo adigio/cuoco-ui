@@ -65,7 +65,6 @@ export default function Favs() {
       setRecipes(recipesList || []);
       setMealPreps(mealPrepsRes.data || []);
     } catch (err) {
-      console.error("Error al traer favoritos", err);
     } finally {
       setLoading(false);
     }

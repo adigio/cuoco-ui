@@ -20,7 +20,6 @@ export const generateMealPrepRecipes = async (requestData: MealPrepRequest): Pro
     );
     return response.data;
   } catch (error) {
-    console.error("Error al generar Meal Prep:", error);
     throw error;
   }
   
@@ -56,7 +55,6 @@ export const getMealPrepById = async (id: number) => {
     );
     return response.data;
   } catch (error) {
-    console.error("Error al obtener receta:", error);
     // Propagamos el error para que pueda ser manejado por el componente
     throw error;
   }

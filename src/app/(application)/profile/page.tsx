@@ -60,7 +60,6 @@ export default function Profile() {
       
       setEditMode(false);
     } catch (error) {
-      console.error('Error al guardar preferencias:', error);
     }
   };
 

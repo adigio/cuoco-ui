@@ -108,7 +108,6 @@ export const RefreshModal = ({
       if (type === "recipe") {
         newItem = await refreshRecipe(refreshRequest);
       } else if (type === "meal-prep") {
-        console.log("request de mealprep", refreshRequest);
 
         newItem = await refreshMealPrep(refreshRequest);
       }
@@ -137,7 +136,6 @@ export const RefreshModal = ({
         );
       }
     } catch (error) {
-      console.error(`Error al refrescar ${type}:`, error);
       showError(
         `Error al refrescar ${
           type === "recipe" ? "la receta" : "el meal prep"

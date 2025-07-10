@@ -23,7 +23,6 @@ const mapApiToRecipeDetail = (apiRecipe: any): RecipeDetail => {
           return favoriteIds.includes(apiRecipe.id);
         }
       } catch (error) {
-        console.error("Error reading favorites:", error);
       }
     }
     return false;

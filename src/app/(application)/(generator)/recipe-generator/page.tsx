@@ -64,7 +64,6 @@ export default function RecipeGeneratorPage() {
       // Redirigir a la página de revisión
       router.push("/review");
     } catch (err) {
-      console.error("Error al procesar imágenes:", err);
       setError(
         "Hubo un problema al procesar las imágenes. Por favor, intentá de nuevo."
       );
