@@ -17,7 +17,7 @@ export interface RecipeImageUploaderProps {
 
 export interface RecipeIngredientListProps {
   ingredients: Ingredient[];
-  setIngredients?: React.Dispatch<React.SetStateAction<Ingredient[]>>;
+  onRemove?: (idx: number) => void;
   enabledDelete?: boolean;
 }
 

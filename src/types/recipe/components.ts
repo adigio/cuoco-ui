@@ -9,20 +9,9 @@ export interface RecipeCardProps {
   colorFont?: string;
 }
 
-export interface RecipeIngredientListProps {
-  ingredients: Ingredient[];
-  setIngredients?: React.Dispatch<React.SetStateAction<Ingredient[]>>;
-  enabledDelete?: boolean;
-  onIngredientRemove?: (index: number) => void;
-  className?: string;
-}
 
-export interface RecipeImageUploaderProps {
-  images: File[];
-  setImages: React.Dispatch<React.SetStateAction<File[]>>;
-  ingredients: Ingredient[];
-  addIngredient: (name: string, origin?: string, confirm?: boolean) => boolean;
-}
+
+
 
 
 

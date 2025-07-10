@@ -1,18 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { CalendarRecipe } from '@/types';
+import { CalendarRecipeCardProps } from '@/types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { getRecipeImageUrl } from '@/utils/imageUtils';
 
-interface RecipeCardProps {
-    recipe: CalendarRecipe;
-    onDelete?: () => void;
-    onAdd?: () => void;
-    isEmpty?: boolean;
-}
-
-export default function RecipeCard({ recipe, onDelete, onAdd, isEmpty = false }: RecipeCardProps) {
+export default function RecipeCard({ recipe, onDelete, onAdd, isEmpty = false }: CalendarRecipeCardProps) {
     const [imageSrc, setImageSrc] = useState<string>('/others/default-recipe.png');
     const [imageError, setImageError] = useState(false);
 

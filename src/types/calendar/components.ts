@@ -14,12 +14,7 @@ export interface WeeklyCalendarProps {
 }
 
 export interface CalendarRecipeCardProps {
-  recipe: {
-    id: number;
-    title: string;
-    image: string;
-    mealType: MealType | undefined;
-  };
+  recipe: CalendarRecipe;
   isEmpty: boolean;
   onAdd?: () => void;
   onDelete?: () => void;

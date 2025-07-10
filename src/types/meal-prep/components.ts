@@ -1,4 +1,5 @@
-import { MealPrepStep } from '../recipe/recipe.types';
+import { ReactNode } from 'react';
+import { MealPrepStep, MealPrepRecipe, MealPrep } from '../recipe/recipe.types';
 
 export interface MealPrepStepsProps {
   steps: MealPrepStep[];
@@ -27,16 +28,7 @@ export interface PortionSummaryProps {
   totalTime: number;
 }
 
-export interface MealPrepCardProps {
-  id: number;
-  title: string;
-  description: string;
-  image: string;
-  difficulty: string;
-  time: number;
-  people: number;
-  className?: string;
-}
+
 
 export interface MealPrepIngredientsListProps {
   ingredients: any[];
@@ -47,4 +39,37 @@ export interface MealPrepPDFDownloadProps {
   mealPrepId: number;
   mealPrepName: string;
   className?: string;
+}
+
+export interface IngredientsListProps {
+  ingredients: {
+    name: string;
+    quantity: number;
+    unit: {
+      symbol: string;
+    };
+  }[];
+}
+
+export interface ObservationInfoProps {
+  observation: string;
+}
+
+export interface MealPrepRecipeInfo {
+  id: string;
+  name: string;
+}
+
+export interface MealPrepRecipeTagsProps {
+  recipes: MealPrepRecipeInfo[];
+}
+
+export interface MealPrepPortionSummaryProps {
+  recipes: MealPrepRecipe[];
+}
+
+export interface MealPrepCardProps {
+  mealPrep: MealPrep;
+  onClick?: () => void;
+  children?: ReactNode;
 } 

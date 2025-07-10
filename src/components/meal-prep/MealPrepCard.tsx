@@ -1,19 +1,13 @@
 'use client';
 
-import { MealPrep } from "@/types";
-import React, { ReactNode } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import Link from "next/link";
 import { getRecipeImageUrl } from '@/utils/imageUtils';
+import { MealPrepCardProps } from "@/types";
 
-interface Props {
-  mealPrep: MealPrep;
-  onClick?: () => void;
-  children?: ReactNode;
-}
-
-export default function MealPrepCard({ mealPrep, onClick, children }: Props) {
+export default function MealPrepCard({ mealPrep, onClick, children }: MealPrepCardProps) {
   const router = useRouter();
 
   const handleClick = () => {

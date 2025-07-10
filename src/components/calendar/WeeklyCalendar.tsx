@@ -9,6 +9,7 @@ import {
   MealType,
   DAYS_DISPLAY,
   REVERSE_MEAL_TYPE_MAPPING,
+  WeeklyCalendarProps,
 } from '@/types';
 import RecipeCard from '@/components/calendar/RecipeCard'; 
 import {
@@ -18,20 +19,6 @@ import {
   DropResult,
 } from '@hello-pangea/dnd';
 import { useCalendarStore } from '@/store/useCalendarStore';
- 
-
-interface WeeklyCalendarProps {
-  schedule: WeeklySchedule;
-  onAddRecipe: (day: DayOfWeek, mealType: MealType) => void;
-  onDeleteRecipe: (day: DayOfWeek, recipeId: number, title: string) => void;
-  onMoveRecipe: (
-    sourceDay: DayOfWeek,
-    destDay: DayOfWeek,
-    mealType: MealType,
-    recipe: CalendarRecipe
-  ) => void;
-  onDropPendingRecipe: (day: DayOfWeek, mealType: MealType) => void;
-}
 
 export default function WeeklyCalendar({
   schedule,

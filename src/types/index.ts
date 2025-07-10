@@ -8,6 +8,7 @@ export * from './components/layout.types';
 export * from './components/modal.types';
 export * from './components/preferences.types';
 export * from './components/shared.types';
+export * from './components/recipe-generator.types';
 export * from './calendar/calendar.types';
 export * from './calendar/components';
 export * from './profile/components';
