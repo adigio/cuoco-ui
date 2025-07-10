@@ -21,22 +21,18 @@ export default function RecipeGeneratorPage() {
   const [error, setError] = useState<string | null>(null);
   const [isSubModalOpen, setIsSubModalOpen] = useState(false);
 
-  //sesion del generador de recetas
   useRecipeGeneratorSession();
 
-  // Tomamos del store si el usuario es premium
   const { ingredients, addMultipleIngredients } = useIngredientsStore();
   const isPremium = useAuthStore((state) => state.user?.premium);
   const router = useRouter();
 
   const handleContinue = async () => {
-    // Si un user no premium intenta con más de 2 imágenes:
     if (!isPremium && images.length > 2) {
       setIsSubModalOpen(true);
       return;
     }
 
-    // Validar si hay al menos una imagen o un ingrediente
     if (images.length === 0 && ingredients.length === 0) {
       setShowAlertModal(true);
       return;

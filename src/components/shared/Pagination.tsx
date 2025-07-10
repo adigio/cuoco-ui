@@ -1,12 +1,7 @@
 'use client';
 
 import React from 'react';
-
-interface PaginationProps {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-}
+import { PaginationProps } from '@/types';
 
 export default function Pagination({
   currentPage,

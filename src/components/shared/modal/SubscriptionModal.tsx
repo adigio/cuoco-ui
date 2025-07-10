@@ -1,15 +1,9 @@
 'use client';
 
-import React, { ReactNode } from 'react';
+import React from 'react';
 import Modal from '@/components/shared/modal/Modal';
 import Button from '@/components/shared/form/Button';
-import { title } from 'process';
-
-interface SubscriptionModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    title?: ReactNode;
-}
+import { SubscriptionModalProps } from '@/types';
 
 export default function SubscriptionModal({ isOpen, onClose,title }: SubscriptionModalProps) {
     return (

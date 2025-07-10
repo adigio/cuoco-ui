@@ -1,17 +1,7 @@
 import React, { useState } from 'react';
 import ConfirmationModal from '@/components/shared/modal/ConfirmationModal';
 import { removeRecipeFromFavorites,removeMealPrepFromFavorites } from '@/services/favs.service';
-
-interface UnfavoriteModalProps {
-  type?: 'recipe' | 'meal-prep';
-  isOpen: boolean;
-  onClose: () => void;
-  onUnfavoriteSuccess?: () => void;
-  recipeId: number;
-  recipeText: string;
-  showSuccess: (message: string, additionalMessage?: string) => void;
-  showError: (message: string, additionalMessage?: string) => void;
-}
+import { UnfavoriteModalProps } from '@/types';
 
 export const UnfavoriteModal = ({
   type = 'recipe',

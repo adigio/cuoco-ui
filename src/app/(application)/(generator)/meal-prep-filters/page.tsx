@@ -60,7 +60,7 @@ export default function MealPrepFilters() {
     [userPreferences?.cook_level, storeCookingLevel]
   );
 
-  // Flags de inicialización para evitar bucles infinitos
+  // Flags de inicialización para evitar bucles
   const [allergiesInitialized, setAllergiesInitialized] = useState<boolean>(false);
   const [needsInitialized, setNeedsInitialized] = useState<boolean>(false);
   const [dietInitialized, setDietInitialized] = useState<boolean>(false);
@@ -101,7 +101,7 @@ export default function MealPrepFilters() {
     }
   }, [optionsLoaded, allergyOptions, finalAllergies, allergiesInitialized,setFilters]);
 
-  // useEffect para inicializar necesidades dietéticas
+  // useEffect para inicializar necesidades dieteticas
   useEffect(() => {
     if (!optionsLoaded || needsInitialized) return;
     

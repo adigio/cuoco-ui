@@ -27,14 +27,3 @@ export interface IngredientReviewTableProps {
   onEdit: (index: number) => void;
   onDelete: (index: number) => void;
 }
-export interface RecipeCardProps {
-  recipe: {
-    id: number;
-    name: string;
-    image?: string;
-    subtitle?: string;
-  };
-  customClass?: string;
-  children?: ReactNode;
-  colorFont?: string;
-}

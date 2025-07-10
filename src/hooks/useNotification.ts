@@ -1,23 +1,5 @@
 import { useState, useEffect } from 'react';
-
-export type NotificationType = 'success' | 'error' | 'warning' | 'info';
-
-interface UseNotificationProps {
-  autoCloseDelay?: number; //milisegundos, 0 = no auto close
-  defaultAutoClose?: {
-    success?: number;
-    error?: number;
-    warning?: number;
-    info?: number;
-  };
-}
-
-interface NotificationState {
-  message: string | null;
-  additionalMessage?: string | null; // Mensaje adicional del backend
-  type: NotificationType;
-  show: boolean;
-}
+import { NotificationType, UseNotificationProps, NotificationState } from '@/types';
 
 export const useNotification = ({ 
   autoCloseDelay,

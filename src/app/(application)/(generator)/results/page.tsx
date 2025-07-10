@@ -20,7 +20,6 @@ import { RefreshModal } from '@/components/shared/modal/RefreshModal';
 import SubscriptionModal from '@/components/shared/modal/SubscriptionModal';
 import NotificationModal from '@/components/shared/modal/NotificationModal';
 import { useNotification } from '@/hooks/useNotification';
-import { RecipeGenerationRequest } from '@/types';
 
 
 export default function RecipeResultsPage() {

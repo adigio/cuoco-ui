@@ -4,13 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons";
-
-interface TimeAndFavoriteProps {
-  time?: string;
-  minutes?: number;
-  onToggleFavorite: () => void;
-  isFavorite?: boolean;
-}
+import { TimeAndFavoriteProps } from "@/types";
 
 const TimeAndFavorite: React.FC<TimeAndFavoriteProps> = ({
   time,

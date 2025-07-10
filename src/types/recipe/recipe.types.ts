@@ -154,6 +154,12 @@ export interface MealPrepRecipe {
   portions?: number;
 }
 
+export interface MealPrepStep {
+  title: string;
+  time: number;
+  description: string[];
+}
+
 export interface MealPrep {
   id: number;
   title: string;
@@ -163,11 +169,7 @@ export interface MealPrep {
   observation?: string;
   description?: string;
   recipes: MealPrepRecipe[];
-  steps: {
-    title: string;
-    instructions: string[];
-    estimatedTime: number;
-  }[];
+  steps: MealPrepStep[];
 }
 
 export type MealPrepResponse = MealPrep[];

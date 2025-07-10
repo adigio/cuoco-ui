@@ -1,5 +1,5 @@
 "use client";
- 
+
 import React, { useEffect, useState } from "react";
 import WeeklyCalendar from "@/components/calendar/WeeklyCalendar";
 import CalendarSkeleton from "@/components/shared/skeleton/CalendarSkeleton";
@@ -12,7 +12,7 @@ import Button from "@/components/shared/form/Button";
 import ConfirmationModal from "@/components/shared/modal/ConfirmationModal";
 import { useRecipeGeneratorSession } from "@/hooks/useRecipeGeneratorSession";
 import { useCalendarStore } from "@/store/useCalendarStore";
- 
+
 
 export default function CalendarPage() {
   // Limpiar ingredientes al estar fuera del flujo del generador

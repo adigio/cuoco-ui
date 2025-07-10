@@ -10,7 +10,6 @@ import RecipeTags from "@/components/meal-prep/RecipeTags";
 import MealPrepSteps from "@/components/meal-prep/MealPrepSteps";
 import ObservationInfo from "@/components/meal-prep/ObservationInfo";
 import IngredientsList from "@/components/meal-prep/IngredientList";
-import PortionSummary from "@/components/meal-prep/PortionSummary";
 import TimeAndFavorite from "@/components/shared/TimeAndFavorite";
 import { FavoriteModal } from "@/components/shared/modal/FavoriteModal"; 
 import { UnfavoriteModal } from "@/components/shared/modal/UnfavoriteModal";
@@ -18,11 +17,8 @@ import SubscriptionModal from "@/components/shared/modal/SubscriptionModal";
 import NotificationModal from "@/components/shared/modal/NotificationModal";
 import { useFavoritesStore } from "@/store/useFavoritesStore";
 import { useNotification } from "@/hooks/useNotification";
-import { Step } from "@/types";
-import jsPDF from "jspdf";
-import { Ingredient, Recipe } from "@/types";
 import PDFDownloadButtons from "@/components/recipe-generator/MealPrepPDFDownload";
- 
+
 
 export default function MealPrepPage({
   params,
