@@ -125,17 +125,22 @@ describe("Página RecipeGeneratorPage (/recipe-generator)", () => {
 
   it("debe analizar imágenes y redirigir a /review si detecta ingredientes", async () => {
     const fakeResult = [
-      {
-        name: "pepino",
-        origin: "image",
-        confirm: true,
-        quantity: 1,
-        unit: "unidad",
-        optional: false,
-        source: "mock",
-        confirmed: true,
-      },
-    ];
+  {
+    name: "pepino",
+    origin: "image",
+    confirm: true,
+    quantity: 1,
+    unit: {
+      id: 1,
+      description: "unidad",
+      symbol: "u" // opcional, podés omitirlo si no lo usás
+    },
+    optional: false,
+    source: "mock",
+    confirmed: true,
+  },
+];
+
 
     mockedAnalyzeImages.mockResolvedValueOnce(fakeResult);
 

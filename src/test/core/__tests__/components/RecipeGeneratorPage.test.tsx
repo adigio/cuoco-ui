@@ -150,12 +150,17 @@ describe("Página RecipeGeneratorPage (/recipe-generator)", () => {
         origin: "image",
         confirm: true,
         quantity: 1,
-        unit: "unidad",
+        unit: {
+          id: 1,
+          description: "unidad",
+          symbol: "u", // opcional, podés omitirlo si no lo usás
+        },
         optional: false,
         source: "mock",
         confirmed: true,
       },
     ];
+
     mockedAnalyzeImages.mockResolvedValueOnce(fakeResult);
 
     render(<RecipeGeneratorPage />);
@@ -170,4 +175,3 @@ describe("Página RecipeGeneratorPage (/recipe-generator)", () => {
     });
   });
 });
-
