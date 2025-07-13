@@ -3,23 +3,22 @@ import Image from "next/image";
 export default function AboutUs() {
   return (
     <section className="relative bg-white py-20 px-4 md:px-20 overflow-hidden" id="aboutUs">
-      
       {/* Línea divisoria superior */}
       <div className="border-t-2 text-color-primary mb-10"></div>
 
-      {/* Fondo decorativo (esquina inferior derecha) */}
-       
-
+      {/* Contenido principal */}
       <div className="relative z-10 max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
         {/* Imagen de comida */}
-        <div className="w-full md:w-1/2">
-          <Image
-            src="/aboutUs.jpeg"
-            alt="Cuoco-team"
-            width={500}
-            height={500}
-            className="rounded-[40px] w-full h-[680px] object-cover object-center"
-          />
+        <div className="w-full md:w-1/2 flex justify-center">
+          <div className="relative w-full max-w-lg	 aspect-square rounded-[40px] overflow-hidden">
+            <Image
+              src="/aboutUs.jpeg"
+              alt="Cuoco-team"
+              fill
+              className="object-cover object-center"
+              sizes="(max-width: 768px) 100vw, 300px"
+            />
+          </div>
         </div>
 
         {/* Texto */}

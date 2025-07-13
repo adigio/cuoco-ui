@@ -20,6 +20,7 @@ import Checkbox from "@/components/shared/form/Checkbox";
 
 import { MealPrepRequest } from "@/types";
 import { generateMealPrepRecipes } from "@/services/generateMealPrepRecipes.service";
+import BackgroundLayers from "@/components/shared/BackgroundLayers";
 
 export default function MealPrepFilters() {
   const { ingredients } = useIngredientsStore();
@@ -234,6 +235,7 @@ export default function MealPrepFilters() {
 
 return (
   <div className="flex flex-col bg-[#fefefe] p-6">
+    <BackgroundLayers />
     <h2 className="text-xl font-semibold text-gray-800 mb-4">Ingredientes seleccionados</h2>
     <RecipeIngredientList ingredients={ingredients} enabledDelete={false} />
     <hr className="my-6" />

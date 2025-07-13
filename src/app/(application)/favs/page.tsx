@@ -125,9 +125,9 @@ export default function Favs() {
 
   return (
     <>
-      <main className="pt-16 md:pt-8 px-4 max-w-5xl mx-auto flex flex-col gap-12">
         <BackgroundLayers />
-
+      <main className="pt-16 md:pt-8 px-4 max-w-5xl mx-auto flex flex-col gap-12 mb-4">
+  <div className="bg-white bg-opacity-95 backdrop-blur-md rounded-2xl shadow-xl p-6 md:p-10 flex flex-col gap-12">
         {/* Recetas favoritas */}
         <section>
           <button
@@ -256,7 +256,7 @@ export default function Favs() {
             </>
           )}
         </section>
-      </main>
+      </div></main>
 
       {selectedToRemove && (
         <UnfavoriteModal
