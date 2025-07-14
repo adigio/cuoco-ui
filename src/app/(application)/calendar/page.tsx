@@ -44,6 +44,7 @@ export default function CalendarPage() {
     day: DayOfWeek;
     recipeId: number;
     title: string;
+    mealType: MealType;
   } | null>(null);
 
   useEffect(() => {
@@ -140,27 +141,28 @@ export default function CalendarPage() {
   const handleRequestDelete = (
     day: DayOfWeek,
     recipeId: number,
-    title: string
+    title: string,
+    mealType: MealType,
   ) => {
-    setDeleteTarget({ day, recipeId, title });
+    setDeleteTarget({ day, recipeId, title, mealType});
     setIsDeleteModalOpen(true);
   };
 
   const handleConfirmDelete = () => {
     if (deleteTarget) {
-      handleDeleteRecipe(deleteTarget.day, deleteTarget.recipeId);
+      handleDeleteRecipe(deleteTarget.day, deleteTarget.recipeId, deleteTarget.mealType);
     }
     setIsDeleteModalOpen(false);
     setDeleteTarget(null);
   };
 
-  const handleDeleteRecipe = (day: DayOfWeek, recipeId: number) => {
+  const handleDeleteRecipe = (day: DayOfWeek, recipeId: number, mealType: MealType) => {
     setSchedule((currentSchedule) => {
       const newSchedule = currentSchedule.map((daySchedule) => {
         const currentDay = Object.keys(daySchedule)[0] as DayOfWeek;
         if (currentDay === day) {
           return {
-            [day]: daySchedule[day].filter((r) => r.id !== recipeId),
+            [day]: daySchedule[day].filter((r) => !(r.id === recipeId && r.mealType === mealType)),
           };
         }
         return daySchedule;
@@ -173,11 +175,13 @@ export default function CalendarPage() {
   const handleSaveChanges = async () => {
     try {
       setIsSaving(true);
-      const updatedSchedule = await calendarService.updateWeeklySchedule(
+
+      await calendarService.updateWeeklySchedule(
         schedule
       );
-      setSchedule(updatedSchedule);
-      setOriginalSchedule(updatedSchedule);
+
+      setSchedule(schedule);
+      setOriginalSchedule(schedule);
       setHasChanges(false);
     } catch (error) {
       // TODO  hacer toast

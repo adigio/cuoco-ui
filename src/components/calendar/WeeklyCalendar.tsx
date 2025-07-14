@@ -219,7 +219,7 @@ export default function WeeklyCalendar({
                                           isEmpty={false}
                                           onAdd={() => onAddRecipe(day, mealType)}
                                           onDelete={() =>
-                                            onDeleteRecipe(day, recipe.id, recipe.title)
+                                            onDeleteRecipe(day, recipe.id, recipe.title, mealType)
                                           }
                                         />
                                       </div>

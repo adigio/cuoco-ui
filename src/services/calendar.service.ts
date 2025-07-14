@@ -184,7 +184,7 @@ export const calendarService = {
     updateWeeklySchedule: async (schedule: WeeklySchedule): Promise<WeeklySchedule> => {
         const recipeMealTypesIndex = await createRecipeMealTypesIndex();
         const transformedSchedule = transformToSavePayload(schedule);
-        const response = await apiClient.post('/users/calendar', transformedSchedule);
+        const response = await apiClient.put('/users/calendar', transformedSchedule);
         return mapResponseCalendar(response.data, recipeMealTypesIndex);
     }
 };
