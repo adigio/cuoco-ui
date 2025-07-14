@@ -1,11 +1,5 @@
 import { create } from 'zustand';
-
-interface ErrorState {
-  error: string | null;
-  showError: boolean;
-  setError: (error: string) => void;
-  clearError: () => void;
-}
+import { ErrorState } from '@/types';
 
 export const useErrorStore = create<ErrorState>((set) => ({
   error: null,

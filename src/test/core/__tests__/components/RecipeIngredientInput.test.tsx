@@ -119,6 +119,7 @@ describe("Componente RecipeIngredientInput", () => {
       true
     );
     expect(input.value).toBe("Harina");
+    
     expect(quantityInput.value).toBe("5");
   });
 

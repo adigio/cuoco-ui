@@ -2,7 +2,7 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { Filters } from '@/types';
+import { Filters, RecipeFiltersState } from '@/types';
 
 const initialFilters: Filters = {
     time: "",
@@ -13,12 +13,6 @@ const initialFilters: Filters = {
     allergies_ids: [],
     dietary_needs_ids: [],
     useProfilePreferences: false,
-};
-
-type RecipeFiltersState = {
-    filters: Filters;
-    setFilters: (filters: Filters | ((prev: Filters) => Filters)) => void;
-    clearFilters: () => void;
 };
 
 export const useRecipeFiltersStore = create<RecipeFiltersState>()(

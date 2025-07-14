@@ -1,16 +1,8 @@
 // components/RecipeTags.tsx
 import React from "react";
+import { MealPrepRecipeTagsProps } from "@/types";
 
-interface Recipe {
-  id: string;
-  name: string;
-}
-
-interface RecipeTagsProps {
-  recipes: Recipe[];
-}
-
-const RecipeTags: React.FC<RecipeTagsProps> = ({ recipes }) => {
+const RecipeTags: React.FC<MealPrepRecipeTagsProps> = ({ recipes }) => {
   return (
     <div className="flex flex-wrap sm:flex-nowrap justify-between items-center mb-8 gap-4">
       {/* Botones de recetas */}

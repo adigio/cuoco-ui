@@ -1,33 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-
-interface RegisterStore {
-  name: string
-  email: string
-  password: string
-  confirmPass: string
-  cookingLevel: number
-  diet: number
-  foodNeeds: number[]
-  allergies: number[]
-  favouriteCuisines: number[]
-  termsAccepted: boolean
-
-  // Setters
-  setName: (name: string) => void
-  setEmail: (email: string) => void
-  setPassword: (password: string) => void
-  setConfirmPass: (pass: string) => void
-  setCookingLevel: (level: number) => void
-  setDiet: (diet: number) => void
-  setFoodNeeds: (needs: number[]) => void
-  setAllergies: (all: number[]) => void
-  setTermsAccepted: (terms: boolean) => void
-  setfavouriteCuisines: (favouriteCuisines: number[]) => void
-
-  reset: () => void
-  resetPreferences: () => void
-}
+import { RegisterStore } from '@/types';
 
 export const useRegisterStore = create<RegisterStore>()(
   persist(

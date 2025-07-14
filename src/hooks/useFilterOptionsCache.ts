@@ -132,7 +132,6 @@ useEffect(() => {
       setLastFetchTimestamp(Date.now());
       setLoadedWithAuth(isAuthenticated);
     } catch (error) {
-      console.error("Error loading filter options:", error);
     } finally {
       setIsFetching(false);
     }

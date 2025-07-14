@@ -1,9 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
-interface UseApiDetailOptions {
-  onError?: (error: Error) => void;
-}
-
 /**
  * Hook generico para manejar fetch de detalles con AbortController
  * useMealPrepDetail y useRecipeDetail

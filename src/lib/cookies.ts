@@ -2,7 +2,6 @@ import Cookies from 'js-cookie';
 
 export const AUTH_TOKEN_KEY = 'auth_token';
 
-//TODO: check con el backend 
 export const cookieConfig = {
     expires: 7, // 7 días
     secure: process.env.NODE_ENV === 'production', // HTTPS en producción

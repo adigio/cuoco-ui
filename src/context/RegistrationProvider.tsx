@@ -1,21 +1,9 @@
 'use client';
 
-import React, { createContext, useContext, ReactNode } from 'react';
-import { useNotification } from '@/hooks/useNotification';
-
-interface RegistrationContextType {
-  showSuccess: (message: string, additionalMessage?: string) => void;
-  showError: (message: string, additionalMessage?: string) => void;
-  showWarning: (message: string, additionalMessage?: string) => void;
-  showInfo: (message: string, additionalMessage?: string) => void;
-}
+import React, { createContext, useContext } from 'react';
+import { RegistrationContextType, RegistrationProviderProps } from '@/types';
 
 const RegistrationContext = createContext<RegistrationContextType | undefined>(undefined);
-
-interface RegistrationProviderProps {
-  children: ReactNode;
-  notificationHook: ReturnType<typeof useNotification>;
-}
 
 export function RegistrationProvider({ children, notificationHook }: RegistrationProviderProps) {
   const { showSuccess, showError, showWarning, showInfo } = notificationHook;

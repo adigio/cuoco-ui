@@ -1,8 +1,4 @@
-interface BaseSkeletonProps {
-    className?: string;
-    width?: string | number;
-    height?: string | number;
-}
+import { BaseSkeletonProps } from "@/types";
 
 export const BaseSkeleton = ({ className = '', width, height }: BaseSkeletonProps) => {
     return (

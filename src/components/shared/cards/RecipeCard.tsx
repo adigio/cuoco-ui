@@ -1,4 +1,4 @@
-import { RecipeCardProps } from "@/types/components/recipe-generator.types";
+import { RecipeCardProps } from "@/types";
 import React, { useState } from "react";
 import { getRecipeImageUrl } from "@/utils/imageUtils";
 import Image from 'next/image';

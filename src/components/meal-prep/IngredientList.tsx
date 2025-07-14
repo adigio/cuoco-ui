@@ -1,16 +1,7 @@
 // components/IngredientsList.tsx
 import ContainerCardDetail from "@/components/shared/containers/ContainerCardDetail";
 import React from "react";
-
-interface IngredientsListProps {
-  ingredients: {
-    name: string;
-    quantity: number;
-    unit: {
-      symbol: string;
-    };
-  }[];
-}
+import { IngredientsListProps } from "@/types";
 
 const IngredientsList: React.FC<IngredientsListProps> = ({ ingredients }) => (
   <ContainerCardDetail title="Ingredientes necesarios">

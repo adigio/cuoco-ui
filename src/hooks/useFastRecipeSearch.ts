@@ -16,7 +16,6 @@ export const useFastRecipeSearch = () => {
       router.push(`/recipe/${recipe.id}`);
     } catch (err) {
       setError('Error al buscar receta');
-      console.error(err);
       setLoading(false);
     }
   };

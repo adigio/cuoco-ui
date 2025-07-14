@@ -1,34 +1,6 @@
-import { PreferenceItem } from '@/types'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-
-interface PreferencesStore {
-    cookingLevelOptions: PreferenceItem[]
-    allergyOptions: PreferenceItem[]
-    dietOptions: PreferenceItem[]
-    dietaryNeedOptions: PreferenceItem[]
-    unitOptions: PreferenceItem[]
-    preparationTimeOptions: PreferenceItem[]
-    mealTypeOptions: PreferenceItem[]
-    isLoaded: boolean
-    lastFetchTimestamp: number | null
-    loadedWithAuth: boolean
-    isFetching: boolean
-
-    setCookingLevelOptions: (options: PreferenceItem[]) => void
-    setAllergyOptions: (options: PreferenceItem[]) => void
-    setDietOptions: (options: PreferenceItem[]) => void
-    setDietaryNeedOptions: (options: PreferenceItem[]) => void
-    setUnitOptions: (options: PreferenceItem[]) => void
-    setPreparationTimeOptions: (options: PreferenceItem[]) => void
-    setMealTypeOptions: (options: PreferenceItem[]) => void
-    setIsLoaded: (loaded: boolean) => void
-    setLastFetchTimestamp: (timestamp: number | null) => void
-    setLoadedWithAuth: (withAuth: boolean) => void
-    setIsFetching: (fetching: boolean) => void
-
-    resetPreferences: () => void
-}
+import { PreferencesStore } from '@/types';
 
 export const usePreferencesStore = create<PreferencesStore>()(
     persist(

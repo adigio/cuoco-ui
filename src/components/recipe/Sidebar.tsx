@@ -1,5 +1,4 @@
 import React from "react";
-import { RecipeDetailIngredientGroup, RecipeDetailMissingIngredient } from "@/types/recipe/recipe.types";
 import RecipeIngredients from "./Ingredients";
 import RecipeMissingIngredients from "./MissingIngredients";
  
@@ -8,17 +7,7 @@ import { faCalendarPlus } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/navigation';
 import { useCalendarStore } from "@/store/useCalendarStore";
 import { getRecipeImageUrl } from "@/utils/imageUtils";
- 
-
-interface Props {
-  ingredients: RecipeDetailIngredientGroup[];
-  missingIngredients: RecipeDetailMissingIngredient[];
-  recipeId?: number;
-  recipeTitle?: string;
-  isFavorite?: boolean;
-  mealType?: number;
-  mealTypes?: number[];
-}
+import { RecipeSidebarProps } from "@/types";
  
 export default function RecipeSidebar({ 
   ingredients, 
@@ -28,7 +17,7 @@ export default function RecipeSidebar({
   isFavorite,
   mealType = 1,
   mealTypes
-}: Props) {
+}: RecipeSidebarProps) {
   const router = useRouter();
   const setPendingRecipe = useCalendarStore(state => state.setPendingRecipe);
 

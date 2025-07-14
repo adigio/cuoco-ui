@@ -4,7 +4,6 @@ export interface JWTPayload {
     sub: string; // email del usuario
     iat: number; // issued at
     exp: number; // expiration
-    //TODO: ver con el back que estructura ira
 }
 
 export const jwtService = {
@@ -12,7 +11,6 @@ export const jwtService = {
         try {
             return jwtDecode<JWTPayload>(token);
         } catch (error) {
-            console.error('Error decodificando JWT:', error);
             return null;
         }
     },

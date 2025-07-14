@@ -1,15 +1,6 @@
 // components/MealPrepSteps.tsx
 import React from "react";
-
-interface Step {
-  title: string;
-  time: number;
-  description: string[];
-}
-
-interface MealPrepStepsProps {
-  steps: Step[];
-}
+import { MealPrepStepsProps } from "@/types";
 
 const MealPrepSteps: React.FC<MealPrepStepsProps> = ({ steps }) => {
   return (

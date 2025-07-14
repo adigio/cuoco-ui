@@ -5,11 +5,7 @@ import Modal from './Modal';
 import Input from '../form/Input';
 import ChefLoader from '../loaders/ChefLoader';
 import { useFastRecipeSearch } from '@/hooks/useFastRecipeSearch';
-
-interface FastRecipeModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
+import { FastRecipeModalProps } from '@/types';
 
 export default function FastRecipeModal({
   isOpen,

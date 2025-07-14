@@ -1,16 +1,5 @@
 import { BRAND_COLORS } from '@/constants/colors';
-
-interface CustomCheckboxProps {
-  id: string;
-  name: string;
-  checked: boolean;
-  onChange: () => void;
-  label: string;
-  className?: string;
-  checkboxClassName?: string;
-  labelClassName?: string;
-  disabled?: boolean;
-}
+import { CustomCheckboxProps } from '@/types';
 
 export default function CustomCheckbox({
   id,

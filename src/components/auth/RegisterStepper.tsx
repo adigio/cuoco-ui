@@ -32,7 +32,7 @@ export default function RegisterStepper({
     termsAccepted,
     setTermsAccepted,
     allergies,
-    reset, // TODO: para limpiar luego del registro completo
+    reset,
   } = useRegisterStore();
 
   const login = useAuthStore((state) => state.login); 

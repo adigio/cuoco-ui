@@ -22,7 +22,7 @@ export default function RecipeDetailPage({ params }: PageProps) {
   useRecipeGeneratorSession();
 
   const router = useRouter();
-  const { id: recipeId } = React.use(params); // ✅ correcto en Next.js 14+
+  const { id: recipeId } = React.use(params);
   const { recipe, loading } = useRecipeDetail(recipeId);
   const isPremium = useAuthStore((state) => state.user?.premium);
   const { message, additionalMessage, type, show, clearNotification } =

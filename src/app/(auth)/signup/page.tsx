@@ -14,8 +14,7 @@ import Modal from '@/components/shared/modal/Modal'
 import NotificationModal from '@/components/shared/modal/NotificationModal'
 import { useNotification } from '@/hooks/useNotification'
 import { RegistrationProvider } from '@/context/RegistrationProvider' 
-
-type StepKey = "email" | "prefs" | "password";
+import { StepKey } from '@/types';
 
 const stepOrder: StepKey[] = ["email", "prefs", "password"];
 

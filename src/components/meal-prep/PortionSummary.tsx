@@ -1,13 +1,9 @@
 // components/PortionSummary.tsx
 import React from "react";
-import { MealPrepRecipe } from "@/types";
 import ContainerCardDetail from "@/components/shared/containers/ContainerCardDetail";
+import { MealPrepPortionSummaryProps } from "@/types";
 
-interface PortionSummaryProps {
-  recipes: MealPrepRecipe[];
-}
-
-const PortionSummary: React.FC<PortionSummaryProps> = ({ recipes }) => (
+const PortionSummary: React.FC<MealPrepPortionSummaryProps> = ({ recipes }) => (
   <ContainerCardDetail title="Recetas incluidas" >
     <h3 className="text-md font-bold mb-2"></h3>
     <ul className="list-disc list-inside text-sm text-gray-700">

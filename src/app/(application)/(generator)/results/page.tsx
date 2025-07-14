@@ -20,7 +20,6 @@ import { RefreshModal } from '@/components/shared/modal/RefreshModal';
 import SubscriptionModal from '@/components/shared/modal/SubscriptionModal';
 import NotificationModal from '@/components/shared/modal/NotificationModal';
 import { useNotification } from '@/hooks/useNotification';
-import { RecipeGenerationRequest } from '@/types';
 
 
 export default function RecipeResultsPage() {
@@ -81,7 +80,7 @@ export default function RecipeResultsPage() {
     <>
     <BackgroundLayers />
     <main className="flex-1">
-      <div className="container mx-auto px-4   py-12">
+      <div className="container mx-auto px-4 py-12">
         <h1 className="text-3xl font-bold text-center mb-2">Recetas sugeridas</h1>
         <p className="text-gray-600 text-center mb-8">
           Basadas en {ingredients.filter(ing => ing.confirmed).length} ingredientes que tienes disponibles
@@ -89,7 +88,7 @@ export default function RecipeResultsPage() {
         <Container>
           {isLoading ? (
             <div className="flex gap-4 justify-center px-4 pb-12 flex-wrap">
-              {[1, 2, 3, 4].map((index) => (
+              {[1, 2, 3].map((index) => (
                 <RecipeCardSkeleton key={index} />
               ))}
             </div>
@@ -144,8 +143,6 @@ export default function RecipeResultsPage() {
               })}
             </div>
           )}
-        </Container>
-
         <div className="flex justify-center mt-8">
           <button
             onClick={handleBack}
@@ -164,6 +161,8 @@ export default function RecipeResultsPage() {
             Nuevo generador
           </button>
         </div>
+        </Container>
+
       </div>
 
 

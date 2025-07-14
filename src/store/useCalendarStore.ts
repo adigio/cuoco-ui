@@ -1,19 +1,7 @@
 'use client';
 
 import { create } from 'zustand';
-
-interface PendingRecipe {
-  id: number;
-  title: string;
-  image: string;
-  mealTypes: number[]; 
-}
-
-interface CalendarStore {
-  pendingRecipe: PendingRecipe | null;
-  setPendingRecipe: (recipe: PendingRecipe) => void;
-  clearPendingRecipe: () => void;
-}
+import { CalendarStore } from '@/types';
 
 export const useCalendarStore = create<CalendarStore>((set) => ({
   pendingRecipe: null,

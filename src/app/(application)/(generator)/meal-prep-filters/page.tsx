@@ -20,6 +20,7 @@ import Checkbox from "@/components/shared/form/Checkbox";
 
 import { MealPrepRequest } from "@/types";
 import { generateMealPrepRecipes } from "@/services/generateMealPrepRecipes.service";
+import BackgroundLayers from "@/components/shared/BackgroundLayers";
 
 export default function MealPrepFilters() {
   const { ingredients } = useIngredientsStore();
@@ -60,7 +61,7 @@ export default function MealPrepFilters() {
     [userPreferences?.cook_level, storeCookingLevel]
   );
 
-  // Flags de inicialización para evitar bucles infinitos
+  // Flags de inicialización para evitar bucles
   const [allergiesInitialized, setAllergiesInitialized] = useState<boolean>(false);
   const [needsInitialized, setNeedsInitialized] = useState<boolean>(false);
   const [dietInitialized, setDietInitialized] = useState<boolean>(false);
@@ -101,7 +102,7 @@ export default function MealPrepFilters() {
     }
   }, [optionsLoaded, allergyOptions, finalAllergies, allergiesInitialized,setFilters]);
 
-  // useEffect para inicializar necesidades dietéticas
+  // useEffect para inicializar necesidades dieteticas
   useEffect(() => {
     if (!optionsLoaded || needsInitialized) return;
     
@@ -219,7 +220,6 @@ export default function MealPrepFilters() {
         setLoading(false);
       }
     } catch (error) {
-      console.error("Error al generar meal preps:", error);
       setError("Ocurrió un error al generar los meal preps. Por favor, intenta de nuevo.");
       setLoading(false);
     }
@@ -235,6 +235,7 @@ export default function MealPrepFilters() {
 
 return (
   <div className="flex flex-col bg-[#fefefe] p-6">
+    <BackgroundLayers />
     <h2 className="text-xl font-semibold text-gray-800 mb-4">Ingredientes seleccionados</h2>
     <RecipeIngredientList ingredients={ingredients} enabledDelete={false} />
     <hr className="my-6" />

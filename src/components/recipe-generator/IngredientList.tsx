@@ -1,14 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Ingredient } from "@/types/ingredient/ingredient.types";
 import ConfirmationModal from "../shared/modal/ConfirmationModal";
-
-interface RecipeIngredientListProps {
-  ingredients: Ingredient[];
-  onRemove?: (idx: number) => void;
-  enabledDelete?: boolean;
-}
+import { RecipeIngredientListProps } from "@/types";
 
 export default function RecipeIngredientList({
   ingredients,

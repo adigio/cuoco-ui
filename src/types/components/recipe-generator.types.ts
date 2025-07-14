@@ -17,7 +17,7 @@ export interface RecipeImageUploaderProps {
 
 export interface RecipeIngredientListProps {
   ingredients: Ingredient[];
-  setIngredients?: React.Dispatch<React.SetStateAction<Ingredient[]>>;
+  onRemove?: (idx: number) => void;
   enabledDelete?: boolean;
 }
 
@@ -26,15 +26,4 @@ export interface IngredientReviewTableProps {
   onConfirm: (index: number) => void;
   onEdit: (index: number) => void;
   onDelete: (index: number) => void;
-}
-export interface RecipeCardProps {
-  recipe: {
-    id: number;
-    name: string;
-    image?: string;
-    subtitle?: string;
-  };
-  customClass?: string;
-  children?: ReactNode;
-  colorFont?: string;
 }

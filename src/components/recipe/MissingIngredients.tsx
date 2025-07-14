@@ -1,12 +1,8 @@
 import React, { useState } from "react";
-import { RecipeDetailMissingIngredient } from "@/types/recipe/recipe.types";
 import ContainerCardDetail from "@/components/shared/containers/ContainerCardDetail";
+import { RecipeMissingIngredientsProps } from "@/types";
 
-interface Props {
-  missing: RecipeDetailMissingIngredient[];
-}
-
-export default function RecipeMissingIngredients({ missing }: Props) {
+export default function RecipeMissingIngredients({ missing }: RecipeMissingIngredientsProps) {
   const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
 
   if (!missing?.length) return null;

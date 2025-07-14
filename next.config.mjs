@@ -4,10 +4,6 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '**',
-      },
-      {
-        protocol: 'https',
         hostname: 'dev.cuoco.com.ar',
         pathname: '/images/**',
       },

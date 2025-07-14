@@ -168,7 +168,6 @@ export default function RecipeFilters() {
         setError("No se pudieron generar recetas. Intenta con otros filtros.");
       }
     } catch (error) {
-      console.error(error);
       setError("Ocurrió un error al generar las recetas.");
     } finally {
       setLoading(false);

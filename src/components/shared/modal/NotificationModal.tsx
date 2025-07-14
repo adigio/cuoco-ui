@@ -2,17 +2,7 @@
 
 import React from 'react';
 import Modal from './Modal';
-import { NotificationType } from '@/hooks/useNotification';
-
-interface NotificationModalProps {
-  show: boolean;
-  onClose: () => void;
-  title?: string;
-  message: string | null;
-  additionalMessage?: string | null; // Mensaje adicional del backend
-  type: NotificationType;
-  autoCloseTime?: number;
-}
+import { NotificationType, NotificationModalProps } from '@/types';
 
 const getNotificationConfig = (type: NotificationType) => {
   const configs = {
