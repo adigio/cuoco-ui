@@ -24,6 +24,7 @@ export default function RecipeCard({
             height={300} // Asigna una altura real según tu diseño
             className="w-full h-full object-cover"
             style={{ width: "100%", height: "100%" }} // para que respete w-full h-full
+            unoptimized
           />
         </div>
         <div className={`p-4 flex-1 overflow-hidden ${colorFont}`}>
