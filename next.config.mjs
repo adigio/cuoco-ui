@@ -13,8 +13,7 @@ const nextConfig = {
         pathname: '/images/**',
       },
     ],
-    dangerouslyAllowSVG: true,
-    domains: ['localhost'],
+    dangerouslyAllowSVG: true
   },
   
   // Proxy habilitado para evitar CORS en desarrollo/local
