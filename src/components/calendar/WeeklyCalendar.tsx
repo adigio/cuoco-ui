@@ -23,7 +23,7 @@ import { useCalendarStore } from '@/store/useCalendarStore';
 interface WeeklyCalendarProps {
   schedule: WeeklySchedule;
   onAddRecipe: (day: DayOfWeek, mealType: MealType) => void;
-  onDeleteRecipe: (day: DayOfWeek, recipeId: number, title: string) => void;
+  onDeleteRecipe: (day: DayOfWeek, recipeId: number, title: string, mealType: MealType) => void;
   onMoveRecipe: (
     sourceDay: DayOfWeek,
     destDay: DayOfWeek,
@@ -232,7 +232,7 @@ export default function WeeklyCalendar({
                                           isEmpty={false}
                                           onAdd={() => onAddRecipe(day, mealType)}
                                           onDelete={() =>
-                                            onDeleteRecipe(day, recipe.id, recipe.title)
+                                            onDeleteRecipe(day, recipe.id, recipe.title, mealType)
                                           }
                                         />
                                       </div>
