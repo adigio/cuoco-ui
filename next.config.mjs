@@ -5,15 +5,16 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'dev.cuoco.com.ar',
+        port: '',
         pathname: '/images/**',
       },
       {
         protocol: 'https',
         hostname: 'www.cuoco.com.ar',
+        port: '',
         pathname: '/images/**',
       },
     ],
-    domains: ['localhost','dev.cuoco.com.ar', 'www.cuoco.com.ar'],
     dangerouslyAllowSVG: true
   },
   
