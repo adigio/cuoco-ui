@@ -23,5 +23,5 @@ export const getRecipeImageUrl = (
   }
   
   // Construir la URL del servidor
-  return buildRecipeImageUrl(recipe.id, imageName);
+  return new URL(buildRecipeImageUrl(recipe.id, imageName)).toString();
 }; 

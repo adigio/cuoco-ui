@@ -13,7 +13,6 @@ const nextConfig = {
         pathname: '/images/**',
       },
     ],
-    domains: ['localhost','dev.cuoco.com.ar', 'www.cuoco.com.ar'],
     dangerouslyAllowSVG: true
   },
   
