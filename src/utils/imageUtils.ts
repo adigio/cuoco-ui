@@ -1,7 +1,7 @@
 import { serverBaseUrl } from '@/lib/config';
 
 export const buildRecipeImageUrl = (recipeId: number | string, imageName: string = 'main.png'): string => {
-  return `/images/recipe/${recipeId}/${imageName}`;
+  return `${serverBaseUrl}/images/recipe/${recipeId}/${imageName}`;
 };
 
 export const getRecipeImageUrl = (
