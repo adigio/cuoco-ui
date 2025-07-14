@@ -6,6 +6,16 @@ const nextConfig = {
         protocol: 'https',
         hostname: '**',
       },
+      {
+        protocol: 'https',
+        hostname: 'dev.cuoco.com.ar',
+        pathname: '/images/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.cuoco.com.ar',
+        pathname: '/images/**',
+      },
     ],
     dangerouslyAllowSVG: true,
     domains: ['localhost'],
