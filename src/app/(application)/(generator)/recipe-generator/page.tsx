@@ -13,6 +13,7 @@ import SubscriptionModal from "@/components/shared/modal/SubscriptionModal";
 import BackgroundLayers from "@/components/shared/BackgroundLayers";
 import ContainerShadow from "@/components/shared/containers/ContainerShadow";
 import { useAuthStore } from "@/store/useAuthStore";
+import ChefLoader from "@/components/shared/loaders/ChefLoader";
 
 export default function RecipeGeneratorPage() {
   const [images, setImages] = useState<File[]>([]);
@@ -48,11 +49,13 @@ export default function RecipeGeneratorPage() {
 
         if (!detectados || detectados.length === 0) {
           setError("No se detectaron ingredientes en las imágenes");
+          setLoading(false);
           return;
         }  
         const cantidadAgregada = addMultipleIngredients(detectados);
         if (cantidadAgregada === 0) {
           setError("No se pudieron agregar nuevos ingredientes");
+          setLoading(false);
           return;
         }
       }
@@ -63,10 +66,11 @@ export default function RecipeGeneratorPage() {
       setError(
         "Hubo un problema al procesar las imágenes. Por favor, intentá de nuevo."
       );
-    } finally {
       setLoading(false);
     }
   };
+
+  if (loading) return <ChefLoader text="Leyendo ingredientes ..." />;
 
   return (
     <>

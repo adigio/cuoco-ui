@@ -46,7 +46,7 @@ export default function RegisterStepper({
         name,
         email,
         password,
-        plan_id: 2,
+        plan_id: 1,
         cook_level_id: cookingLevel,
         diet_id: diet,
         dietary_needs: foodNeeds,

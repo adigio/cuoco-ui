@@ -49,6 +49,7 @@ export const RefreshModal = ({
 
       const currentIds = filteredRecipes.map((r) => r.id);
 
+      console.log("ingredients", ingredients);
       const ingredientList = ingredients
         .filter((ing) => ing.confirmed)
         .map((ingredient) => ({
