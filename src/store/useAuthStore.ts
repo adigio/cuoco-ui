@@ -39,8 +39,8 @@ export const useAuthStore = create<AuthState>()(
           preferences: {
             cook_level: backendUser.preferences?.cook_level?.id,
             diet: backendUser.preferences?.diet?.id,
-            dietaryRestrictions: backendUser.preferences?.dietaryRestrictions,
-            allergies: backendUser.preferences?.allergies,
+            dietaryRestrictions: backendUser.dietary_needs?.map((dietaryNeed: any) => dietaryNeed.id) || [],
+            allergies: backendUser.allergies?.map((allergy: any) => allergy.id) || [],
             favourite_cuisines: backendUser.preferences?.favourite_cuisines,
           }
         }; 
