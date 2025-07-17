@@ -64,16 +64,23 @@ export interface RegisterStore {
 export interface FavoritesState {
   favoriteRecipeIds: number[];
   favoriteMealPrepIds: number[];
+  // Nuevos arrays para rastrear cambios locales
+  addedLocallyRecipeIds: number[];
+  removedLocallyRecipeIds: number[];
+  addedLocallyMealPrepIds: number[];
+  removedLocallyMealPrepIds: number[];
+  
   addFavoriteRecipe: (recipeId: number) => void;
   removeFavoriteRecipe: (recipeId: number) => void;
   addFavoriteMealPrep: (mealPrepId: number) => void;
   removeFavoriteMealPrep: (mealPrepId: number) => void;
-  isFavoriteRecipe: (recipeId: number) => boolean;
-  isFavoriteMealPrep: (mealPrepId: number) => boolean;
+  isFavoriteRecipe: (recipeId: number, serverState?: boolean) => boolean;
+  isFavoriteMealPrep: (mealPrepId: number, serverState?: boolean) => boolean;
   clearFavorites: () => void;
   addFavorite: (recipeId: number) => void;
   removeFavorite: (recipeId: number) => void;
-  isFavorite: (recipeId: number) => boolean;
+  isFavorite: (recipeId: number, serverState?: boolean) => boolean;
+  syncWithServer: (favoriteRecipeIds: number[], favoriteMealPrepIds: number[]) => void;
 }
 
 // ================================

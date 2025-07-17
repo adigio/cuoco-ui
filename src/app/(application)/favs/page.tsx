@@ -164,7 +164,7 @@ export default function Favs() {
                             onClick={() =>
                               handleRemove(recipe.id, recipe.name, "recipe")
                             }
-                            className="absolute bottom-3 right-3 w-10 h-10 flex items-center justify-center text-white background-color-primary hover:bg-red-800 rounded-full shadow-md transition"
+                            className="absolute bottom-3 right-0 w-10 h-10 flex items-center justify-center text-white background-color-primary hover:bg-red-800 rounded-full shadow-md transition"
                             title="Eliminar de favoritos"
                           >
                             <FontAwesomeIcon
@@ -227,7 +227,7 @@ export default function Favs() {
                             onClick={() =>
                               handleRemove(mp.id, mp.title, "meal-prep")
                             }
-                            className="absolute bottom-3 right-3 w-10 h-10 flex items-center justify-center text-white background-color-primary hover:bg-red-800 rounded-full shadow-md transition"
+                            className="absolute bottom-3 right-0 w-10 h-10 flex items-center justify-center text-white background-color-primary hover:bg-red-800 rounded-full shadow-md transition"
                             title="Eliminar de favoritos"
                           >
                             <FontAwesomeIcon

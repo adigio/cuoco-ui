@@ -52,11 +52,8 @@ const handleConfirmUnfavorite = async () => {
       onConfirm={handleConfirmUnfavorite}
       onCancel={onClose}
     >
-      <p>
+      <p className='my-5'>
         ¿Estás seguro de que querés eliminar <strong>{recipeText}</strong> de tus {itemType} favoritos?
-      </p>
-      <p className="text-gray-500 text-sm mt-2">
-        Esta acción no se puede deshacer.
       </p>
     </ConfirmationModal>
   );

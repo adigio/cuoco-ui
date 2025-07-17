@@ -12,6 +12,7 @@ import RecipeIngredientInput from "@/components/recipe-generator/IngredientInput
 import BackgroundLayers from "@/components/shared/BackgroundLayers";
 import ContainerShadow from "@/components/shared/containers/ContainerShadow";
 import ChefLoader from "@/components/shared/loaders/ChefLoader";
+import Input from "@/components/shared/form/Input";
 
 export default function ReviewPage() {
   useRecipeGeneratorSession();
@@ -225,46 +226,59 @@ export default function ReviewPage() {
 
       {isEditModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
-            <h2 className="text-lg font-bold mb-4">Editar ingrediente</h2>
-            <input
-              type="text"
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
-              className="w-full px-4 py-2 border text-color-primary rounded mb-4"
-              placeholder="Nombre"
-              autoFocus
-            />
-            <input
-              type="text"
-              value={newQuantity}
-              onChange={(e) => setNewQuantity(e.target.value)}
-              className="w-full px-4 py-2 border text-color-primary rounded mb-4"
-              placeholder="Cantidad"
-            />
-            <input
-              type="text"
-              value={newUnit?.description || ""}
-              onChange={(e) =>
-                setNewUnit((prev) => ({
-                  id: prev?.id ?? 0,
-                  symbol: prev?.symbol,
-                  description: e.target.value,
-                }))
-              }
-              placeholder="Unidad"
-            />
+          <div className="bg-white p-6 rounded-xl shadow-xl w-full max-w-md mx-4">
+            <h2 className="text-lg font-bold mb-6 text-gray-800">Editar ingrediente</h2>
+            
+            <div className="space-y-4">
+              <Input
+                type="text"
+                name="ingredientName"
+                label="Nombre del ingrediente"
+                value={newName}
+                onChange={(e) => setNewName(e.target.value)}
+                placeholder="Ej: Carne picada"
+                className="w-full"
+              />
 
-            <div className="flex justify-end gap-3">
+              <Input
+                type="number"
+                name="quantity"
+                label="Cantidad"
+                value={newQuantity}
+                onChange={(e) => setNewQuantity(e.target.value)}
+                placeholder="2"
+                min="0"
+                step="0.1"
+                className="w-full"
+              />
+
+              <Input
+                type="text"
+                name="unit"
+                label="Unidad"
+                value={newUnit?.description || ""}
+                onChange={(e) =>
+                  setNewUnit((prev) => ({
+                    id: prev?.id ?? 0,
+                    symbol: prev?.symbol,
+                    description: e.target.value,
+                  }))
+                }
+                placeholder="Kg"
+                className="w-full"
+              />
+            </div>
+
+            <div className="flex justify-end gap-3 mt-6">
               <button
                 onClick={() => setIsEditModalOpen(false)}
-                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition"
+                className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleConfirmEdit}
-                className="px-4 py-2 bg-[#f37b6a] text-white rounded hover:bg-[#e36455] transition"
+                className="px-6 py-2 bg-[#f37b6a] text-white rounded-lg hover:bg-[#e36455] transition font-medium"
               >
                 Guardar
               </button>

@@ -28,11 +28,15 @@ export default function RecipeHeader({
   const {
     addFavorite,
     removeFavorite,
+    isFavorite: isLocalFavorite,
   } = useFavoritesStore();
   const { showSuccess, showError } = useNotification();
 
+  // Mix estado del servidor con estado local
+  const currentIsFavorite = isLocalFavorite(id, isFavorite);
+
   const handleFavRecipe = (recipeId: number) => {
-    if (!isFavorite) {
+    if (!currentIsFavorite) {
       setShowFavoriteModal(true);
     } else {
       setShowUnfavoriteModal(true);
@@ -51,7 +55,7 @@ export default function RecipeHeader({
     <>
       <div className="mb-6 border-b border-color-primary-medium">
         <div className="flex items-center justify-between mb-4 flex-wrap gap-2"> 
-          <h1 className="text-3xl font-bold w-1/2 text-center flex items-center gap-2">
+          <h1 className="text-3xl font-bold w-1/2 text-center flex items-center gap-2 text-gray-700">
             {name}
           </h1>
 
@@ -67,7 +71,7 @@ export default function RecipeHeader({
             <TimeAndFavorite
               time={time}
               onToggleFavorite={() => handleFavRecipe(id)}
-              isFavorite={isFavorite}
+              isFavorite={currentIsFavorite}
             />
           </div>
         </div>

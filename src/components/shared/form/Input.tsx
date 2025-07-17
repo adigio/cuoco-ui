@@ -57,7 +57,7 @@ export default function Input({
         disabled={disabled}
         min={min}
         max={max}
-        className={`px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-100 ${
+        className={`px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-100${
           disabled ? 'bg-gray-100 cursor-not-allowed' : ''
         } ${inputClassName}`}
         {...props}
