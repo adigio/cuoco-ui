@@ -39,6 +39,7 @@ export default function MealPrepCard({ mealPrep, onClick, children }: MealPrepCa
                     alt={recipe.name}
                     fill
                     className="object-cover rounded"
+                    unoptimized
                   />
                 </div>
               )}
