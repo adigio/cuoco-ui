@@ -22,7 +22,8 @@ jobs:
 
     - name: Build Next.js app
       run: |
-        NEXT_PUBLIC_API_BASE_URL=https://www.cuoco.com.ar/api \
+        NEXT_PUBLIC_API_URL=https://www.cuoco.com.ar/api \
+        NEXT_PUBLIC_SERVER_URL=https://www.cuoco.com.ar \
         NEXT_PUBLIC_ENABLE_MSW=true \
         npm run build
 
