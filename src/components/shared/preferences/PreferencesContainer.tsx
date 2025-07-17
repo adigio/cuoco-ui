@@ -60,7 +60,7 @@ export default function PreferencesContainer({
 
   if (!isLoaded) {
     return (
-      <div className="w-full max-w-md">
+      <div className="h-60 w-full max-w-md">
         <ChefLoader text="Cargando preferencias..." />
       </div>
     );
