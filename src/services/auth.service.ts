@@ -26,6 +26,31 @@ export const authService = {
     }
   },
 
+  async resetPassword(email: string): Promise<any> {
+    try {
+      const response = await apiClient.post('/auth/password/reset', { 
+        email
+      });
+      return response.data;
+    } catch (error: any) {
+      const message = error.response?.data?.message || 'Error desconocido';
+      throw new Error(message);
+    }
+  },
+
+  async changePassword(token: string, password: string): Promise<any> {
+    try {
+      const response = await apiClient.post('/auth/password', 
+        { password },
+        { params: { token } } 
+      );
+      return response.data;
+    } catch (error: any) {
+      const message = error.response?.data?.message || 'Error desconocido';
+      throw new Error(message);
+    }
+  },
+
   async updateProfile(userData: UpdateUserRequest): Promise<any> {
     try {
       const response = await apiClient.patch('/users', userData);
@@ -36,4 +61,4 @@ export const authService = {
     }
   }
 };
-export const { login, register, updateProfile } = authService;
+export const { login, register, resetPassword, changePassword, updateProfile } = authService;

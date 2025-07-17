@@ -11,6 +11,7 @@ import ConfirmationModal from "@/components/shared/modal/ConfirmationModal";
 import RecipeIngredientInput from "@/components/recipe-generator/IngredientInput";
 import BackgroundLayers from "@/components/shared/BackgroundLayers";
 import ContainerShadow from "@/components/shared/containers/ContainerShadow";
+import ChefLoader from "@/components/shared/loaders/ChefLoader";
 
 export default function ReviewPage() {
   useRecipeGeneratorSession();
@@ -40,7 +41,7 @@ export default function ReviewPage() {
     description: string;
     symbol?: string;
   }>();
-
+  const [loading, setLoading] = useState(false);
   const openEditModal = (idx: number) => {
     const ing = ingredients[idx];
     setEditIndex(idx);
@@ -99,8 +100,11 @@ export default function ReviewPage() {
       setShowAlertModal(true);
       return;
     }
+    setLoading(true);
     router.push(mode === "meal-prep" ? "/meal-prep-filters" : "/filters");
   };
+
+    if (loading) return <ChefLoader text="Preparando Filtros..." />;
 
   return (
     <>

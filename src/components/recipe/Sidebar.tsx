@@ -41,9 +41,8 @@ export default function RecipeSidebar({
     <aside className="w-full lg:w-1/4 flex flex-col gap-6">
       <RecipeIngredients ingredients={ingredients} />
       <RecipeMissingIngredients missing={missingIngredients} />
- 
-      
-      {isFavorite ? (
+
+      {isFavorite  && (
         <button
           onClick={handleAddToCalendar}
           className="w-full flex items-center justify-center gap-2 bg-purple-500 hover:bg-purple-600 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
@@ -51,11 +50,6 @@ export default function RecipeSidebar({
           <FontAwesomeIcon icon={faCalendarPlus} />
           Agregar a planificación semanal
         </button>
-      ) : (
-        <div className="w-full text-center text-gray-400 text-sm py-3">
-          Solo puedes planificar recetas favoritas
- 
-        </div>
       )}
     </aside>
   );

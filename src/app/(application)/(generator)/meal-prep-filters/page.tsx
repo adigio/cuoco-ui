@@ -206,6 +206,10 @@ export default function MealPrepFilters() {
         unit_id: Number(ingredient.unit),
       })),
       filters: filtersToSend,
+      configuration: {
+        size: 1,
+        not_include: []
+      },
     };
 
     try {

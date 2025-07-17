@@ -37,7 +37,7 @@ export default function FastRecipeModal({
       showCloseButton={true}
     >
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-10">
+        <div className="h-60 rounded-3xl flex flex-col items-center justify-center py-10">
           <ChefLoader />
           <p className="mt-4 text-gray-700">Buscando receta...</p>
         </div>

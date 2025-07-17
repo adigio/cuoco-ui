@@ -8,6 +8,7 @@ import { UnfavoriteModal } from "@/components/shared/modal/UnfavoriteModal";
 import SubscriptionModal from "@/components/shared/modal/SubscriptionModal";
 import { useFavoritesStore } from "@/store/useFavoritesStore";
 import { useNotification } from "@/hooks/useNotification";
+import { useAuthStore } from "@/store/useAuthStore";
 
 type Props = RecipeDetail;
 
@@ -53,7 +54,7 @@ export default function RecipeHeader({
           <h1 className="text-3xl font-bold w-1/2 text-center flex items-center gap-2">
             {name}
           </h1>
- 
+
 
           <div className="flex items-center gap-2">
             <span className="flex items-center gap-1 text-color-primary-medium">

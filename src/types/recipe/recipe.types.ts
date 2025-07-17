@@ -189,5 +189,9 @@ interface FiltersMealPrep {
 export interface MealPrepRequest {
   ingredients: IngredientRequest[];
   filters: FiltersMealPrep;
+  configuration?: {
+    size?: number;
+    not_include?: number[];
+  };
 }
 
