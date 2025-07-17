@@ -13,6 +13,7 @@ import RecipeSidebar from "@/components/recipe/Sidebar";
 import { useRecipeGeneratorSession } from "@/hooks/useRecipeGeneratorSession";
 import { useNotification } from "@/hooks/useNotification";
 import { useRecipeDetail } from "@/hooks/useRecipeDetail";
+import { useFavoritesStore } from "@/store/useFavoritesStore";
 import NotificationModal from "@/components/shared/modal/NotificationModal";
 import RecipePDFDownload from "@/components/recipe/RecipePDFDownload";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -24,9 +25,13 @@ export default function RecipeDetailPage({ params }: PageProps) {
   const router = useRouter();
   const { id: recipeId } = React.use(params);
   const { recipe, loading } = useRecipeDetail(recipeId);
+  const { isFavorite: isLocalFavorite } = useFavoritesStore();
   const isPremium = useAuthStore((state) => state.user?.premium);
   const { message, additionalMessage, type, show, clearNotification } =
     useNotification();
+
+  // Mix estado del servidor con estado local para el sidebar
+  const currentIsFavorite = recipe ? isLocalFavorite(recipe.id, recipe.isFavorite) : false;
 
   if (loading) {
     return <RecipeDetailSkeleton />;
@@ -76,7 +81,7 @@ export default function RecipeDetailPage({ params }: PageProps) {
               missingIngredients={recipe.missingIngredients}
               recipeId={recipe.id}
               recipeTitle={recipe.name}
-              isFavorite={recipe.isFavorite}
+              isFavorite={currentIsFavorite}
               mealTypes={recipe.mealTypes}
             />
           </div>

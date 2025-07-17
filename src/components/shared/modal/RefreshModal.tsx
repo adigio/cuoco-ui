@@ -11,6 +11,7 @@ import { RecipeGenerationRequest } from "@/types";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useMealPrepStore } from "@/store/useMealPrepStore";
 import { useMealPrepFiltersStore } from "@/store/useMealPrepFiltersStore";
+import { useFilterOptionsCache } from "@/hooks/useFilterOptionsCache";
 
 export const RefreshModal = ({
   type = "recipe",
@@ -34,7 +35,8 @@ export const RefreshModal = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const { filters } = useRecipeFiltersStore();
- const { filters: mealPrepFilters } = useMealPrepFiltersStore();
+  const { filters: mealPrepFilters } = useMealPrepFiltersStore();
+  const { mealOptions, timeOptions, difficultyOptions, dietOptions } = useFilterOptionsCache();
 
   const { ingredients } = useIngredientsStore();
   const { filteredRecipes, replaceRecipe: replaceRecipeInStore } =
@@ -48,6 +50,7 @@ export const RefreshModal = ({
       setIsLoading(true);
 
       const currentIds = filteredRecipes.map((r) => r.id);
+      const currentMealPrepIds = filteredMealPrep.map((m) => m.id);
 
       console.log("ingredients", ingredients);
       const ingredientList = ingredients
@@ -55,7 +58,7 @@ export const RefreshModal = ({
         .map((ingredient) => ({
           name: ingredient.name,
           quantity: ingredient.quantity,
-          unit_id: Number(ingredient.unit),
+          unit_id: Number(ingredient.unit.id),
         }));
 
       let refreshRequest: any;
@@ -70,7 +73,9 @@ export const RefreshModal = ({
                 : Number(filters.time),
             servings: filters.people,
             cook_level_id: Number(filters.difficulty),
-            type_ids: filters.types.map((t) => Number(t)),
+            type_ids: filters.types
+              .map((typeValue) => mealOptions.find((opt) => opt.value === typeValue)?.key)
+              .filter((key): key is number => key !== undefined),
             diet_id:
               !filters.diet || filters.diet === ""
                 ? null
@@ -93,14 +98,20 @@ export const RefreshModal = ({
                 : Number(mealPrepFilters.time),
             servings: mealPrepFilters.people,
             cook_level_id: Number(mealPrepFilters.difficulty),
-            type_ids: mealPrepFilters.types.map((t) => Number(t)),
+            type_ids: mealPrepFilters.types
+              .map((typeValue) => mealOptions.find((opt) => opt.value === typeValue)?.key)
+              .filter((key): key is number => key !== undefined),
             diet_id:
               !mealPrepFilters.diet || mealPrepFilters.diet === ""
                 ? null
                 : Number(mealPrepFilters.diet),
             allergies_ids: mealPrepFilters.allergies_ids,
             dietary_needs_ids: mealPrepFilters.dietary_needs_ids,
-            freeze: mealPrepFilters.freeze, // solo si lo tenés en tu filtro, opcional
+            freeze: mealPrepFilters.freeze,
+          },
+          configuration: {
+            size: 1,
+            not_include: currentMealPrepIds,
           },
         };
       }
@@ -114,6 +125,10 @@ export const RefreshModal = ({
       }
 
       if (newItem) {
+        console.log("RefreshModal - newItem recibido:", newItem); // Debug temporal
+        console.log("RefreshModal - newItem.title:", newItem.title); // Debug temporal
+        console.log("RefreshModal - type:", type); // Debug temporal
+        
         if (type === "recipe") {
           replaceRecipeInStore(recipeId, newItem);
           showSuccess(
@@ -121,10 +136,16 @@ export const RefreshModal = ({
             `Se generó una nueva receta: "${newItem.name}"`
           );
         } else if (type === "meal-prep") {
+          console.log("RefreshModal - Antes de replaceMealPrepInStore:", { recipeId, newItem }); // Debug temporal
           replaceMealPrepInStore(recipeId, newItem);
+          console.log("RefreshModal - Después de replaceMealPrepInStore"); // Debug temporal
+          
+          const title = newItem.title || newItem.name || "Sin título";
+          console.log("RefreshModal - título final:", title); // Debug temporal
+          
           showSuccess(
             "Meal prep refrescado exitosamente",
-            `Se generó un nuevo meal prep: "${newItem.name}"`
+            `Se generó un nuevo meal prep: "${title}"`
           );
         }
         onClose();

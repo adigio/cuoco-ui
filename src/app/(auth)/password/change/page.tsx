@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import "./change-password.css";
 import Modal from '@/components/shared/modal/Modal'
@@ -9,11 +9,11 @@ import { useNotification } from "@/hooks/useNotification";
 import PasswordBox from "@/components/shared/password/PasswordBox";
 import { changePassword } from "@/services/auth.service";
 
-export default function ChangePassword() {
+function ChangePasswordContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const token = searchParams.get('token')
+  const token = searchParams?.get('token')
   
   const { 
     message, 
@@ -92,5 +92,17 @@ export default function ChangePassword() {
 
       </div>
     </div>
+  );
+}
+
+export default function ChangePassword() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[url('/auth/signup.png')] bg-cover bg-no-repeat bg-center flex items-center justify-center px-4 md:px-16">
+        <ChefLoader text="" />
+      </div>
+    }>
+      <ChangePasswordContent />
+    </Suspense>
   );
 }

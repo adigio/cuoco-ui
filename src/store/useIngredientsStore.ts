@@ -28,7 +28,9 @@ export const useIngredientsStore = create<IngredientsStore>((set, get) => ({
       '/review', 
       '/filters',
       '/results',
-      '/recipe/'
+      '/recipe/',
+      '/meal-prep/',
+      '/results-meal'
     ];
     
     const isInGeneratorFlow = generatorPaths.some(path => currentPath.includes(path));
