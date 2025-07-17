@@ -238,7 +238,7 @@ export default function CalendarPage() {
   if (isLoading) {
     return (
       <Container customClass="mt-30 mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">
+        <h1 className="text-3xl font-bold text-gray-700 mb-8">
           Planificación Semanal
         </h1>
         <CalendarSkeleton />
@@ -252,7 +252,7 @@ export default function CalendarPage() {
       <Container customClass="mt-14 mb-8">
         <div className="flex justify-between items-center mb-8">
           <div className="w-full flex justify-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-800 text-center">
+            <h1 className="text-3xl font-bold text-gray-700 text-center">
               Planificación Semanal
             </h1>
           </div>

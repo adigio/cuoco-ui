@@ -42,14 +42,14 @@ export default function MealPrepCard({ mealPrep, onClick, children }: MealPrepCa
                   />
                 </div>
               )}
-              <h4 className="font-semibold text-md">{recipe.name}</h4>
+              <h4 className="font-semibold text-md mt-3">{recipe.name}</h4>
             </div>
           ))}
         </div>
       </Link>
 
       {children &&
-        <div className="p-4" onClick={e => e.stopPropagation()}>{children}</div>}
+        <div className="mt-2 p-4" onClick={e => e.stopPropagation()}>{children}</div>}
     </div>
   );
 }

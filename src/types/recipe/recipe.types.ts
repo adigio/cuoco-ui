@@ -170,6 +170,7 @@ export interface MealPrep {
   description?: string;
   recipes: MealPrepRecipe[];
   steps: MealPrepStep[];
+  isFavorite?: boolean; // Estado de favorito del servidor
 }
 
 export type MealPrepResponse = MealPrep[];

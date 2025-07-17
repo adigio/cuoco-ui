@@ -13,7 +13,7 @@ import { faClock, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons";
 import Container from "@/components/shared/containers/Container";
 import BackgroundLayers from "@/components/shared/BackgroundLayers";
-import { RecipeCardSkeleton } from "@/components/shared/skeleton/RecipeCardSkeleton";
+import { MealPrepCardSkeleton } from "@/components/shared/skeleton/MealPrepCardSkeleton";
 import { FavoriteModal } from "@/components/shared/modal/FavoriteModal";
 import SubscriptionModal from "@/components/shared/modal/SubscriptionModal";
 import NotificationModal from "@/components/shared/modal/NotificationModal";
@@ -89,9 +89,9 @@ export default function MealPrepResultsPage() {
           </p>
           <Container>
             {isLoading ? (
-              <div className="flex gap-4 justify-center px-4 pb-12 flex-wrap">
-                {[1, 2, 3, 4].map((index) => (
-                  <RecipeCardSkeleton key={index} />
+              <div className="space-y-4 px-4 pb-12">
+                {[1].map((index) => (
+                  <MealPrepCardSkeleton key={index} />
                 ))}
               </div>
             ) : mealPreps.length === 0 ? (

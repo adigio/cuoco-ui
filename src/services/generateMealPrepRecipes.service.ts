@@ -7,7 +7,6 @@ import apiClient from "@/lib/axios.config";
 export const generateMealPrepRecipes = async (requestData: MealPrepRequest): Promise<MealPrepResponse> => {
 
   try {
-    // Simulación de delay para desarrollo
     await new Promise(resolve => setTimeout(resolve, 2000));
 
     const response = await apiClient.post('/meal-preps', 
@@ -26,15 +25,30 @@ export const generateMealPrepRecipes = async (requestData: MealPrepRequest): Pro
 };
 export const refreshMealPrep = async (
   informationRecipe: MealPrepRequest
-) => {
+): Promise<MealPrep> => {
   try {
     const response = await apiClient.post("/meal-preps", informationRecipe);
+    
 
-    const mappedData = response.data.map((recipe: any) => ({
-      ...recipe,
-      preparationTime:
-        recipe.preparation_time?.description || recipe.preparationTime,
-    }));
+    const mappedData = response.data.map((mealPrep: any) => {
+      
+      const mapped = {
+        id: mealPrep.id,
+        title: mealPrep.title,
+        estimated_cooking_time: mealPrep.estimated_cooking_time,
+        totalPortions: mealPrep.servings || 4,
+        ingredients: mealPrep.ingredients || [],
+        observation: mealPrep.observation,
+        description: mealPrep.description,
+        recipes: mealPrep.recipes || [],
+        steps: mealPrep.steps || [],
+        isFavorite: mealPrep.favorite || false,
+        preparationTime:
+          mealPrep.preparation_time?.description || mealPrep.preparationTime,
+      };
+      
+      return mapped;
+    });
 
     return mappedData[0];
   } catch (error) {
@@ -43,7 +57,6 @@ export const refreshMealPrep = async (
 };
 export const getMealPrepById = async (id: number) => { 
   try {
-    // Simulación de delay para mostrar el loader (solo para desarrollo)
     await new Promise(resolve => setTimeout(resolve, 1500));
         
     const response: ApiResponse<MealPrep>  = await apiClient.get(`/meal-preps/${id}`,  
@@ -55,7 +68,6 @@ export const getMealPrepById = async (id: number) => {
     );
     return response.data;
   } catch (error) {
-    // Propagamos el error para que pueda ser manejado por el componente
     throw error;
   }
 };

@@ -52,7 +52,7 @@ export default function HeroHome() {
       {/* Contenido centrado */}
       <div className="relative z-10 flex items-center justify-center h-full text-center px-4">
         <div className="bg-white bg-opacity-70 rounded-xl shadow-lg px-6 py-8 w-full max-w-3xl min-h-[200px] flex flex-col items-center justify-center">
-          <h1 className="text-black text-3xl md:text-5xl font-bold mb-6">
+          <h1 className="text-gray-700 text-3xl md:text-5xl font-bold mb-6">
             {saludo}
           </h1>
 
