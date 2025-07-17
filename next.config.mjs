@@ -5,16 +5,17 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'dev.cuoco.com.ar',
+        port: '',
         pathname: '/images/**',
       },
       {
         protocol: 'https',
         hostname: 'www.cuoco.com.ar',
+        port: '',
         pathname: '/images/**',
       },
     ],
-    dangerouslyAllowSVG: true,
-    domains: ['localhost'],
+    dangerouslyAllowSVG: true
   },
   
   // Proxy habilitado para evitar CORS en desarrollo/local
