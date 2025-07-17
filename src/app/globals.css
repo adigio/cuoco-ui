@@ -51,6 +51,9 @@ border-color: var(--background-color-primary);
 .text-color-primary-medium {
   color: var(--color-primary-medium);
 }
+.bg-color-primary-medium {
+  background-color: var(--color-primary-medium);
+}
 
 .border-color-primary-medium {
   border-color: var(--color-primary-medium);

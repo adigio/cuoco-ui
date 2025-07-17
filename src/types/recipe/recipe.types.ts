@@ -1,4 +1,4 @@
-import { Ingredient } from "../ingredient/ingredient.types";
+import { Ingredient, IngredientRequest } from "../ingredient/ingredient.types";
 
 export interface Filters {
   time: string;
@@ -6,6 +6,8 @@ export interface Filters {
   types: string[];
   diet: string;
   people: number;
+  allergies_ids: number[];
+  dietary_needs_ids: number[];
   useProfilePreferences: boolean;
 }
 export interface FiltersMealprep {
@@ -51,6 +53,10 @@ export interface RecipeDetailStep {
   description: string;
   image?: string;
 }
+export interface Step {
+  title: string;
+  description: string;
+}
 
 export interface RecipeDetailSection {
   section: string;
@@ -77,10 +83,11 @@ export interface RecipeDetail {
   id: number;
   name: string;
   subtitle: string;
-  time: number;
+  time: string;
   servings: number;
   difficulty: string;
   isFavorite: boolean;
+  mealTypes?: number[];
   stepBlocks: RecipeDetailSection[];
   ingredients: RecipeDetailIngredientGroup[];
   missingIngredients: RecipeDetailMissingIngredient[];
@@ -93,7 +100,7 @@ export interface RecipeFormData {
   description: string;
   ingredients: Ingredient[];
   instructions: string[];
-  preparationTime: number;
+  preparationTime: string;
   servings: number;
   difficulty: string;
   images?: File[];
@@ -101,16 +108,28 @@ export interface RecipeFormData {
 }
 
 export interface RecipeGenerationRequest {
-  ingredients: string[];
+  ingredients: {
+    name: string;
+    quantity: number;
+    unit_id: number;
+  }[];
   filters: {
-    time: string;
-    difficulty: string;
-    diet: string;
-    people: number;
-    useProfilePreferences: boolean;
-    types: string[];
+    preparation_time_id?: number|null;
+    servings: number;
+    cook_level_id: number;
+    type_ids: number[];
+    diet_id: number|null;
+    allergies_ids: number[];
+    dietary_needs_ids: number[];
+  };
+  configuration?: {
+    size?: number;
+    not_include?: number[];
   };
 }
+
+
+
 
 export interface PageProps {
   params: Promise<{ id: string }>;
@@ -130,25 +149,49 @@ export interface MealPrepGenerationRequest {
 
 export interface MealPrepRecipe {
   id: string;
-  title: string;
+  name: string;
   image: string;
   portions?: number;
+}
+
+export interface MealPrepStep {
+  title: string;
+  time: number;
+  description: string[];
 }
 
 export interface MealPrep {
   id: number;
   title: string;
-  estimatedCookingTime: number;
+  estimated_cooking_time: number;
   totalPortions: number;
   ingredients: string[];
   observation?: string;
   description?: string;
   recipes: MealPrepRecipe[];
-  steps: {
-    title: string;
-    instructions: string[];
-    estimatedTime: number;
-  }[];
+  steps: MealPrepStep[];
 }
 
 export type MealPrepResponse = MealPrep[];
+
+ 
+interface FiltersMealPrep {
+  freeze?: boolean;
+  preparation_time_id?: number;
+  servings?: number;
+  cook_level_id?: number;
+  type_ids?: number[];
+  diet_id?: number;
+  allergies_ids?: number[];
+  dietary_needs_ids?: number[];
+}
+
+export interface MealPrepRequest {
+  ingredients: IngredientRequest[];
+  filters: FiltersMealPrep;
+  configuration?: {
+    size?: number;
+    not_include?: number[];
+  };
+}
+

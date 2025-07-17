@@ -1,16 +1,13 @@
 import { Montserrat } from "next/font/google";
 import "./globals.css";
-
+import { LayoutProps } from "@/types/layout";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false;
 
 import "@/lib/fontawesome";
 import ClientProvider from "@/context/ClientProvider";
-
-interface LayoutProps {
-  children: React.ReactNode;
-}
+import GlobalErrorHandler from "@/components/shared/GlobalErrorHandler"; 
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -30,7 +27,10 @@ export default function RootLayout({ children }: LayoutProps) {
         <link rel="icon" href="favicon/favicon.ico" />
       </head>
       <body className={`${montserrat.variable}`}>
-        <ClientProvider>{children}</ClientProvider>
+        <ClientProvider>
+          {children}
+          <GlobalErrorHandler />
+        </ClientProvider>
       </body>
     </html>
   );

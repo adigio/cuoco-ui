@@ -2,28 +2,23 @@ import Image from "next/image";
 
 export default function AboutUs() {
   return (
-    <section className="relative  bg-white py-20 px-4 md:px-20 overflow-hidden" id="aboutUs">
-      {/* Fondo decorativo (esquina inferior derecha) */}
-     <div className="hidden md:block absolute bottom-0 right-0 w-64 pointer-events-none z-0">
-        <Image
-          src="/decorativos.png"
-          alt="Decoración de ingredientes"
-          width={256}
-          height={256}
-          className="w-full h-auto"
-        />
-      </div>
+    <section className="relative bg-white py-20 px-4 md:px-20 overflow-hidden" id="aboutUs">
+      {/* Línea divisoria superior */}
+      <div className="border-t-2 text-color-primary mb-10"></div>
 
+      {/* Contenido principal */}
       <div className="relative z-10 max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
         {/* Imagen de comida */}
-        <div className="w-full md:w-1/2">
-          <Image
-            src="/aboutUs.png" // reemplazá por el path real
-            alt="Comida en sartén"
-            width={500}
-            height={500}
-            className="rounded-[40px] w-full h-auto object-cover"
-          />
+        <div className="w-full md:w-1/2 flex justify-center">
+          <div className="relative w-full max-w-lg	 aspect-square rounded-[40px] overflow-hidden">
+            <Image
+              src="/aboutUs.jpeg"
+              alt="Cuoco-team"
+              fill
+              className="object-cover object-center"
+              sizes="(max-width: 768px) 100vw, 300px"
+            />
+          </div>
         </div>
 
         {/* Texto */}

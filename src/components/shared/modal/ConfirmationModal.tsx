@@ -1,17 +1,8 @@
 'use client';
 
-import React, { ReactNode } from 'react';
+import React from 'react';
 import Modal from '@/components/shared/modal/Modal';
-
-interface ConfirmationModalProps {
-  isOpen: boolean;
-  title?: string;
-  children: ReactNode;              // aquí va el texto o JSX del cuerpo
-  confirmText?: string;            // por defecto “Confirmar”
-  cancelText?: string;             // por defecto “Cancelar”
-  onConfirm: () => void;
-  onCancel: () => void;
-}
+import { ConfirmationModalProps } from '@/types';
 
 export default function ConfirmationModal({
   isOpen,

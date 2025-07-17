@@ -10,7 +10,10 @@ jest.mock("react", () => {
 });
 
 // 1) Mocks de next/navigation y servicios
-jest.mock("next/navigation", () => ({ useRouter: jest.fn() }));
+jest.mock("next/navigation", () => ({
+  useRouter: jest.fn(),
+  usePathname: jest.fn().mockReturnValue("/recipe/123"),
+}));
 jest.mock("@/services/recipe.service");
 
 // 2) Mocks de componentes hijos con displayName
@@ -78,31 +81,25 @@ import { useRouter } from "next/navigation";
 const mockedGet = jest.mocked(recipeServiceModule.getRecipeById);
 const mockedRouter = useRouter as jest.MockedFunction<typeof useRouter>;
 
-describe("RecipeDetailPage", () => {
+describe("Componente RecipeDetailPage (/recipe/[id])", () => {
   const fakePush = jest.fn();
 
   beforeEach(() => {
     jest.clearAllMocks();
-    // mock del router
     mockedRouter.mockReturnValue({ push: fakePush } as any);
   });
 
-  it("muestra skeleton mientras carga", async () => {
-    // una promesa que nunca resuelve
-    mockedGet.mockReturnValue(new Promise(() => {}) as any);
+  it("debe mostrar el skeleton de carga mientras se espera la respuesta del servicio", async () => {
+    mockedGet.mockReturnValue(new Promise(() => {}) as any); // promesa que nunca resuelve
 
     await act(async () => {
-      render(
-        // casteamos params a any para evitar el error TS2353
-        <RecipeDetailPage params={{ id: "123" } as any} />
-      );
+      render(<RecipeDetailPage params={{ id: "123" } as any} />);
     });
 
     expect(screen.getByTestId("detail-skeleton")).toBeInTheDocument();
   });
 
-  it("muestra mensaje de error cuando no encuentra receta", async () => {
-    // devolvemos undefined para simular “no encontrada”
+  it("debe mostrar un mensaje de error cuando no se encuentra la receta (respuesta undefined)", async () => {
     mockedGet.mockResolvedValueOnce(undefined as any);
 
     await act(async () => {
@@ -114,7 +111,7 @@ describe("RecipeDetailPage", () => {
     ).toBeInTheDocument();
   });
 
-  it("renderiza correctamente la receta cuando la obtiene", async () => {
+  it("debe renderizar todos los componentes correctamente cuando la receta es válida", async () => {
     const fakeRecipe = {
       id: "789",
       title: "Mi Receta",
@@ -132,7 +129,6 @@ describe("RecipeDetailPage", () => {
       render(<RecipeDetailPage params={{ id: "789" } as any} />);
     });
 
-    // Verificamos que los mocks se hayan renderizado
     expect(screen.getByTestId("background-layers")).toBeInTheDocument();
     expect(screen.getByTestId("container-shadow")).toBeInTheDocument();
     expect(screen.getByTestId("recipe-header")).toHaveTextContent("Mi Receta");

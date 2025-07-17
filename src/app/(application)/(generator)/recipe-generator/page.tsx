@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { analyzeImagesWithAPI } from "@/services/vision.service";
 // Contexto
 import { useIngredientsStore } from "@/store/useIngredientsStore";
+import { useRecipeGeneratorSession } from "@/hooks/useRecipeGeneratorSession";
 // Componentes
 import RecipeImageUploader from "@/components/recipe-generator/ImageUploader";
 import AlertModal from "@/components/shared/modal/AlertModal";
@@ -12,6 +13,7 @@ import SubscriptionModal from "@/components/shared/modal/SubscriptionModal";
 import BackgroundLayers from "@/components/shared/BackgroundLayers";
 import ContainerShadow from "@/components/shared/containers/ContainerShadow";
 import { useAuthStore } from "@/store/useAuthStore";
+import ChefLoader from "@/components/shared/loaders/ChefLoader";
 
 export default function RecipeGeneratorPage() {
   const [images, setImages] = useState<File[]>([]);
@@ -20,28 +22,18 @@ export default function RecipeGeneratorPage() {
   const [error, setError] = useState<string | null>(null);
   const [isSubModalOpen, setIsSubModalOpen] = useState(false);
 
-  // Tomamos del store si el usuario es premium
-  const {
-    ingredients,
-    addIngredient,
-    addMultipleIngredients,
-    mode,
-    clearIngredients,
-  } = useIngredientsStore();
+  useRecipeGeneratorSession();
 
+  const { ingredients, addMultipleIngredients } = useIngredientsStore();
   const isPremium = useAuthStore((state) => state.user?.premium);
   const router = useRouter();
-  useEffect(() => {
-    clearIngredients();
-  }, []);
+
   const handleContinue = async () => {
-    // Si un user no premium intenta con más de 2 imágenes:
     if (!isPremium && images.length > 2) {
       setIsSubModalOpen(true);
       return;
     }
 
-    // Validar si hay al menos una imagen o un ingrediente
     if (images.length === 0 && ingredients.length === 0) {
       setShowAlertModal(true);
       return;
@@ -57,12 +49,13 @@ export default function RecipeGeneratorPage() {
 
         if (!detectados || detectados.length === 0) {
           setError("No se detectaron ingredientes en las imágenes");
+          setLoading(false);
           return;
-        }
-
+        }  
         const cantidadAgregada = addMultipleIngredients(detectados);
         if (cantidadAgregada === 0) {
           setError("No se pudieron agregar nuevos ingredientes");
+          setLoading(false);
           return;
         }
       }
@@ -70,14 +63,14 @@ export default function RecipeGeneratorPage() {
       // Redirigir a la página de revisión
       router.push("/review");
     } catch (err) {
-      console.error("Error al procesar imágenes:", err);
       setError(
         "Hubo un problema al procesar las imágenes. Por favor, intentá de nuevo."
       );
-    } finally {
       setLoading(false);
     }
   };
+
+  if (loading) return <ChefLoader text="Leyendo ingredientes ..." />;
 
   return (
     <>
@@ -95,7 +88,6 @@ export default function RecipeGeneratorPage() {
             images={images}
             setImages={setImages}
             ingredients={ingredients}
-            addIngredient={addIngredient}
           />
 
           {error && (

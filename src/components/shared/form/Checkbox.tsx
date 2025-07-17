@@ -23,9 +23,7 @@ export default function Checkbox({
         checked={checked}
         onChange={onChange}
         disabled={disabled}
-        className={`w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 ${
-          disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'
-        } ${checkboxClassName}`}
+        className="h-5 w-5 accent-purple-300"
       />
       {label && (
         <label 

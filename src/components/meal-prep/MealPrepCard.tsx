@@ -1,18 +1,13 @@
 'use client';
 
-import { MealPrep } from "@/types";
-import React, { ReactNode } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import Link from "next/link";
+import { getRecipeImageUrl } from '@/utils/imageUtils';
+import { MealPrepCardProps } from "@/types";
 
-interface Props {
-  mealPrep: MealPrep;
-  onClick?: () => void;
-  children?: ReactNode;
-}
-
-export default function MealPrepCard({ mealPrep, onClick, children }: Props) {
+export default function MealPrepCard({ mealPrep, onClick, children }: MealPrepCardProps) {
   const router = useRouter();
 
   const handleClick = () => {
@@ -30,7 +25,7 @@ export default function MealPrepCard({ mealPrep, onClick, children }: Props) {
     >
       <h3 className="text-xl font-bold mb-2">{mealPrep.title}</h3>
 
-      <Link href={`/meal-prep/${mealPrep.id}`}>
+      <Link href={`/meal-preps/${mealPrep.id}`}>
         <div className="flex flex-col sm:flex-row gap-4">
           {Array.isArray(mealPrep.recipes) && mealPrep.recipes.slice(0, 3).map((recipe) => (
             <div
@@ -40,14 +35,14 @@ export default function MealPrepCard({ mealPrep, onClick, children }: Props) {
               {recipe.image && (
                 <div className="w-full relative h-32">
                   <Image
-                    src={recipe.image}
-                    alt={recipe.title}
+                    src={getRecipeImageUrl(recipe)}
+                    alt={recipe.name}
                     fill
                     className="object-cover rounded"
                   />
                 </div>
               )}
-              <h4 className="font-semibold text-md">{recipe.title}</h4>
+              <h4 className="font-semibold text-md">{recipe.name}</h4>
             </div>
           ))}
         </div>

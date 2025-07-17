@@ -1,14 +1,8 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { Ingredient } from '@/types/ingredient/ingredient.types';
-import ConfirmationModal from '../shared/modal/ConfirmationModal';
-
-interface RecipeIngredientListProps {
-  ingredients: Ingredient[];
-  onRemove?: (idx: number) => void;
-  enabledDelete?: boolean;
-}
+import React, { useState } from "react";
+import ConfirmationModal from "../shared/modal/ConfirmationModal";
+import { RecipeIngredientListProps } from "@/types";
 
 export default function RecipeIngredientList({
   ingredients,
@@ -27,7 +21,6 @@ export default function RecipeIngredientList({
     setDeleteTarget({ idx, name });
     setIsDeleteModalOpen(true);
   };
-
   // Confirma el borrado y llama al callback
   const handleConfirmDelete = () => {
     if (deleteTarget && onRemove) {
@@ -35,7 +28,7 @@ export default function RecipeIngredientList({
     }
     setIsDeleteModalOpen(false);
     setDeleteTarget(null);
-  };
+  }; 
 
   return (
     <>
@@ -48,7 +41,7 @@ export default function RecipeIngredientList({
               key={idx}
               className="bg-gray-200 text-sm px-3 py-1 rounded-full flex items-center gap-2"
             >
-              {item.name}
+              {`${item.name} ${item.quantity ?? ""} ${item.unit.description ?? ""}`.trim()}
               {enabledDelete && onRemove && (
                 <button
                   onClick={() => handleRequestDelete(idx, item.name)}

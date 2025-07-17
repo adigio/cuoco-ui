@@ -2,10 +2,8 @@
 'use client';
 
 import Container from '@/components/shared/containers/Container';
+import { LayoutProps } from '@/types/layout';
 
-interface LayoutProps {
-  children: React.ReactNode;
-}
 
 export default function FavsLayout({ children }: LayoutProps) {
   return (

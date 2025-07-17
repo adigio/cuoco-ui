@@ -3,26 +3,25 @@
 import { Props } from "next/script";
 import { useEffect, useState } from "react";
 import ChefLoader from "@/components/shared/loaders/ChefLoader";
+import { useAuthInitialization } from "@/hooks/useAuthInitialization";
+
 export default function ClientProvider({ children }: Props) {
   const [mswReady, setMswReady] = useState(process.env.NODE_ENV !== 'development' && process.env.NEXT_PUBLIC_ENABLE_MSW !== 'true');
+  
+  // Inicializar autenticación al cargar la aplicación
+  useAuthInitialization();
+  
+  // Debug del estado de autenticación
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const { useAuthStore } = require('@/store/useAuthStore');
+      const authStore = useAuthStore.getState();
+    }
+  }, []);
 
   useEffect(() => {
-    const initMSW = async () => {
-      try {
-        console.log("[MSW] Iniciando worker...");
-        const { worker } = await import("@/mocks/browser");
-        await worker.start({ onUnhandledRequest: "bypass" });
-        console.log("[MSW] Worker iniciado correctamente");
-        setMswReady(true); // ⚠️ Solo cuando el worker está listo
-      } catch (error) {
-        console.error("[MSW] Error al iniciar el worker:", error);
-        setMswReady(true); // Para que al menos la app no se quede colgada
-      }
-    };
-
-    if (process.env.NODE_ENV === 'development' || process.env.NEXT_PUBLIC_ENABLE_MSW === 'true') {
-      initMSW();
-    }
+    // 🚨 MSW COMPLETAMENTE DESHABILITADO para evitar interferencia con API real
+    setMswReady(true); // Saltar MSW completamente
   }, []);
 
   // ⛔️ No renderizar children hasta que MSW esté iniciado

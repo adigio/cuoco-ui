@@ -1,4 +1,3 @@
-import { Ingredient } from '@/types/ingredient/ingredient.types';
 import { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode, ChangeEvent } from 'react';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -59,20 +58,3 @@ export interface CheckboxGroupProps {
   orientation?: 'horizontal' | 'vertical';
 } 
 
-// src/types/components/recipe-generator.types.ts
-export interface RecipeImageUploaderProps {
-  images: File[];
-  setImages: React.Dispatch<React.SetStateAction<File[]>>;
-  ingredients: Ingredient[];
-  addIngredient: (name: string, origin?: string, confirm?: boolean) => boolean;
-}
-
-export interface RecipeIngredientListProps {
-  ingredients: Ingredient[];
-  enabledDelete?: boolean;
-}
-
-export interface IngredientReviewTableProps {
-  ingredients: Ingredient[];
-  onRemove?: (index: number) => void;
-}

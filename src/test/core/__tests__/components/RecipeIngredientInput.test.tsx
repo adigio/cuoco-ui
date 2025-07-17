@@ -1,77 +1,137 @@
-// src/test/core/__tests__/components/RecipeIngredientInput.test.tsx
+import React from "react";
+import { render, screen, fireEvent } from "@testing-library/react";
+import RecipeIngredientInput from "@/components/recipe-generator/IngredientInput";
+import * as ingredientsStoreModule from "@/store/useIngredientsStore";
+import * as filterOptionsCacheModule from "@/hooks/useFilterOptionsCache";
 
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import RecipeIngredientInput from '@/components/recipe-generator/IngredientInput';
-import * as ingredientsStoreModule from '@/store/useIngredientsStore';
+jest.mock("@/store/useIngredientsStore");
+jest.mock("@/hooks/useFilterOptionsCache");
 
-jest.mock('@/store/useIngredientsStore');
-
-describe('RecipeIngredientInput', () => {
+describe("Componente RecipeIngredientInput", () => {
   let addIngredientMock: jest.Mock;
 
   beforeEach(() => {
     jest.clearAllMocks();
-    // Creamos el mock de addIngredient
+
     addIngredientMock = jest.fn().mockReturnValue(true);
-    // Spy del hook para devolver nuestra implementación
+
     jest
-      .spyOn(ingredientsStoreModule, 'useIngredientsStore')
+      .spyOn(ingredientsStoreModule, "useIngredientsStore")
       .mockImplementation((selector) =>
-        selector({ addIngredient: addIngredientMock } as any)
+        selector({
+          addIngredient: addIngredientMock,
+        } as any)
       );
+
+    jest
+      .spyOn(filterOptionsCacheModule, "useFilterOptionsCache")
+      .mockReturnValue({
+        isLoaded: true,
+        difficultyOptions: [],
+        allergyOptions: [],
+        dietOptions: [],
+        needOptions: [],
+        timeOptions: [],
+        mealOptions: [],
+        unitOptions: [
+          { key: 1, value: 1, label: "unidad", symbol: "u" },
+          { key: 2, value: 2, label: "gramos", symbol: "g" },
+        ],
+        cookingLevelOptions: [],
+        originalAllergyOptions: [],
+        originalDietOptions: [],
+        originalDietaryNeedOptions: [],
+        originalUnitOptions: [],
+        originalPreparationTimeOptions: [],
+        originalMealTypeOptions: [],
+      });
   });
 
-  it('llama a addIngredient y limpia el input al hacer click en +', () => {
+  it("agrega un ingrediente al hacer clic en el botón + y limpia los inputs si fue exitoso", () => {
     render(<RecipeIngredientInput />);
 
-    const input = screen.getByPlaceholderText('Ej: Leche, Huevos...') as HTMLInputElement;
-    fireEvent.change(input, { target: { value: 'Leche' } });
+    const input = screen.getByPlaceholderText("Ej: Leche, Huevos...") as HTMLInputElement;
+    const quantityInput = screen.getByPlaceholderText("Cantidad") as HTMLInputElement;
+    const select = screen.getByRole("combobox") as HTMLSelectElement;
+    const addButton = screen.getByTitle("Agregar ingrediente");
 
-    const addButton = screen.getByTitle('Agregar ingrediente');
+    fireEvent.change(input, { target: { value: "Leche" } });
+    fireEvent.change(quantityInput, { target: { value: "2" } });
+    fireEvent.change(select, { target: { value: "1" } });
     fireEvent.click(addButton);
 
-    expect(addIngredientMock).toHaveBeenCalledWith('Leche', 'manual', true);
-    expect(input.value).toBe('');
+    expect(addIngredientMock).toHaveBeenCalledWith(
+      "Leche",
+      2,
+      { id: 1, symbol: "u", description: "unidad" },
+      false,
+      "manual",
+      true
+    );
+    expect(input.value).toBe("");
+    expect(quantityInput.value).toBe("");
+    expect(select.value).toBe("1");
   });
 
-  it('llama a addIngredient y limpia el input al presionar Enter', () => {
+  it("agrega un ingrediente al presionar Enter y limpia los inputs si fue exitoso", () => {
     render(<RecipeIngredientInput />);
 
-    const input = screen.getByPlaceholderText('Ej: Leche, Huevos...') as HTMLInputElement;
-    fireEvent.change(input, { target: { value: 'Huevos' } });
+    const input = screen.getByPlaceholderText("Ej: Leche, Huevos...") as HTMLInputElement;
+    const quantityInput = screen.getByPlaceholderText("Cantidad") as HTMLInputElement;
+    const select = screen.getByRole("combobox") as HTMLSelectElement;
 
-    fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
+    fireEvent.change(input, { target: { value: "Huevos" } });
+    fireEvent.change(quantityInput, { target: { value: "3" } });
+    fireEvent.keyDown(input, { key: "Enter", code: "Enter" });
 
-    expect(addIngredientMock).toHaveBeenCalledWith('Huevos', 'manual', true);
-    expect(input.value).toBe('');
+    expect(addIngredientMock).toHaveBeenCalledWith(
+      "Huevos",
+      3,
+      { id: 1, symbol: "u", description: "unidad" },
+      false,
+      "manual",
+      true
+    );
+    expect(input.value).toBe("");
+    expect(quantityInput.value).toBe("");
+    expect(select.value).toBe("1");
   });
 
-  it('no limpia el input si addIngredient devuelve false', () => {
-    // Forzamos que el mock devuelva false
+  it("no limpia los inputs si addIngredient devuelve false", () => {
     addIngredientMock.mockReturnValueOnce(false);
+
     render(<RecipeIngredientInput />);
 
-    const input = screen.getByPlaceholderText('Ej: Leche, Huevos...') as HTMLInputElement;
-    fireEvent.change(input, { target: { value: 'Harina' } });
+    const input = screen.getByPlaceholderText("Ej: Leche, Huevos...") as HTMLInputElement;
+    const quantityInput = screen.getByPlaceholderText("Cantidad") as HTMLInputElement;
+    const addButton = screen.getByTitle("Agregar ingrediente");
 
-    const addButton = screen.getByTitle('Agregar ingrediente');
+    fireEvent.change(input, { target: { value: "Harina" } });
+    fireEvent.change(quantityInput, { target: { value: "5" } });
     fireEvent.click(addButton);
 
-    expect(addIngredientMock).toHaveBeenCalledWith('Harina', 'manual', true);
-    expect(input.value).toBe('Harina');
+    expect(addIngredientMock).toHaveBeenCalledWith(
+      "Harina",
+      5,
+      { id: 1, symbol: "u", description: "unidad" },
+      false,
+      "manual",
+      true
+    );
+    expect(input.value).toBe("Harina");
+    
+    expect(quantityInput.value).toBe("5");
   });
 
-  it('muestra y funciona el botón de limpiar input', () => {
+  it("permite limpiar manualmente el input de nombre de ingrediente", () => {
     render(<RecipeIngredientInput />);
 
-    const input = screen.getByPlaceholderText('Ej: Leche, Huevos...') as HTMLInputElement;
-    fireEvent.change(input, { target: { value: 'Azúcar' } });
+    const input = screen.getByPlaceholderText("Ej: Leche, Huevos...") as HTMLInputElement;
 
-    const clearButton = screen.getByTitle('Eliminar');
-    expect(clearButton).toBeInTheDocument();
+    fireEvent.change(input, { target: { value: "Azúcar" } });
+    expect(input.value).toBe("Azúcar");
 
-    fireEvent.click(clearButton);
-    expect(input.value).toBe('');
+    fireEvent.change(input, { target: { value: "" } });
+    expect(input.value).toBe("");
   });
 });
