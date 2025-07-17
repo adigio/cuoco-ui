@@ -12,7 +12,7 @@ export default function RecipeIngredients({ ingredients }: Props) {
       {ingredients.map((group, idx) => (
         <div key={idx} className="my-4"> 
           {group.section && group.section.trim() && (
-            <div className="font-semibold text-sm mb-2 border-b border-gray-200 text-center">
+            <div className="font-semibold text-md mb-2 border-b border-gray-200 text-center">
               <h3>{group.section}</h3>
             </div>
           )}

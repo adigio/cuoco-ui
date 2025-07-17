@@ -137,7 +137,7 @@ export default function RecipeFilters() {
     const ingredientList = ingredients.map((ingredient) => ({
       name: ingredient.name,
       quantity: ingredient.quantity,
-      unit_id: Number(ingredient.unit),
+      unit_id: Number(ingredient.unit.id),
     }));
 
     const informationRecipe: RecipeGenerationRequest = {

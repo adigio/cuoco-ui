@@ -4,7 +4,7 @@ import React from "react";
 import { IngredientsListProps } from "@/types";
 
 const IngredientsList: React.FC<IngredientsListProps> = ({ ingredients }) => (
-  <ContainerCardDetail title="Ingredientes necesarios">
+  <ContainerCardDetail title="Ingredientes">
     <div className="flex flex-col items-center space-y-3 mt-4">
       {ingredients.map((ingredient, i) => (
         <div key={i} className="flex items-center justify-center min-w-[200px]">

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import apiClient from "@/lib/axios.config";
 import ChefLoader from "@/components/shared/loaders/ChefLoader";
+import { MealPrepDetailSkeleton } from "@/components/shared/skeleton/MealPrepDetailSkeleton";
 import BackgroundLayers from "@/components/shared/BackgroundLayers";
 import ContainerShadow from "@/components/shared/containers/ContainerShadow";
 import RecipeTags from "@/components/meal-prep/RecipeTags";
@@ -32,6 +33,7 @@ export default function MealPrepPage({
 
   const { isFavoriteMealPrep, addFavoriteMealPrep, removeFavoriteMealPrep } =
     useFavoritesStore();
+ 
   const {
     show,
     message,
@@ -48,6 +50,8 @@ export default function MealPrepPage({
   const [showUnfavoriteModal, setShowUnfavoriteModal] = useState(false);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
 
+  // Mix estado del servidor con estado local
+  const currentIsFavorite = mealPrep ? isFavoriteMealPrep(mealPrep.id, mealPrep.isFavorite) : false;
   useEffect(() => {
     const fetchMealPrep = async () => {
       try {
@@ -65,6 +69,7 @@ export default function MealPrepPage({
           recipes: data.recipes,
           ingredients: data.ingredients,
           observation: data.observation || undefined,
+          isFavorite: data.favorite || false,
         };
 
         setMealPrep(mapped);
@@ -77,13 +82,11 @@ export default function MealPrepPage({
 
     fetchMealPrep();
   }, [mealPrepId]);
-   
- 
+
 
   const handleFavMealPrep = () => {
     if (!mealPrep) return;
-    const isCurrentlyFavorite = isFavoriteMealPrep(mealPrep.id);
-    if (isCurrentlyFavorite) {
+    if (currentIsFavorite) {
       setShowUnfavoriteModal(true);
     } else {
       setShowFavoriteModal(true);
@@ -107,7 +110,7 @@ export default function MealPrepPage({
   };
 
   if (loading) {
-    return <ChefLoader text="Cargando meal prep..." />;
+    return <MealPrepDetailSkeleton />;
   }
   if (!mealPrep) {
     return (
@@ -116,8 +119,6 @@ export default function MealPrepPage({
       </div>
     );
   }
-  const isCurrentlyFavorite = isFavoriteMealPrep(mealPrep.id);
-
   return (
     <>
       <BackgroundLayers />
@@ -130,17 +131,16 @@ export default function MealPrepPage({
           <div className="flex flex-col lg:flex-row gap-8">
             <section className="w-full lg:w-3/4">
               <div className="flex justify-between items-center mb-6"> 
-                <h2 className="text-2xl font-bold text-[#333]">{mealPrep.title}</h2>
- 
+                <h2 className="text-2xl font-bold text-gray-700">{mealPrep.title}</h2>
 
                 <TimeAndFavorite
                   minutes={mealPrep.estimatedCookingTime}
                   onToggleFavorite={handleFavMealPrep}
-                  isFavorite={isCurrentlyFavorite}
+                  isFavorite={currentIsFavorite}
                 />
               </div>
                 <div className="border-t-2 text-color-primary mb-10"></div>
-              <h3 className="mx-4 mb-2 text-xl font-bold text-[#333]">Paso a paso</h3>
+              <h3 className="mx-4 mb-2 text-xl text-center font-bold text-gray-700">Paso a paso</h3>
 
               <MealPrepSteps steps={mealPrep.steps} />
             </section>
@@ -151,7 +151,7 @@ export default function MealPrepPage({
               {/* <PortionSummary recipes={mealPrep.recipes} /> */}
 
               <IngredientsList ingredients={mealPrep.ingredients} />
- 
+
               {mealPrep.observation && (
                 <ObservationInfo observation={mealPrep.observation} />
               )}

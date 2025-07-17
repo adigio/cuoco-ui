@@ -66,7 +66,7 @@ export default function RecipeIngredientInput() {
   return (
     <div>
       <h2 className="text-lg font-medium">
-        También podés escribir o decir qué tenés
+        También podés escribir lo que tenés
       </h2>
 
       <div className="flex gap-2 mt-2 items-center flex-wrap">
@@ -77,7 +77,7 @@ export default function RecipeIngredientInput() {
           value={name}
           onChange={(e) => setName(e.target.value)}
           onKeyDown={handleKeyPress}
-          className="border rounded px-4 py-2 w-60"
+          className="border border-gray-300 rounded px-4 py-2 w-60 focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-100"
         />
 
         {/* Cantidad */}
@@ -86,7 +86,7 @@ export default function RecipeIngredientInput() {
           placeholder="Cantidad"
           value={quantity}
           onChange={(e) => setQuantity(e.target.value)}
-          className="border rounded px-4 py-2 w-24"
+          className="border border-gray-300 rounded px-4 py-2 w-24 focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-100"
         />
 
         {/* Unidad */}
@@ -95,7 +95,7 @@ export default function RecipeIngredientInput() {
           onChange={(e) => {
             setUnit(e.target.value);
           }}
-          className="border rounded px-2 py-2"
+          className="border border-gray-300 rounded px-2 py-2 focus:outline-none focus:ring-2 focus:ring-purple-100 focus:border-purple-100"
           disabled={!isLoaded || unitOptions.length === 0}
         >
           {!isLoaded ? (
