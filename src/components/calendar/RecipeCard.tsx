@@ -58,6 +58,7 @@ export default function RecipeCard({ recipe, onDelete, onAdd, isEmpty = false }:
                                 setImageError(true);
                                 setImageSrc('/others/default-recipe.png');
                             }}
+                            unoptimized
                         />
                     </div>
                     <div className="flex-1 overflow-hidden">
